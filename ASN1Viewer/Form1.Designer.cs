@@ -35,6 +35,7 @@
       this.textBox1 = new System.Windows.Forms.TextBox();
       this.tabPage2 = new System.Windows.Forms.TabPage();
       this.panel1 = new System.Windows.Forms.Panel();
+      this.hexViewer1 = new ASN1Viewer.HexViewer();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -45,7 +46,6 @@
       this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.statusStrip1 = new System.Windows.Forms.StatusStrip();
       this.lbStatus = new System.Windows.Forms.ToolStripStatusLabel();
-      this.hexViewer1 = new ASN1Viewer.HexViewer();
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
@@ -139,6 +139,15 @@
       this.panel1.Size = new System.Drawing.Size(655, 485);
       this.panel1.TabIndex = 0;
       // 
+      // hexViewer1
+      // 
+      this.hexViewer1.BackColor = System.Drawing.SystemColors.Window;
+      this.hexViewer1.Location = new System.Drawing.Point(3, 3);
+      this.hexViewer1.Name = "hexViewer1";
+      this.hexViewer1.Size = new System.Drawing.Size(475, 1158);
+      this.hexViewer1.TabIndex = 0;
+      this.hexViewer1.Text = "hexViewer1";
+      // 
       // menuStrip1
       // 
       this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -198,8 +207,9 @@
       // aboutToolStripMenuItem
       // 
       this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-      this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+      this.aboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
       this.aboutToolStripMenuItem.Text = "&About";
+      this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
       // 
       // statusStrip1
       // 
@@ -215,15 +225,6 @@
       // 
       this.lbStatus.Name = "lbStatus";
       this.lbStatus.Size = new System.Drawing.Size(0, 17);
-      // 
-      // hexViewer1
-      // 
-      this.hexViewer1.BackColor = System.Drawing.SystemColors.Window;
-      this.hexViewer1.Location = new System.Drawing.Point(3, 3);
-      this.hexViewer1.Name = "hexViewer1";
-      this.hexViewer1.Size = new System.Drawing.Size(475, 1158);
-      this.hexViewer1.TabIndex = 0;
-      this.hexViewer1.Text = "hexViewer1";
       // 
       // Form1
       // 

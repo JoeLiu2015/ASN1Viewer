@@ -304,5 +304,19 @@ namespace ASN1Viewer
     private static byte[] DIGITS = null;
     private static bool[] B64MAP = null;
     private const long SIZE_100MB = 1024 * 1024 * 100L;
+
+    private void aboutToolStripMenuItem_Click(object sender, EventArgs e) {
+      Schema sc = new Schema();
+      sc.Add(@"D:\GitHub\ASN1Viewer\ASN1Viewer\schemas\X509.txt");
+
+      SchemaTokenizer st = new SchemaTokenizer(File.ReadAllText(@"D:\GitHub\ASN1Viewer\ASN1Viewer\schemas\X509.txt"));
+
+      string s = st.Next();
+      while (s != null) {
+        System.Diagnostics.Debug.WriteLine(s);
+        s = st.Next();
+      }
+
+    }
   }
 }
