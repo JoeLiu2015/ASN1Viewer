@@ -28,17 +28,17 @@ namespace ASN1Viewer {
     public object Size = null;
     public List<string> Tag = null;
     public List<string> Other = null;
+
+    public override string ToString() {
+      return Name + ":" + TypeName;
+    }
   }
 
-  public class Variable {
-    public string Name = "";
-    public string Type = "";
 
-  }
 
 
   public class Schema {
-    private Dictionary<string, TypeDef> m_Nodes = new Dictionary<string, TypeDef>();
+    private Dictionary<string, TypeDef> m_Types = new Dictionary<string, TypeDef>();
     private Dictionary<string, string>  m_Oids = new Dictionary<string, string>();
     private Dictionary<string, object>  m_Consts = new Dictionary<string, object>();
 
@@ -61,16 +61,92 @@ namespace ASN1Viewer {
           } else {
             throw new Exception("Failed to parse expression");
           }
+
           words.Clear();
         } else {
           words.Add(word);
         }
+
         word = tok.Next();
       }
 
-      int m = 0;
+      if (!m_Consts.ContainsKey("MAX")) m_Consts["MAX"] = int.MaxValue;
+      foreach (KeyValuePair<string, TypeDef> kv in m_Types) {
+        if (kv.Value.Size != null) kv.Value.Size = FixSize(kv.Value.Size);
+        if (kv.Value.Fields == null) continue;
+        for (int i = 0; i < kv.Value.Fields.Count; i++) {
+          if (kv.Value.Fields[i].Size != null) kv.Value.Fields[i].Size = FixSize(kv.Value.Fields[i].Size);
+        }
+      }
+
+      List<TypeDef> checkTypes = new List<TypeDef>();
+      foreach (KeyValuePair<string, TypeDef> kv in m_Types) {
+        checkTypes.Add(kv.Value);
+      }
+
+      for (int i = 0; i < checkTypes.Count; i++) {
+        CheckType(checkTypes[i]);
+      }
     }
 
+    private bool IsPrimeType(string typeName) {
+      return typeName == "OCTET STRING" ||
+             typeName == "OBJECT IDENTIFIER" ||
+             typeName == "BIT STRING" ||
+             typeName == "INTEGER" ||
+             typeName == "BOOLEAN" ||
+             typeName == "PrintableString" ||
+             typeName == "NumericString" ||
+             typeName == "IA5String" ||
+             typeName == "ANY" ||
+             typeName == "UTCTime" ||
+             typeName == "GeneralizedTime" ||
+             typeName == "TeletexString";
+    }
+    private void CheckType(TypeDef td) {
+      if (td.TypeName == "OCTET STRING" || 
+          td.TypeName == "OBJECT IDENTIFIER" || 
+          td.TypeName == "BIT STRING" ||
+          td.TypeName == "INTEGER" ||
+          td.TypeName == "PrintableString" ||
+          td.TypeName == "NumericString" ||
+          td.TypeName == "IA5String" ||
+          td.TypeName == "ANY")
+        return;
+      if (td.TypeName == "SEQUENCE" || td.TypeName == "SET" || td.TypeName == "CHOICE") {
+        for (int i = 0; i < td.Fields.Count; i++) {
+          string tn = td.Fields[i].TypeName;
+          if (!m_Types.ContainsKey(tn) && !IsPrimeType(tn)) {
+            throw new Exception("TODO: wrong parsed type field.");
+            //Console.WriteLine(td.TypeName + " == " + tn);
+          }
+        }
+      } else {
+        if (td.Fields != null) {
+          throw new Exception("It will not contains fields."); 
+        }
+
+        if (!m_Types.ContainsKey(td.TypeName) && !IsPrimeType(td.TypeName)) {
+          throw new Exception("TODO: wrong parsed type.");
+          //Console.WriteLine(td.TypeName + " == ");
+        }
+      }
+    }
+
+    private object FixSize(object size) {
+      string[] s = (string[]) size;
+      int[] ret = new int[2];
+      int val = 0;
+      if (s[0] != null) {
+        if (int.TryParse(s[0], out val)) ret[0] = val;
+        else                             ret[0] = (int)m_Consts[s[0]];
+      }
+      if (s[1] != null) {
+        if (int.TryParse(s[1], out val)) ret[1] = val;
+        else                             ret[1] = (int)m_Consts[s[1]];
+      }
+      return ret;
+    }
     private void ParseOid(string name, SchemaTokenizer tok) {
       string value = "";
       string word = tok.Next();
@@ -139,6 +215,8 @@ namespace ASN1Viewer {
         } else if (w == "(SIZE") {
           fd.Size = ParseSize(tok);
           if (tok.Next() != ")") throw new Exception("Invalid Field Size");
+        } else if (w == "DEFAULT") {
+          tok.Next();  // ignore  default value like "Version DEFAULT v1,"
         } else if (w == "SEQUENCE" || w == "SET") {
           if (tok.Peek() == "{") {
             fd.TypeName = w + "_" + fd.Name;
@@ -146,6 +224,17 @@ namespace ASN1Viewer {
             ParseTypeDef(fd.TypeName, tok);
           } else {
             throw new Exception("TODO:");
+          }
+        } else if (w == "ANY") {
+          fd.TypeName = w;
+          if (tok.Peek() == "DEFINED BY") {
+            tok.Next();
+            tok.Next(); // ignore "DEFINED BY algorithm"
+          }
+        } else if (w == "INTEGER") {
+          fd.TypeName = w;
+          if (tok.Peek() == "(") {
+            fd.Size = ParseSize(tok);
           }
         } else {
           fd.TypeName = w;
@@ -207,7 +296,7 @@ namespace ASN1Viewer {
 
     private bool IsOID(string type) {
       if (type == "OBJECT IDENTIFIER") return true;
-      while (m_Nodes.ContainsKey(type)) type = m_Nodes[type].TypeName;
+      while (m_Types.ContainsKey(type)) type = m_Types[type].TypeName;
       return type == "OBJECT IDENTIFIER";
     }
     private void ParseTypeDef(string name, SchemaTokenizer tok) {
@@ -280,7 +369,7 @@ namespace ASN1Viewer {
         break;
       }
 
-      m_Nodes.Add(td.Name, td);
+      m_Types.Add(td.Name, td);
     }
 
 
@@ -328,8 +417,20 @@ RESTART:
 
       // comments
       if (ch == '-' && pos + 1 < m_EndPos && m_Text[pos + 1] == '-') {
-        while (m_Pos < m_EndPos && m_Text[m_Pos] != '\n') m_Pos++;
-        m_Pos++;
+        m_Pos += 2;
+        while (m_Pos < m_EndPos) {
+          // 1. End with "--"
+          if (m_Text[m_Pos] == '-' && m_Pos + 1 < m_EndPos && m_Text[m_Pos + 1] == '-') {
+            m_Pos += 2;
+            break;
+          } 
+          // 2. End with '\n'
+          else if (m_Text[m_Pos] == '\n') {
+            m_Pos++;
+            break;
+          }
+          m_Pos++;
+        }
         if (m_Pos >= m_EndPos) return null;
         goto RESTART;
       }
