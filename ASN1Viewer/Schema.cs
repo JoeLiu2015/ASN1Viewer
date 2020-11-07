@@ -12,6 +12,8 @@ namespace ASN1Viewer {
     public List<string>     Tag       = null;
     public List<string>     Other     = null;
     public string           Collection = "";
+    public object           Size      = null;
+    public Dictionary<string, int> IntEnums = null;
 
     public string TypeName {
       get { return BaseType; }
@@ -166,6 +168,34 @@ namespace ASN1Viewer {
       if (tok.Next() != ")") throw new Exception("Invalid Size");
       return ret;
     }
+
+    private Dictionary<string, int> ParseIntEnum(SchemaTokenizer tok) {
+      if (tok.Next() != "{") throw new Exception("Failed to parse IntEnum {");
+      Dictionary<string, int> ret = new Dictionary<string, int>();
+      string name = "";
+      int val = 0;
+      while (true) {
+        name = tok.Next();
+        if (tok.Next() != "(") throw new Exception("Failed to parse IntEnum (");
+        val = int.Parse(tok.Next());
+        if (tok.Next() != ")") throw new Exception("Failed to parse IntEnum )");
+        ret.Add(name, val);
+        if (tok.Peek() == ",") {
+          tok.Next();
+          continue;
+        } else if (tok.Peek() == "}") {
+          tok.Next();
+          if (tok.Peek() == "(") {
+            // Skip range (1..ub-integer-options)
+            while (tok.Next() != ")");
+          }
+          break;
+        } else {
+          throw new Exception("Failed to parse IntEnum " + tok.Peek());
+        }
+      }
+      return ret;
+    }
     private bool IsInt(string val) {
       try {
         int.Parse(val);
@@ -183,7 +213,6 @@ namespace ASN1Viewer {
     private void ParseTypeDef(string name, SchemaTokenizer tok) {
       TypeDef td = new TypeDef();
       td.Name = name;
-
 
       string word = null;
       while (true) {
@@ -225,10 +254,30 @@ namespace ASN1Viewer {
           if (next == "{") {
             td.Fields = new List<FieldDef>();
             ParseFieldDef(td, tok);
+          } else {
+            throw new Exception("Failed to parse SEQUENCE,CHOICE,SET at '" + next + "'");
           }
           
           break;
         }
+
+        if (word == "INTEGER" && tok.Peek() == "{") {
+          td.BaseType = word;
+          td.IntEnums = ParseIntEnum(tok);
+          break;
+        }
+
+        td.BaseType = word;
+        if (tok.Peek() == "(SIZE") {
+          tok.Next();
+          td.Size = ParseSize(tok);
+          if (tok.Next() != ")") throw new Exception("Failed to parse size in ParseTypeDef");
+        }
+        if (tok.Peek() == "{") {
+          throw new Exception("TODO: ParseType(" + name + ":" + word + ")");
+        }
+
+        break;
       }
 
       m_Nodes.Add(td.Name, td);
@@ -352,6 +401,12 @@ RESTART:
           break;
         case "(":
           if (PeekTok() == "SIZE") return "(" + NextTok();
+          break;
+        case "DEFINED":
+          if (PeekTok() == "BY") return "DEFINED " + NextTok();
+          break;
+        case "BIT":
+          if (PeekTok() == "STRING") return "BIT " + NextTok();
           break;
       }
       return tok;
