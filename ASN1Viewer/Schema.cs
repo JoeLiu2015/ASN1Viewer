@@ -6,17 +6,19 @@ using System.Text;
 namespace ASN1Viewer {
 
   public class TypeDef {
-    public string           BaseType  = "";
-    public string           Name      = "";
-    public List<FieldDef>   Fields    = null;
-    public List<string>     Tag       = null;
-    public List<string>     Other     = null;
-    public string           Collection = "";
-    public object           Size      = null;
+    public string           Name       = "";
+    public string           TypeName   = "";
+    public List<FieldDef>   Fields     = null;
+    public List<string>     Tag        = null;
+    public List<string>     Other      = null;
+    public string           Collection = null;
+    public object           Size       = null;
     public Dictionary<string, int> IntEnums = null;
 
-    public string TypeName {
-      get { return BaseType; }
+    public string          PrimeType   = "";
+
+    public override string ToString() {
+      return Collection == null ? Name + ": " + TypeName : Name + ": " + Collection + " " + TypeName;
     }
   }
 
@@ -29,8 +31,10 @@ namespace ASN1Viewer {
     public List<string> Tag = null;
     public List<string> Other = null;
 
+    public string PrimeType = "";
+
     public override string ToString() {
-      return Name + ":" + TypeName;
+      return Name + ": " + TypeName;
     }
   }
 
@@ -79,15 +83,20 @@ namespace ASN1Viewer {
         }
       }
 
-      List<TypeDef> checkTypes = new List<TypeDef>();
       foreach (KeyValuePair<string, TypeDef> kv in m_Types) {
-        checkTypes.Add(kv.Value);
-      }
-
-      for (int i = 0; i < checkTypes.Count; i++) {
-        CheckType(checkTypes[i]);
+        InitPrimeType(kv.Value);
       }
     }
+
+    public string GetOidName(string oid) {
+      if (m_Oids.ContainsKey(oid)) return m_Oids[oid];
+      return null;
+    }
+
+    public Dictionary<string, TypeDef> Types {
+      get { return m_Types; }
+    }
+
 
     private bool IsPrimeType(string typeName) {
       return typeName == "OCTET STRING" ||
@@ -103,32 +112,23 @@ namespace ASN1Viewer {
              typeName == "GeneralizedTime" ||
              typeName == "TeletexString";
     }
-    private void CheckType(TypeDef td) {
-      if (td.TypeName == "OCTET STRING" || 
-          td.TypeName == "OBJECT IDENTIFIER" || 
-          td.TypeName == "BIT STRING" ||
-          td.TypeName == "INTEGER" ||
-          td.TypeName == "PrintableString" ||
-          td.TypeName == "NumericString" ||
-          td.TypeName == "IA5String" ||
-          td.TypeName == "ANY")
-        return;
-      if (td.TypeName == "SEQUENCE" || td.TypeName == "SET" || td.TypeName == "CHOICE") {
-        for (int i = 0; i < td.Fields.Count; i++) {
-          string tn = td.Fields[i].TypeName;
-          if (!m_Types.ContainsKey(tn) && !IsPrimeType(tn)) {
-            throw new Exception("TODO: wrong parsed type field.");
-            //Console.WriteLine(td.TypeName + " == " + tn);
-          }
-        }
-      } else {
-        if (td.Fields != null) {
-          throw new Exception("It will not contains fields."); 
-        }
 
-        if (!m_Types.ContainsKey(td.TypeName) && !IsPrimeType(td.TypeName)) {
-          throw new Exception("TODO: wrong parsed type.");
-          //Console.WriteLine(td.TypeName + " == ");
+    private string GetPrimeType(string typeName) {
+      if (IsPrimeType(typeName)) return typeName;
+      if (typeName == "SEQUENCE" || typeName == "SET" || typeName == "CHOICE") return typeName;
+      if (m_Types.ContainsKey(typeName)) {
+        return GetPrimeType(m_Types[typeName].TypeName);
+      }
+
+      throw new Exception("Can not get the prime type for '" + typeName + "'");
+    }
+    private void InitPrimeType(TypeDef td) {
+      td.PrimeType = GetPrimeType(td.TypeName);
+      if (td.Fields != null) {
+        if (td.TypeName != "SEQUENCE" && td.TypeName != "SET" && td.TypeName != "CHOICE")
+          throw new Exception("Fields only appear in SEQUENCE, SET and CHOICE.");
+        for (int i = 0; i < td.Fields.Count; i++) {
+          td.Fields[i].PrimeType = GetPrimeType(td.Fields[i].TypeName);
         }
       }
     }
@@ -293,7 +293,6 @@ namespace ASN1Viewer {
         return false;
       }
     }
-
     private bool IsOID(string type) {
       if (type == "OBJECT IDENTIFIER") return true;
       while (m_Types.ContainsKey(type)) type = m_Types[type].TypeName;
@@ -327,8 +326,14 @@ namespace ASN1Viewer {
           continue;
         }
 
-        if (word == "OCTET STRING" || word == "OBJECT IDENTIFIER" || word == "ANY" || word == "PrintableString" || word == "IA5String") {
-          td.BaseType = word;
+        if (word == "INTEGER" && tok.Peek() == "{") {
+          td.TypeName = word;
+          td.IntEnums = ParseIntEnum(tok);
+          break;
+        }
+
+        if (IsPrimeType(word)) {
+          td.TypeName = word;
           if (tok.Peek() == "(SIZE") {
             tok.Next();
             ParseSize(tok);
@@ -338,7 +343,7 @@ namespace ASN1Viewer {
         }
 
         if (word == "SEQUENCE" || word == "CHOICE" || word == "SET") {
-          td.BaseType = word;
+          td.TypeName = word;
           string next = tok.Next();
           if (next == "{") {
             td.Fields = new List<FieldDef>();
@@ -350,13 +355,7 @@ namespace ASN1Viewer {
           break;
         }
 
-        if (word == "INTEGER" && tok.Peek() == "{") {
-          td.BaseType = word;
-          td.IntEnums = ParseIntEnum(tok);
-          break;
-        }
-
-        td.BaseType = word;
+        td.TypeName = word;
         if (tok.Peek() == "(SIZE") {
           tok.Next();
           td.Size = ParseSize(tok);
