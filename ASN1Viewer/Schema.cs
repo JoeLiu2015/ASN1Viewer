@@ -16,6 +16,7 @@ namespace ASN1Viewer {
     public Dictionary<string, int> IntEnums = null;
 
     public string          PrimeType   = "";
+    public TypeDef         TypeObj     = null;
 
     public override string ToString() {
       return Collection == null ? Name + ": " + TypeName : Name + ": " + Collection + " " + TypeName;
@@ -31,7 +32,8 @@ namespace ASN1Viewer {
     public List<string> Tag = null;
     public List<string> Other = null;
 
-    public string PrimeType = "";
+    public string  PrimeType = "";
+    public TypeDef TypeObj   = null;
 
     public override string ToString() {
       return Name + ": " + TypeName;
@@ -85,6 +87,7 @@ namespace ASN1Viewer {
 
       foreach (KeyValuePair<string, TypeDef> kv in m_Types) {
         InitPrimeType(kv.Value);
+        InitTypeObj(kv.Value);
       }
     }
 
@@ -131,6 +134,29 @@ namespace ASN1Viewer {
           td.Fields[i].PrimeType = GetPrimeType(td.Fields[i].TypeName);
         }
       }
+    }
+
+    private void InitTypeObj(TypeDef td) {
+      if (IsPrimeType(td.TypeName)) return;
+      
+      if (td.TypeName == "SEQUENCE" || td.TypeName == "SET" || td.TypeName == "CHOICE") {
+        for (int i = 0; i < td.Fields.Count; i++) {
+          if (IsPrimeType(td.Fields[i].TypeName)) continue;
+          if (m_Types.ContainsKey(td.Fields[i].TypeName)) {
+            td.Fields[i].TypeObj = m_Types[td.Fields[i].TypeName];
+            continue;
+          }
+          throw new Exception("Failed to get TypeObj for the field '" + td.Fields[i].Name + "'");
+        }
+
+        return;
+      }
+      if (m_Types.ContainsKey(td.TypeName)) {
+        td.TypeObj = m_Types[td.TypeName];
+        return;
+      }
+
+      throw new Exception("Can not get the type obj");
     }
 
     private object FixSize(object size) {

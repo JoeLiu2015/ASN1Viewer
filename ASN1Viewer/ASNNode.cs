@@ -27,13 +27,13 @@ namespace ASN1Viewer {
     public const int UNIVERSAL_OCTETSTRING      = 0x04;
     public const int UNIVERSAL_NULL             = 0x05;
     public const int UNIVERSAL_OID              = 0x06;
-    public const int UNIVERSAL_OBJ_DESCRIPTOR   = 0x07;
-    public const int UNIVERSAL_INSTANCE_OF      = 0x08;
     public const int UNIVERSAL_REAL             = 0x09;
     public const int UNIVERSAL_SEQ_SEQOF        = 0x10;
     public const int UNIVERSAL_SET_SETOF        = 0x11;
+    public const int UNIVERSAL_NUMSTRING        = 0x12;
     public const int UNIVERSAL_PRINTABLESTRING  = 0x13;
     public const int UNIVERSAL_T61STRING        = 0x14;
+    public const int UNIVERSAL_VIDEOTEXSTRING   = 0x15;
     public const int UNIVERSAL_IA5STRING        = 0x16;
     public const int UNIVERSAL_UTCTIME          = 0x17;
     public const int UNIVERSAL_GENTIME          = 0x18;
@@ -41,7 +41,6 @@ namespace ASN1Viewer {
     public const int UNIVERSAL_ISO646STR        = 0x1A;
     public const int UNIVERSAL_GENERAL_STR      = 0x1B;
     public const int UNIVERSAL_STRING           = 0x1C;
-    public const int UNIVERSAL_CHARACTER_STRING = 0x1D;
     public const int UNIVERSAL_BMPSTRING        = 0x1E;
 
     private byte   m_Tag = 0x00;  
@@ -52,6 +51,8 @@ namespace ASN1Viewer {
     private byte[] m_Data = null;
     private ASNNode m_FirstChild = null;
     private ASNNode m_Next = null;
+    private TypeDef m_Schema = null;
+    private string m_SchemaName = null;
 
     private ASNNode(byte tag, int elementStart, int elementEnd, int contentStart, int contentEnd, byte[] data) {
       m_Tag = tag;
@@ -90,8 +91,55 @@ namespace ASN1Viewer {
       return GetTagNum(m_Tag);
     }
 
+    public TypeDef Schema {
+      get { return m_Schema;  }
+    }
+
+    private byte GetSchemaTag(TypeDef t) {
+      switch (t.PrimeType) {
+        case "SEQUENCE":          return UNIVERSAL_SEQ_SEQOF;
+        case "OCTET STRING":      return UNIVERSAL_OCTETSTRING;
+        case "OBJECT IDENTIFIER": return UNIVERSAL_OID;
+        case "BIT STRING":        return UNIVERSAL_BITSTRING;
+        case "INTEGER":           return UNIVERSAL_INTEGER;
+        case "BOOLEAN":           return UNIVERSAL_BOOLEAN;
+        case "PrintableString":   return UNIVERSAL_PRINTABLESTRING;
+        case "NumericString":     return UNIVERSAL_OCTETSTRING;
+        case "IA5String":         return UNIVERSAL_IA5STRING;
+        case "UTCTime":           return UNIVERSAL_UTCTIME;
+        case "GeneralizedTime":   return UNIVERSAL_GENTIME;
+        case "TeletexString":     return UNIVERSAL_T61STRING;
+        case "SET":               return UNIVERSAL_SET_SETOF;
+      }
+
+      throw new Exception("Failed to get schema tag");
+    }
+    public bool MatchSchema(string name, TypeDef t) {
+      
+      if (t.PrimeType == "CHOICE") {
+        for (int i = 0; i < t.Fields.Count; i++) {
+          if (MatchSchema(t.Fields[i].Name, t.Fields[i].TypeObj)) {
+            m_SchemaName = t.Fields[i].Name;
+            m_Schema = t.Fields[i].TypeObj;
+          }
+        }
+      }
+
+      if (GetSchemaTag(t) != GetTagNum())
+        return false;
+
+      if (t.PrimeType == "SEQUENCE") {
+
+      }
+     
+      return true;
+    }
+
     public override string ToString() {
       String str = "";
+      if (m_SchemaName != null) {
+        str = m_SchemaName + " ";
+      }
       if (GetClass() != NODE_CLASS_UNIVERSAL) {
         if      (GetClass() == NODE_CLASS_APPLICATION)  str += "[Application][" + GetTagNum() + "]";
         else if (GetClass() == NODE_CLASS_CONTEXT)      str += "[Context]["     + GetTagNum() + "]";
@@ -114,7 +162,6 @@ namespace ASN1Viewer {
         else if (GetTagNum() == UNIVERSAL_ISO646STR)       str += "ISO646String "    + GetValue();
         else if (GetTagNum() == UNIVERSAL_GENERAL_STR)     str += "GeneralString "   + GetValue();
         else if (GetTagNum() == UNIVERSAL_STRING)          str += "UniversalString " + GetValue();
-        else if (GetTagNum() == UNIVERSAL_CHARACTER_STRING) str += "CharacterString " + GetValue();
         else if (GetTagNum() == UNIVERSAL_BMPSTRING)       str += "BMPString "       + GetValue();
       }
       if (m_FirstChild != null) {
