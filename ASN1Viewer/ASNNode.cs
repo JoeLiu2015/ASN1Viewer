@@ -95,8 +95,11 @@ namespace ASN1Viewer {
       get { return m_Schema;  }
     }
 
-    private byte GetSchemaTag(TypeDef t) {
-      switch (t.PrimeType) {
+    private byte GetSchemaTag(string primeType, List<string> tag) {
+      if (tag != null && tag.Count > 0) {
+        if (tag.Count == 1) return (byte)int.Parse(tag[0]);
+      }
+      switch (primeType) {
         case "SEQUENCE":          return UNIVERSAL_SEQ_SEQOF;
         case "OCTET STRING":      return UNIVERSAL_OCTETSTRING;
         case "OBJECT IDENTIFIER": return UNIVERSAL_OID;
@@ -114,24 +117,91 @@ namespace ASN1Viewer {
 
       throw new Exception("Failed to get schema tag");
     }
-    public bool MatchSchema(string name, TypeDef t) {
+    public bool MatchSchema(string name, string primeType, List<string> tag, TypeDef t) {
+      if (t != null) {
+        primeType = t.PrimeType;
+      }
       
-      if (t.PrimeType == "CHOICE") {
+
+      if (tag == null && t != null) {
+        tag = t.Tag;
+      }
+
+      if (primeType == "ANY") {
+        m_SchemaName = name;
+        m_Schema = t;
+        return true;
+      }
+      if (primeType == "CHOICE") {
         for (int i = 0; i < t.Fields.Count; i++) {
-          if (MatchSchema(t.Fields[i].Name, t.Fields[i].TypeObj)) {
+          if (MatchSchema(t.Fields[i].Name, t.Fields[i].PrimeType, t.Fields[i].Tag, t.Fields[i].TypeObj)) {
             m_SchemaName = t.Fields[i].Name;
             m_Schema = t.Fields[i].TypeObj;
+            return true;
           }
         }
-      }
 
-      if (GetSchemaTag(t) != GetTagNum())
         return false;
-
-      if (t.PrimeType == "SEQUENCE") {
-
       }
-     
+
+      if (GetSchemaTag(primeType, tag) != GetTagNum()) {
+        return false;
+      }
+
+      if (primeType == "SEQUENCE") {
+        int i = 0;
+        ASNNode c = m_FirstChild;
+        if (t.Fields == null) {
+          while (c != null) {
+            if (!c.MatchSchema(t.TypeName, t.TypeObj.PrimeType, t.TypeObj.Tag, t.TypeObj)) {
+              return false;
+            }
+
+            c = c.m_Next;
+          }
+        } else {
+          while (c != null && i < t.Fields.Count) {
+            if (!t.Fields[i].Optional) {
+              if (!c.MatchSchema(t.Fields[i].Name, t.Fields[i].PrimeType, t.Fields[i].Tag, t.Fields[i].TypeObj)) {
+                return false;
+              }
+
+              i++;
+              c = c.m_Next;
+            } else {
+              if (!c.MatchSchema(t.Fields[i].Name, t.Fields[i].PrimeType, t.Fields[i].Tag, t.Fields[i].TypeObj)) {
+                i++;
+              } else {
+                i++;
+                c = c.m_Next;
+              }
+            }
+          }
+
+          if (c == null) {
+            for (; i < t.Fields.Count; i++) {
+              if (!t.Fields[i].Optional)
+                return false;
+            }
+          } else {
+            return false;
+          }
+        }
+      } else if (primeType == "SET") {
+        ASNNode c = m_FirstChild;
+        if (t.Fields == null) {
+          while (c != null) {
+            if (!c.MatchSchema(t.TypeName, t.TypeObj.PrimeType, t.TypeObj.Tag, t.TypeObj)) {
+              return false;
+            }
+            c = c.m_Next;
+          }
+        } else {
+          throw new Exception("TODO:");
+        }
+      }
+      m_SchemaName = name;
+      m_Schema = t;
       return true;
     }
 

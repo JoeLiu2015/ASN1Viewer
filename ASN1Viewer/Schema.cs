@@ -126,7 +126,14 @@ namespace ASN1Viewer {
       throw new Exception("Can not get the prime type for '" + typeName + "'");
     }
     private void InitPrimeType(TypeDef td) {
-      td.PrimeType = GetPrimeType(td.TypeName);
+      if (td.Collection == "SEQUENCE OF") {
+        td.PrimeType = "SEQUENCE";
+      } else if (td.Collection == "SET OF") {
+        td.PrimeType = "SET";
+      } else {
+        td.PrimeType = GetPrimeType(td.TypeName);
+      }
+
       if (td.Fields != null) {
         if (td.TypeName != "SEQUENCE" && td.TypeName != "SET" && td.TypeName != "CHOICE")
           throw new Exception("Fields only appear in SEQUENCE, SET and CHOICE.");
