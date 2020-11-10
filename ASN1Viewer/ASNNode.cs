@@ -135,7 +135,7 @@ namespace ASN1Viewer {
       if (primeType == "CHOICE") {
         for (int i = 0; i < t.Fields.Count; i++) {
           if (MatchSchema(t.Fields[i].Name, t.Fields[i].PrimeType, t.Fields[i].Tag, t.Fields[i].TypeObj)) {
-            m_SchemaName = t.Fields[i].Name;
+            m_SchemaName = String.IsNullOrEmpty(name) ? t.Fields[i].Name : name;
             m_Schema = t.Fields[i].TypeObj;
             return true;
           }
