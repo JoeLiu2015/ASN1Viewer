@@ -250,6 +250,7 @@ namespace ASN1Viewer {
           if (tok.Next() != ")") throw new Exception("Invalid Field Size");
         } else if (w == "DEFAULT") {
           tok.Next();  // ignore  default value like "Version DEFAULT v1,"
+          fd.Optional = true;
         } else if (w == "SEQUENCE" || w == "SET") {
           if (tok.Peek() == "{") {
             fd.TypeName = w + "_" + fd.Name;

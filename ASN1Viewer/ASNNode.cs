@@ -117,6 +117,28 @@ namespace ASN1Viewer {
 
       throw new Exception("Failed to get schema tag");
     }
+
+    public bool MatchSchema(string name, TypeDef t) {
+      bool b = MatchSchema(name, t.PrimeType, t.Tag, t);
+      if (!b) {
+        List<ASNNode> n = new List<ASNNode>();
+        n.Add(this);
+        while (n.Count > 0) {
+          ASNNode an = n[n.Count - 1];
+          n.RemoveAt(n.Count - 1);
+          an.m_Schema = null;
+          an.m_SchemaName = "";
+          an = an.m_FirstChild;
+          while (an != null) {
+            n.Add(an);
+            an = an.m_Next;
+          }
+        }
+      }
+      return b;
+    }
+
+
     public bool MatchSchema(string name, string primeType, List<string> tag, TypeDef t) {
       if (t != null) {
         primeType = t.PrimeType;
@@ -127,10 +149,14 @@ namespace ASN1Viewer {
         tag = t.Tag;
       }
 
-      if (primeType == "ANY") {
-        m_SchemaName = name;
-        m_Schema = t;
-        return true;
+      if (primeType == "ANY" ) {
+        if (m_FirstChild == null) {
+          m_SchemaName = name;
+          m_Schema = t;
+          return true;
+        } else {
+          return false;
+        }
       }
       if (primeType == "CHOICE") {
         for (int i = 0; i < t.Fields.Count; i++) {
@@ -146,6 +172,10 @@ namespace ASN1Viewer {
 
       if (GetSchemaTag(primeType, tag) != GetTagNum()) {
         return false;
+      }
+
+      if (tag != null && tag.Count > 0) {
+        return m_FirstChild.MatchSchema(name, primeType, null, t);
       }
 
       if (primeType == "SEQUENCE") {

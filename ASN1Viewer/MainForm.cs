@@ -129,8 +129,8 @@ namespace ASN1Viewer
         Schema schema = LoadSchema();
         Dictionary<string, TypeDef> types = schema.Types;
         foreach (KeyValuePair<string, TypeDef> kv in types) {
-          if (kv.Key != "Certificate") continue;
-          if (a.MatchSchema(kv.Key, "", null, kv.Value)) break;
+          //if (kv.Key != "Certificate") continue;
+          if (a.MatchSchema(kv.Key, kv.Value)) break;
         }
 
         this.treeView1.Nodes.Clear();
