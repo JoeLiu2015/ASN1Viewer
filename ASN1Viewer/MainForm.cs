@@ -63,6 +63,7 @@ namespace ASN1Viewer
 
     private TreeNode CreateNode(ASNNode n) {
       TreeNode t = new TreeNode(n.ToString());
+      t.Tag = n;
       for (int i = 0; i < n.GetChildCount(); i++) {
         t.Nodes.Add(CreateNode(n.GetChild(i)));
       }
@@ -137,6 +138,7 @@ namespace ASN1Viewer
         this.treeView1.Nodes.Add(CreateNode(a));
         this.lbStatus.Text = "Succeed.";
         this.lbStatus.ForeColor = Color.Green;
+        this.hexViewer1.Data = data;
         return true;
       } catch (Exception ex) {
         Err(ex.Message);
@@ -223,6 +225,10 @@ namespace ASN1Viewer
     private static bool[] B64MAP = null;
     private const long SIZE_100MB = 1024 * 1024 * 100L;
 
-    
+    private void treeView1_AfterSelect(object sender, TreeViewEventArgs e) {
+      TreeNode tn = e.Node;
+      ASNNode an = tn.Tag as ASNNode;
+      this.hexViewer1.SelectNode(an.Start, an.End, an.ContentStart, an.ContentEnd);
+    }
   }
 }

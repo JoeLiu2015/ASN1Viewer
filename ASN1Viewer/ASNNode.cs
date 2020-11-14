@@ -95,6 +95,11 @@ namespace ASN1Viewer {
       get { return m_Schema;  }
     }
 
+    public int Start { get { return m_ElementStart;  } }
+    public int End { get { return m_ElementEnd; } }
+    public int ContentStart { get { return m_ContentStart; } }
+    public int ContentEnd   { get { return m_ContentEnd; } }
+
     private byte GetSchemaTag(string primeType, List<string> tag) {
       if (tag != null && tag.Count > 0) {
         if (tag.Count == 1) return (byte)int.Parse(tag[0]);
