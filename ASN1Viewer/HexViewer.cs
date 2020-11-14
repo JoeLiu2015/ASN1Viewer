@@ -51,7 +51,7 @@ namespace ASN1Viewer
 
         m_Start = start / 16 * LINE_LEN;
         m_End = end / 16 * LINE_LEN + LINE_LEN;
-        this.Select(m_Start, 0);
+        this.SelectionStart = m_Start;
         this.ScrollToCaret();
       }
     }

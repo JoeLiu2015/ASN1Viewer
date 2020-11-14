@@ -226,6 +226,7 @@ namespace ASN1Viewer
     private const long SIZE_100MB = 1024 * 1024 * 100L;
 
     private void treeView1_AfterSelect(object sender, TreeViewEventArgs e) {
+      this.tabControl1.SelectTab(this.tabPage2);
       TreeNode tn = e.Node;
       ASNNode an = tn.Tag as ASNNode;
       this.hexViewer1.SelectNode(an.Start, an.End, an.ContentStart, an.ContentEnd);
