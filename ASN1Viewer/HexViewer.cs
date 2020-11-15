@@ -47,7 +47,7 @@ namespace ASN1Viewer
         SetColor(start, 1, Color.Red);
         SetColor(start + 1, contentStart - start - 1, Color.Blue);
         SetColor(contentEnd, end - contentEnd, Color.Blue);
-        SetColor(contentStart, contentEnd - contentStart, Color.Black);
+        SetColor(contentStart, contentEnd - contentStart, Color.Green);
 
         m_Start = start / 16 * LINE_LEN;
         m_End = end / 16 * LINE_LEN + LINE_LEN;
