@@ -113,7 +113,7 @@ namespace ASN1Viewer {
         (byte) '0', (byte) '1', (byte) '2', (byte) '3', (byte) '4', (byte) '5', (byte) '6', (byte) '7', (byte) '8',
         (byte) '9', (byte) 'A', (byte) 'B', (byte) 'C', (byte) 'D', (byte) 'E', (byte) 'F'
       };
-      byte[] defaultBuf = Get8BitBytes("                                                  |                "); // length: 67
+      byte[] defaultBuf = Get8BitBytes("                                                  |                "); // length: 67 (16*3 + 3 + 16)
       byte[] buf = CopyBytes(defaultBuf, 0, defaultBuf.Length);
       int len = length;
       int len16 = (len + 15) / 16 * 16; // Extend length to multiple of 16, or use as-is if it's already a multiple of 16.
@@ -135,7 +135,7 @@ namespace ASN1Viewer {
         sb.Append(IntToHex(i - 16));
         sb.Append("|  ");
         sb.Append(Get8BitString(buf));
-        if (i < len) sb.Append("\r\n"); // Make sure we don't add an extra CRLF after the data.
+        if (i < len) sb.Append("\n"); // Make sure we don't add an extra LF after the data.
         buf = CopyBytes(defaultBuf, 0, defaultBuf.Length);
       }
 

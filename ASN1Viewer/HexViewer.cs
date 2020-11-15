@@ -68,7 +68,7 @@ namespace ASN1Viewer
       this.SelectionColor = c;
     }
 
-    public const int LINE_LEN    = 8 /*Offset*/ + 3 /*Separators*/ + 16 * 3 /*Bytes*/ + 3 /*Separators*/ + 16 /*Text*/ + 1 /*CRLF*/;
+    public const int LINE_LEN    = 8 /*Offset*/ + 3 /*Separators*/ + 16 * 3 /*Bytes*/ + 3 /*Separators*/ + 16 /*Text*/ + 1 /*LF*/;
     public const int BYTE_OFFSET = 8 /*Offset*/ + 3 /*Separators*/;
     public const int TXT_OFFSET  = 8 /*Offset*/ + 3 /*Separators*/ + 16 * 3 /*Bytes*/ + 3 /*Separators*/;
 
