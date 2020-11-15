@@ -45,16 +45,17 @@ namespace ASN1Viewer
       if (!String.IsNullOrEmpty(file)) ParseInputFile(file);
     }
     private void aboutToolStripMenuItem_Click(object sender, EventArgs e) {
-      Schema sc = new Schema();
-      sc.Add(@"D:\GitHub\ASN1Viewer\ASN1Viewer\schemas\X509.txt");
+      new About().ShowDialog();
+      //Schema sc = new Schema();
+      //sc.Add(@"D:\GitHub\ASN1Viewer\ASN1Viewer\schemas\X509.txt");
 
-      SchemaTokenizer st = new SchemaTokenizer(File.ReadAllText(@"D:\GitHub\ASN1Viewer\ASN1Viewer\schemas\X509.txt"));
+      //SchemaTokenizer st = new SchemaTokenizer(File.ReadAllText(@"D:\GitHub\ASN1Viewer\ASN1Viewer\schemas\X509.txt"));
 
-      string s = st.Next();
-      while (s != null) {
-        System.Diagnostics.Debug.WriteLine(s);
-        s = st.Next();
-      }
+      //string s = st.Next();
+      //while (s != null) {
+      //  System.Diagnostics.Debug.WriteLine(s);
+      //  s = st.Next();
+      //}
 
     }
     private void txtInput_TextChanged(object sender, EventArgs e) {
@@ -183,7 +184,8 @@ namespace ASN1Viewer
       }
       if (text.Contains("-----BEGIN")) {
         int start = text.IndexOf("-----", 5);
-        int end = text.LastIndexOf("-----", text.Length - 5);
+        int end = text.LastIndexOf("-----");
+        if (end > 0) end = text.LastIndexOf("-----", end);
         if (start > 0 && end > 0) {
           text = text.Substring(start + 5, end - start - 5);
         }
