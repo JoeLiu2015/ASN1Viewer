@@ -62,13 +62,16 @@ namespace ASN1Viewer
       int len1 = len * 3;
       int offset2 = LINE_LEN * line + TXT_OFFSET + offset;
       int len2 = len;
+      if (offset >= 8) offset2++;
+      if (offset < 8 && offset + len2 > 8) len2 += 1; 
+
       this.Select(offset1, len1);
       this.SelectionColor = c;
       this.Select(offset2, len2);
       this.SelectionColor = c;
     }
 
-    public const int LINE_LEN    = 8 /*Offset*/ + 3 /*Separators*/ + 16 * 3 /*Bytes*/ + 3 /*Separators*/ + 16 /*Text*/ + 1 /*LF*/;
+    public const int LINE_LEN    = 8 /*Offset*/ + 3 /*Separators*/ + 16 * 3 /*Bytes*/ + 3 /*Separators*/ + (8 + 1 + 8) /*Text*/ + 1 /*LF*/;
     public const int BYTE_OFFSET = 8 /*Offset*/ + 3 /*Separators*/;
     public const int TXT_OFFSET  = 8 /*Offset*/ + 3 /*Separators*/ + 16 * 3 /*Bytes*/ + 3 /*Separators*/;
 

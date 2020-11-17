@@ -102,6 +102,9 @@ namespace ASN1Viewer
         this.txtInput.TextChanged -= this.txtInput_TextChanged;
         if (b64Data != null) {
           this.txtInput.Text = File.ReadAllText(file);
+          if (this.txtInput.Text.Contains("\n") && !this.txtInput.Text.Contains("\r")) {
+            this.txtInput.Text = this.txtInput.Text.Replace("\n", "\r\n");
+          }
         } else {
           this.txtInput.Text = Utils.HexDump(data, 0, data.Length, "");
         }
@@ -232,6 +235,8 @@ namespace ASN1Viewer
       TreeNode tn = e.Node;
       ASNNode an = tn.Tag as ASNNode;
       this.hexViewer1.SelectNode(an.Start, an.End, an.ContentStart, an.ContentEnd);
+      this.lbStatus.ForeColor = SystemColors.WindowText;
+      this.lbStatus.Text = String.Format("Offset({0}) Tag({1}) Length({2})", an.Start, an.GetTagNum(), an.ContentEnd - an.ContentStart);
     }
   }
 }

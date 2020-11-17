@@ -36,7 +36,6 @@
       this.txtInput = new System.Windows.Forms.TextBox();
       this.tabPage2 = new System.Windows.Forms.TabPage();
       this.panel1 = new System.Windows.Forms.Panel();
-      this.hexViewer1 = new ASN1Viewer.HexViewer();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -47,6 +46,7 @@
       this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.statusStrip1 = new System.Windows.Forms.StatusStrip();
       this.lbStatus = new System.Windows.Forms.ToolStripStatusLabel();
+      this.hexViewer1 = new ASN1Viewer.HexViewer();
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
@@ -64,7 +64,7 @@
       this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
       this.treeView1.Location = new System.Drawing.Point(0, 0);
       this.treeView1.Name = "treeView1";
-      this.treeView1.Size = new System.Drawing.Size(228, 398);
+      this.treeView1.Size = new System.Drawing.Size(228, 394);
       this.treeView1.TabIndex = 0;
       this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
       // 
@@ -81,7 +81,7 @@
       // splitContainer1.Panel2
       // 
       this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
-      this.splitContainer1.Size = new System.Drawing.Size(853, 398);
+      this.splitContainer1.Size = new System.Drawing.Size(853, 394);
       this.splitContainer1.SplitterDistance = 228;
       this.splitContainer1.TabIndex = 1;
       // 
@@ -93,7 +93,7 @@
       this.tabControl1.Location = new System.Drawing.Point(0, 0);
       this.tabControl1.Name = "tabControl1";
       this.tabControl1.SelectedIndex = 0;
-      this.tabControl1.Size = new System.Drawing.Size(621, 398);
+      this.tabControl1.Size = new System.Drawing.Size(621, 394);
       this.tabControl1.TabIndex = 0;
       // 
       // tabPage1
@@ -101,8 +101,8 @@
       this.tabPage1.Controls.Add(this.txtInput);
       this.tabPage1.Location = new System.Drawing.Point(4, 22);
       this.tabPage1.Name = "tabPage1";
-      this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-      this.tabPage1.Size = new System.Drawing.Size(613, 372);
+      this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+      this.tabPage1.Size = new System.Drawing.Size(613, 368);
       this.tabPage1.TabIndex = 0;
       this.tabPage1.Text = "Text";
       this.tabPage1.UseVisualStyleBackColor = true;
@@ -115,7 +115,7 @@
       this.txtInput.Multiline = true;
       this.txtInput.Name = "txtInput";
       this.txtInput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-      this.txtInput.Size = new System.Drawing.Size(607, 366);
+      this.txtInput.Size = new System.Drawing.Size(607, 362);
       this.txtInput.TabIndex = 0;
       this.txtInput.WordWrap = false;
       this.txtInput.TextChanged += new System.EventHandler(this.txtInput_TextChanged);
@@ -125,8 +125,8 @@
       this.tabPage2.Controls.Add(this.panel1);
       this.tabPage2.Location = new System.Drawing.Point(4, 22);
       this.tabPage2.Name = "tabPage2";
-      this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-      this.tabPage2.Size = new System.Drawing.Size(612, 377);
+      this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+      this.tabPage2.Size = new System.Drawing.Size(613, 368);
       this.tabPage2.TabIndex = 1;
       this.tabPage2.Text = "ASN.1 Bytes";
       this.tabPage2.UseVisualStyleBackColor = true;
@@ -137,23 +137,8 @@
       this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
       this.panel1.Location = new System.Drawing.Point(3, 3);
       this.panel1.Name = "panel1";
-      this.panel1.Size = new System.Drawing.Size(606, 371);
+      this.panel1.Size = new System.Drawing.Size(607, 362);
       this.panel1.TabIndex = 0;
-      // 
-      // hexViewer1
-      // 
-      this.hexViewer1.BackColor = System.Drawing.SystemColors.Window;
-      this.hexViewer1.Data = null;
-      this.hexViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.hexViewer1.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.hexViewer1.ForeColor = System.Drawing.Color.Gray;
-      this.hexViewer1.Location = new System.Drawing.Point(0, 0);
-      this.hexViewer1.Name = "hexViewer1";
-      this.hexViewer1.ReadOnly = true;
-      this.hexViewer1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-      this.hexViewer1.Size = new System.Drawing.Size(606, 371);
-      this.hexViewer1.TabIndex = 0;
-      this.hexViewer1.Text = "";
       // 
       // menuStrip1
       // 
@@ -223,16 +208,34 @@
       this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
       this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lbStatus});
-      this.statusStrip1.Location = new System.Drawing.Point(0, 422);
+      this.statusStrip1.Location = new System.Drawing.Point(0, 418);
       this.statusStrip1.Name = "statusStrip1";
-      this.statusStrip1.Size = new System.Drawing.Size(853, 22);
+      this.statusStrip1.Size = new System.Drawing.Size(853, 26);
       this.statusStrip1.TabIndex = 3;
       this.statusStrip1.Text = "statusStrip1";
       // 
       // lbStatus
       // 
+      this.lbStatus.AutoSize = false;
+      this.lbStatus.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
       this.lbStatus.Name = "lbStatus";
-      this.lbStatus.Size = new System.Drawing.Size(0, 17);
+      this.lbStatus.Size = new System.Drawing.Size(400, 21);
+      this.lbStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+      // 
+      // hexViewer1
+      // 
+      this.hexViewer1.BackColor = System.Drawing.SystemColors.Window;
+      this.hexViewer1.Data = null;
+      this.hexViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.hexViewer1.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.hexViewer1.ForeColor = System.Drawing.Color.Gray;
+      this.hexViewer1.Location = new System.Drawing.Point(0, 0);
+      this.hexViewer1.Name = "hexViewer1";
+      this.hexViewer1.ReadOnly = true;
+      this.hexViewer1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+      this.hexViewer1.Size = new System.Drawing.Size(607, 362);
+      this.hexViewer1.TabIndex = 0;
+      this.hexViewer1.Text = "";
       // 
       // MainForm
       // 
