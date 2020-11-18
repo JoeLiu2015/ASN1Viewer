@@ -101,14 +101,11 @@ namespace ASN1Viewer
       if (ParseASN1(asnData)) {
         this.txtInput.TextChanged -= this.txtInput_TextChanged;
         if (b64Data != null) {
-          this.txtInput.Text = File.ReadAllText(file);
-          if (this.txtInput.Text.Contains("\n") && !this.txtInput.Text.Contains("\r")) {
-            this.txtInput.Text = this.txtInput.Text.Replace("\n", "\r\n");
-          }
+          this.txtInput.Text = Utils.FixCRLF(File.ReadAllText(file));
         } else {
           this.txtInput.Text = Utils.HexDump(data, 0, data.Length, "");
         }
-
+        //this.Text = 
         this.txtInput.TextChanged += this.txtInput_TextChanged;
       }
     }
@@ -231,12 +228,45 @@ namespace ASN1Viewer
     private const long SIZE_100MB = 1024 * 1024 * 100L;
 
     private void treeView1_AfterSelect(object sender, TreeViewEventArgs e) {
-      this.tabControl1.SelectTab(this.tabPage2);
+      this.tabControl1.SelectTab(this.tabPageBytes);
       TreeNode tn = e.Node;
       ASNNode an = tn.Tag as ASNNode;
       this.hexViewer1.SelectNode(an.Start, an.End, an.ContentStart, an.ContentEnd);
       this.lbStatus.ForeColor = SystemColors.WindowText;
       this.lbStatus.Text = String.Format("Offset({0}) Tag({1}) Length({2})", an.Start, an.GetTagNum(), an.ContentEnd - an.ContentStart);
+    }
+
+    private void MainForm_Load(object sender, EventArgs e) {
+
+    }
+
+    private void menuChinese_Click(object sender, EventArgs e) {
+      if (this.menuChinese.Checked) return;
+      this.menuChinese.Checked = true;
+      this.menuEnglish.Checked = false;
+      Lang.Select("zh_CN");
+      LoadLang();
+    }
+    private void menuEnglish_Click(object sender, EventArgs e) {
+      if (this.menuEnglish.Checked) return;
+      this.menuChinese.Checked = false;
+      this.menuEnglish.Checked = true;
+      Lang.Select("en_US");
+      LoadLang();
+    }
+    private void LoadLang() {
+      this.Text              = Lang.T["PROD_NAME"];
+      this.menuFile.Text     = Lang.T["MENU_FILE"];
+      this.menuOptions.Text  = Lang.T["MENU_OPTIONS"];
+      this.menuHelp.Text     = Lang.T["MENU_HELP"];
+      this.menuOpen.Text     = Lang.T["MENU_OPEN"];
+      this.menuExit.Text     = Lang.T["MENU_EXIT"];
+      this.menuLanguage.Text = Lang.T["MENU_LANG"];
+      this.menuChinese.Text  = Lang.T["MENU_CHINESE"];
+      this.menuEnglish.Text  = Lang.T["MENU_ENGLISH"];
+      this.menuAbout.Text    = Lang.T["MENU_ABOUT"];
+      this.tabPageInput.Text = Lang.T["TAB_INPUT"];
+      this.tabPageBytes.Text = Lang.T["TAB_BYTES"];
     }
   }
 }

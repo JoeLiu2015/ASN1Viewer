@@ -1,1 +1,13 @@
-﻿<?xml version="1.0" encoding="utf-8" ?> 
+﻿
+PROD_NAME    : ASN.1 Viewer
+MENU_FILE    : &File
+MENU_OPTIONS : &Options
+MENU_HELP    : &Help
+MENU_OPEN    : &Open...
+MENU_EXIT    : &Exit
+MENU_ABOUT   : &About
+MENU_LANG    : Language
+MENU_CHINESE : Chinese
+MENU_ENGLISH : English
+TAB_INPUT    : Input Text
+TAB_BYTES    : ASN.1 Bytes

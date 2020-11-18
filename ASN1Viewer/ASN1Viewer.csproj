@@ -92,19 +92,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="lang\en_US.txt" />
-    <Content Include="lang\zh_CN.txt" />
+    <EmbeddedResource Include="lang\en_US.txt" />
+    <EmbeddedResource Include="lang\zh_CN.txt" />
     <Content Include="oids.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

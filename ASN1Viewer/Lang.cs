@@ -19,15 +19,15 @@ namespace ASN1Viewer {
       if (File.Exists(langFile)) {
         input = File.ReadAllText(langFile);
       } else if (lang == "en_US") {
-        //input = Properties.Resources.lang_en_US;
+        input = Properties.Resources.lang_en_US;
       } else if (lang == "zh_CN") {
-        //input = Properties.Resources.lang_zh_CN;
+        input = Properties.Resources.lang_zh_CN;
       } else {
-        //m_Data.Init(Properties.Resources.lang_en_US, input);
+        m_Data.Init(Properties.Resources.lang_en_US, input);
         return false;
       }
 
-      //m_Data.Init(Properties.Resources.lang_en_US, input);
+      m_Data.Init(Properties.Resources.lang_en_US, input);
       return true;
     }
   }

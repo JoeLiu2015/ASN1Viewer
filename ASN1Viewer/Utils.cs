@@ -141,5 +141,22 @@ namespace ASN1Viewer {
 
       return sb.ToString();
     }
+    public static String FixCRLF(String input) {
+      StringBuilder sb = new StringBuilder();
+      int start = 0;
+      for (int i = 0; i < input.Length; i++) {
+        if (input[i] == '\n') {
+          if (i == 0) { sb.Append('\r'); }
+          else if (input[i] != '\r') {
+            if (i > start) sb.Append(input, start, i - start);
+            sb.Append("\r\n");
+            start = i + 1;
+          }
+        }
+      }
+      if (sb.Length == 0) return input;
+      if (input.Length > start) sb.Append(input, start, input.Length - start);
+      return sb.ToString();
+    }
   }
 }

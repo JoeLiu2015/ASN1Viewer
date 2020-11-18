@@ -10,6 +10,7 @@
 
 namespace ASN1Viewer.Properties {
     using System;
+    using System.Reflection;
     
     
     /// <summary>
@@ -59,5 +60,29 @@ namespace ASN1Viewer.Properties {
                 resourceCulture = value;
             }
         }
-    }
+
+        /// <summary>
+        ///   Looks up a localized string
+        /// </summary>
+        internal static string lang_en_US {
+          get {
+            using (System.IO.StreamReader r = new System.IO.StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("ASN1Viewer.lang.en_US.txt"))) {
+              return r.ReadToEnd();
+            }
+            return "";
+          }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string
+        /// </summary>
+        internal static string lang_zh_CN {
+          get {
+            using (System.IO.StreamReader r = new System.IO.StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("ASN1Viewer.lang.zh_CN.txt"))) {
+              return r.ReadToEnd();
+            }
+            return "";
+          }
+        }
+  }
 }
