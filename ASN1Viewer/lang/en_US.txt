@@ -1,13 +1,14 @@
 ﻿
-PROD_NAME    : ASN.1 Viewer
-MENU_FILE    : &File
-MENU_OPTIONS : &Options
-MENU_HELP    : &Help
-MENU_OPEN    : &Open...
-MENU_EXIT    : &Exit
-MENU_ABOUT   : &About
-MENU_LANG    : Language
-MENU_CHINESE : Chinese
-MENU_ENGLISH : English
-TAB_INPUT    : Input Text
-TAB_BYTES    : ASN.1 Bytes
+PROD_NAME      : ASN.1 Viewer
+MENU_FILE      : &File
+MENU_OPTIONS   : &Options
+MENU_HELP      : &Help
+MENU_OPEN      : &Open...
+MENU_EXIT      : &Exit
+MENU_ABOUT     : &About
+MENU_LANG      : Language
+MENU_CHINESE   : Chinese
+MENU_ENGLISH   : English
+TAB_INPUT      : Input Text
+TAB_BYTES      : ASN.1 Bytes
+STATUS_ASNINFO : Tag[{1}], Offset[{0}], Length[{2}]

@@ -17,6 +17,7 @@ namespace ASN1Viewer
       this.BackColor = SystemColors.Window;
       this.ForeColor = Color.Gray;
       this.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.WordWrap = false;
     }
 
     private byte[] m_Data = null;

@@ -233,11 +233,11 @@ namespace ASN1Viewer
       ASNNode an = tn.Tag as ASNNode;
       this.hexViewer1.SelectNode(an.Start, an.End, an.ContentStart, an.ContentEnd);
       this.lbStatus.ForeColor = SystemColors.WindowText;
-      this.lbStatus.Text = String.Format("Offset({0}) Tag({1}) Length({2})", an.Start, an.GetTagNum(), an.ContentEnd - an.ContentStart);
+      this.lbStatus.Text = String.Format(Lang.T["STATUS_ASNINFO"], an.Start, an.GetTagNum(), an.ContentEnd - an.ContentStart);
     }
 
     private void MainForm_Load(object sender, EventArgs e) {
-
+      menuChinese_Click(menuChinese, EventArgs.Empty);
     }
 
     private void menuChinese_Click(object sender, EventArgs e) {
@@ -267,6 +267,10 @@ namespace ASN1Viewer
       this.menuAbout.Text    = Lang.T["MENU_ABOUT"];
       this.tabPageInput.Text = Lang.T["TAB_INPUT"];
       this.tabPageBytes.Text = Lang.T["TAB_BYTES"];
+      if (this.treeView1.SelectedNode != null) {
+        ASNNode an = this.treeView1.SelectedNode.Tag as ASNNode;
+        if (an != null) this.lbStatus.Text = String.Format(Lang.T["STATUS_ASNINFO"], an.Start, an.GetTagNum(), an.ContentEnd - an.ContentStart);
+      }
     }
   }
 }

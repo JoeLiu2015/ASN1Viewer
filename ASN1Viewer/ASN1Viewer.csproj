@@ -94,8 +94,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="lang\en_US.txt" />
-    <EmbeddedResource Include="lang\zh_CN.txt" />
+    <Content Include="lang\en_US.txt" />
+    <Content Include="lang\zh_CN.txt" />
     <Content Include="oids.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
