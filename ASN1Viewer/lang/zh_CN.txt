@@ -12,3 +12,6 @@ MENU_ENGLISH   : 英文
 TAB_INPUT      : 输入文本
 TAB_BYTES      : 二进制字节
 STATUS_ASNINFO : 类型[{1}], 位置[{0}], 内容长度[{2}]
+ABOUT_TITLE    : 关于 {0}
+ABOUT_COPYRIGHT: 版权 © 2020-{0} ASN.1 Viewer Ltd
+ABOUT_BUILD    : 版本 {0}  内部版本号 {1}

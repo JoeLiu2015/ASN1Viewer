@@ -270,6 +270,8 @@ namespace ASN1Viewer
       if (this.treeView1.SelectedNode != null) {
         ASNNode an = this.treeView1.SelectedNode.Tag as ASNNode;
         if (an != null) this.lbStatus.Text = String.Format(Lang.T["STATUS_ASNINFO"], an.Start, an.GetTagNum(), an.ContentEnd - an.ContentStart);
+      } else {
+
       }
     }
   }
