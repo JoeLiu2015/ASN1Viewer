@@ -5,6 +5,7 @@ MENU_OPTIONS   : 选项(&O)
 MENU_HELP      : 帮助(&H)
 MENU_OPEN      : 打开文件(&O)...
 MENU_EXIT      : 退出(&E)
+MENU_RECENT    : 最近打开的文件
 MENU_ABOUT     : 关于(&A)
 MENU_LANG      : 语言
 MENU_CHINESE   : 中文
@@ -15,3 +16,4 @@ STATUS_ASNINFO : 类型[{1}], 位置[{0}], 内容长度[{2}]
 ABOUT_TITLE    : 关于 {0}
 ABOUT_COPYRIGHT: 版权 © 2020-{0} ASN.1 Viewer Ltd
 ABOUT_BUILD    : 版本 {0}  内部版本号 {1}
+MSG_NOFILE     : 文件 “{0}” 不存在.

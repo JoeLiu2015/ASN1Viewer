@@ -12,11 +12,19 @@ namespace ASN1Viewer
 {
   public partial class MainForm : Form
   {
+   
     public MainForm()
     {
       InitializeComponent();
     }
 
+    private void MainForm_Load(object sender, EventArgs e) {
+      menuChinese_Click(menuChinese, EventArgs.Empty);
+      UpdateRecentFiles();
+    }
+    private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
+      Config.Instance.Save();
+    }
     private void MainForm_DragDrop(object sender, DragEventArgs e) {
       string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
       if (files.Length > 0) ParseInputFile(files[0]);
@@ -105,8 +113,14 @@ namespace ASN1Viewer
         } else {
           this.txtInput.Text = Utils.HexDump(data, 0, data.Length, "");
         }
-        //this.Text = 
         this.txtInput.TextChanged += this.txtInput_TextChanged;
+
+        // Update recent files
+        Config.Instance.History.Insert(0, file);
+        if (Config.Instance.History.Count > Config.Instance.MaxHistory) {
+          Config.Instance.History.RemoveAt(Config.Instance.History.Count - 1);
+        }
+        UpdateRecentFiles();
       }
     }
     private void ParseInputText(string text) {
@@ -236,9 +250,7 @@ namespace ASN1Viewer
       this.lbStatus.Text = String.Format(Lang.T["STATUS_ASNINFO"], an.Start, an.GetTagNum(), an.ContentEnd - an.ContentStart);
     }
 
-    private void MainForm_Load(object sender, EventArgs e) {
-      menuChinese_Click(menuChinese, EventArgs.Empty);
-    }
+    
 
     private void menuChinese_Click(object sender, EventArgs e) {
       if (this.menuChinese.Checked) return;
@@ -254,6 +266,20 @@ namespace ASN1Viewer
       Lang.Select("en_US");
       LoadLang();
     }
+    private void menuRentFileItem_Click(object sender, EventArgs e) {
+      ToolStripMenuItem item = sender as ToolStripMenuItem;
+      string txt = item.Text;
+      int pos = txt.IndexOf(' ');
+      int idx = int.Parse(txt.Substring(0, pos));
+      string file = txt.Substring(pos + 1).Trim();
+      Config.Instance.History.Remove(file);
+      if (!File.Exists(file)) {
+        MessageBox.Show(this, String.Format(Lang.T["MSG_NOFILE"], file), Lang.T["PROD_NAME"], MessageBoxButtons.OK, MessageBoxIcon.Error);
+        UpdateRecentFiles();
+        return;
+      }
+      ParseInputFile(file);
+    }
     private void LoadLang() {
       this.Text              = Lang.T["PROD_NAME"];
       this.menuFile.Text     = Lang.T["MENU_FILE"];
@@ -261,6 +287,7 @@ namespace ASN1Viewer
       this.menuHelp.Text     = Lang.T["MENU_HELP"];
       this.menuOpen.Text     = Lang.T["MENU_OPEN"];
       this.menuExit.Text     = Lang.T["MENU_EXIT"];
+      this.menuRecent.Text   = Lang.T["MENU_RECENT"];
       this.menuLanguage.Text = Lang.T["MENU_LANG"];
       this.menuChinese.Text  = Lang.T["MENU_CHINESE"];
       this.menuEnglish.Text  = Lang.T["MENU_ENGLISH"];
@@ -274,5 +301,17 @@ namespace ASN1Viewer
 
       }
     }
+    private void UpdateRecentFiles() {
+      this.menuRecent.DropDownItems.Clear();
+      for (int i = 0; i < Config.Instance.History.Count; i++) {
+        ToolStripMenuItem mi = new ToolStripMenuItem();
+        mi.Text = (i + 1) + " " + Config.Instance.History[i];
+        mi.Click += this.menuRentFileItem_Click;
+        this.menuRecent.DropDownItems.Add(mi);
+      }
+      this.menuRecent.Enabled = this.menuRecent.DropDownItems.Count > 0;
+    }
+
+    
   }
 }

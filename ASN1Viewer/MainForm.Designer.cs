@@ -42,15 +42,16 @@
       this.menuOpen = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
       this.menuExit = new System.Windows.Forms.ToolStripMenuItem();
+      this.menuRecent = new System.Windows.Forms.ToolStripMenuItem();
       this.menuOptions = new System.Windows.Forms.ToolStripMenuItem();
       this.menuHelp = new System.Windows.Forms.ToolStripMenuItem();
-      this.menuAbout = new System.Windows.Forms.ToolStripMenuItem();
-      this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-      this.lbStatus = new System.Windows.Forms.ToolStripStatusLabel();
       this.menuLanguage = new System.Windows.Forms.ToolStripMenuItem();
       this.menuChinese = new System.Windows.Forms.ToolStripMenuItem();
       this.menuEnglish = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+      this.menuAbout = new System.Windows.Forms.ToolStripMenuItem();
+      this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+      this.lbStatus = new System.Windows.Forms.ToolStripStatusLabel();
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
@@ -158,6 +159,7 @@
       this.hexViewer1.Size = new System.Drawing.Size(607, 362);
       this.hexViewer1.TabIndex = 0;
       this.hexViewer1.Text = "";
+      this.hexViewer1.WordWrap = false;
       // 
       // menuStrip1
       // 
@@ -177,7 +179,8 @@
       this.menuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuOpen,
             this.toolStripMenuItem1,
-            this.menuExit});
+            this.menuExit,
+            this.menuRecent});
       this.menuFile.Name = "menuFile";
       this.menuFile.Size = new System.Drawing.Size(37, 20);
       this.menuFile.Text = "&File";
@@ -201,6 +204,12 @@
       this.menuExit.Text = "&Exit";
       this.menuExit.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
       // 
+      // menuRecent
+      // 
+      this.menuRecent.Name = "menuRecent";
+      this.menuRecent.Size = new System.Drawing.Size(180, 22);
+      this.menuRecent.Text = "Recent Files";
+      // 
       // menuOptions
       // 
       this.menuOptions.Name = "menuOptions";
@@ -217,10 +226,40 @@
       this.menuHelp.Size = new System.Drawing.Size(44, 20);
       this.menuHelp.Text = "&Help";
       // 
+      // menuLanguage
+      // 
+      this.menuLanguage.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuChinese,
+            this.menuEnglish});
+      this.menuLanguage.Name = "menuLanguage";
+      this.menuLanguage.Size = new System.Drawing.Size(126, 22);
+      this.menuLanguage.Text = "Language";
+      // 
+      // menuChinese
+      // 
+      this.menuChinese.Name = "menuChinese";
+      this.menuChinese.Size = new System.Drawing.Size(116, 22);
+      this.menuChinese.Text = "Chinese";
+      this.menuChinese.Click += new System.EventHandler(this.menuChinese_Click);
+      // 
+      // menuEnglish
+      // 
+      this.menuEnglish.Checked = true;
+      this.menuEnglish.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.menuEnglish.Name = "menuEnglish";
+      this.menuEnglish.Size = new System.Drawing.Size(116, 22);
+      this.menuEnglish.Text = "English";
+      this.menuEnglish.Click += new System.EventHandler(this.menuEnglish_Click);
+      // 
+      // toolStripMenuItem2
+      // 
+      this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+      this.toolStripMenuItem2.Size = new System.Drawing.Size(123, 6);
+      // 
       // menuAbout
       // 
       this.menuAbout.Name = "menuAbout";
-      this.menuAbout.Size = new System.Drawing.Size(180, 22);
+      this.menuAbout.Size = new System.Drawing.Size(126, 22);
       this.menuAbout.Text = "&About";
       this.menuAbout.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
       // 
@@ -243,36 +282,6 @@
       this.lbStatus.Size = new System.Drawing.Size(400, 21);
       this.lbStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
-      // menuLanguage
-      // 
-      this.menuLanguage.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuChinese,
-            this.menuEnglish});
-      this.menuLanguage.Name = "menuLanguage";
-      this.menuLanguage.Size = new System.Drawing.Size(180, 22);
-      this.menuLanguage.Text = "Language";
-      // 
-      // menuChinese
-      // 
-      this.menuChinese.Name = "menuChinese";
-      this.menuChinese.Size = new System.Drawing.Size(180, 22);
-      this.menuChinese.Text = "Chinese";
-      this.menuChinese.Click += new System.EventHandler(this.menuChinese_Click);
-      // 
-      // menuEnglish
-      // 
-      this.menuEnglish.Checked = true;
-      this.menuEnglish.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.menuEnglish.Name = "menuEnglish";
-      this.menuEnglish.Size = new System.Drawing.Size(180, 22);
-      this.menuEnglish.Text = "English";
-      this.menuEnglish.Click += new System.EventHandler(this.menuEnglish_Click);
-      // 
-      // toolStripMenuItem2
-      // 
-      this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-      this.toolStripMenuItem2.Size = new System.Drawing.Size(177, 6);
-      // 
       // MainForm
       // 
       this.AllowDrop = true;
@@ -287,6 +296,7 @@
       this.MinimumSize = new System.Drawing.Size(869, 482);
       this.Name = "MainForm";
       this.Text = "ASN.1 Viewer";
+      this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
       this.Load += new System.EventHandler(this.MainForm_Load);
       this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainForm_DragDrop);
       this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainForm_DragEnter);
@@ -332,6 +342,7 @@
     private System.Windows.Forms.ToolStripMenuItem menuChinese;
     private System.Windows.Forms.ToolStripMenuItem menuEnglish;
     private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
+    private System.Windows.Forms.ToolStripMenuItem menuRecent;
   }
 }
 
