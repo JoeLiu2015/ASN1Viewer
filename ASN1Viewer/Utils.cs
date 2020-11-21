@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 
 namespace ASN1Viewer {
   public class Utils {
     public static Encoding Encoding8Bit = Encoding.GetEncoding("ISO-8859-1");
     public static Encoding EncodingUTF8 = Encoding.UTF8;
+    private static byte[] DIGITS = null;
+    private static bool[] B64MAP = null;
 
     public static readonly byte[] BYTE0 = new byte[0]; 
     public static byte[] CopyBytes(byte[] value, int offset, int length) {
@@ -157,6 +160,68 @@ namespace ASN1Viewer {
       if (sb.Length == 0) return input;
       if (input.Length > start) sb.Append(input, start, input.Length - start);
       return sb.ToString();
+    }
+    public static byte[] ParseHexBytes(string text) {
+      if (DIGITS == null) {
+        DIGITS = new byte[128];
+        for (int i = (int)'0'; i <= (int)'9'; i++) DIGITS[i] = (byte)(i - (int)'0');
+        for (int i = (int)'a'; i <= (int)'f'; i++) DIGITS[i] = (byte)(i - (int)'a' + 10);
+        for (int i = (int)'A'; i <= (int)'F'; i++) DIGITS[i] = (byte)(i - (int)'A' + 10);
+      }
+      MemoryStream ms = new MemoryStream();
+      int pos = 0;
+      while (pos < text.Length) {
+        char ch = text[pos];
+        if (ch == '\r' || ch == '\n' || ch == ' ' || ch == '\t') {
+          pos++;
+          continue;
+        }
+        if (pos + 1 < text.Length && IsHexChar(text[pos]) && IsHexChar(text[pos + 1])) {
+          ms.WriteByte((byte)((DIGITS[text[pos]] << 4) | DIGITS[text[pos + 1]]));
+          pos += 2;
+        } else {
+          return null;
+        }
+      }
+
+      if (ms.Length == 0) return null;
+      return ms.ToArray();
+    }
+    public static bool IsHexChar(char ch) {
+      return (ch >= '0' && ch <= '9') || (ch >= 'A' && ch <= 'F') || (ch >= 'a' && ch <= 'f');
+    }
+    public static byte[] ParsePEM(string text) {
+      if (B64MAP == null) {
+        B64MAP = new bool[256];
+        for (int i = (int)'0'; i <= (int)'9'; i++) B64MAP[i] = true;
+        for (int i = (int)'a'; i <= (int)'z'; i++) B64MAP[i] = true;
+        for (int i = (int)'A'; i <= (int)'Z'; i++) B64MAP[i] = true;
+        B64MAP['+'] = true;
+        B64MAP['/'] = true;
+      }
+      if (text.Contains("-----BEGIN")) {
+        int start = text.IndexOf("-----", 5);
+        int end = text.LastIndexOf("-----");
+        if (end > 0) end = text.LastIndexOf("-----", end);
+        if (start > 0 && end > 0) {
+          text = text.Substring(start + 5, end - start - 5);
+        }
+      }
+      StringBuilder sb = new StringBuilder();
+      for (int i = 0; i < text.Length; i++) {
+        char ch = text[i];
+        if (ch >= 256) return null;
+        if (ch == '\r' || ch == '\n' || ch == ' ' || ch == '\t') continue;
+        if (!B64MAP[ch] && ch != '=') return null;
+        sb.Append(ch);
+      }
+      try {
+        String s = sb.ToString();
+        if (s.Length == 0) return null;
+        return Convert.FromBase64String(s);
+      } catch (Exception ex) {
+        return null;
+      }
     }
   }
 }

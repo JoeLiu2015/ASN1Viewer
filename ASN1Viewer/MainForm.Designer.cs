@@ -190,7 +190,7 @@
       this.menuOpen.Name = "menuOpen";
       this.menuOpen.Size = new System.Drawing.Size(180, 22);
       this.menuOpen.Text = "&Open...";
-      this.menuOpen.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+      this.menuOpen.Click += new System.EventHandler(this.menuOpen_Click);
       // 
       // toolStripMenuItem1
       // 
@@ -202,7 +202,7 @@
       this.menuExit.Name = "menuExit";
       this.menuExit.Size = new System.Drawing.Size(180, 22);
       this.menuExit.Text = "&Exit";
-      this.menuExit.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+      this.menuExit.Click += new System.EventHandler(this.menuExit_Click);
       // 
       // menuRecent
       // 
@@ -261,7 +261,7 @@
       this.menuAbout.Name = "menuAbout";
       this.menuAbout.Size = new System.Drawing.Size(126, 22);
       this.menuAbout.Text = "&About";
-      this.menuAbout.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+      this.menuAbout.Click += new System.EventHandler(this.menuAbout_Click);
       // 
       // statusStrip1
       // 
