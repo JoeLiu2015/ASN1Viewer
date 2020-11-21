@@ -180,7 +180,7 @@ namespace ASN1Viewer {
       }
 
       if (tag != null && tag.Count > 0) {
-        return m_FirstChild.MatchSchema(name, primeType, null, t);
+        return m_FirstChild != null && m_FirstChild.MatchSchema(name, primeType, null, t);
       }
 
       if (primeType == "SEQUENCE") {
