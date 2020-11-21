@@ -45,11 +45,12 @@ namespace ASN1Viewer
         m_Start = m_End = 0;
       }
       if (end > start) {
+        StopRepaint();
         SetColor(start, 1, Color.Red);
         SetColor(start + 1, contentStart - start - 1, Color.Blue);
         SetColor(contentEnd, end - contentEnd, Color.Blue);
         SetColor(contentStart, contentEnd - contentStart, Color.Green);
-
+        StartRepaint();
         m_Start = start / 16 * LINE_LEN;
         m_End = end / 16 * LINE_LEN + LINE_LEN;
         this.SelectionStart = m_Start;
@@ -87,9 +88,35 @@ namespace ASN1Viewer
         SetColor(startLine, startOffset, len, c);
         return;
       }
+      
       SetColor(startLine, startOffset, 16 - startOffset, c);
       SetColor(endLine, 0, endOffset, c);
       for (int i = startLine + 1; i < endLine; i++) SetColor(i, 0, 16, c);
+    }
+
+    private const int WM_USER = 0x0400;
+    private const int EM_GETEVENTMASK = (WM_USER + 59);
+    private const int EM_SETEVENTMASK = (WM_USER + 69);
+    private const int WM_SETREDRAW = 0x0b;
+    private IntPtr eventMask;
+
+    [DllImport("user32.dll", CharSet = CharSet.Auto)]
+    private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
+
+    private void StopRepaint() {
+      // Stop redrawing:
+      SendMessage(this.Handle, WM_SETREDRAW, IntPtr.Zero, IntPtr.Zero);
+      // Stop sending of events:
+      eventMask = SendMessage(this.Handle, EM_GETEVENTMASK, IntPtr.Zero, IntPtr.Zero);
+    }
+
+    private void StartRepaint() {
+      // turn on events
+      SendMessage(this.Handle, EM_SETEVENTMASK, IntPtr.Zero, eventMask);
+      // turn on redrawing
+      SendMessage(this.Handle, WM_SETREDRAW, (IntPtr)1, IntPtr.Zero);
+      // this forces a repaint, which for some reason is necessary in some cases.
+      this.Invalidate();
     }
   }
   
