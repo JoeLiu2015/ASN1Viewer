@@ -49,8 +49,8 @@ namespace ASN1Viewer {
     private int    m_ContentStart = 0x00;
     private int    m_ContentEnd = 0x00;
     private byte[] m_Data = null;
-    private ASNNode m_FirstChild = null;
-    private ASNNode m_Next = null;
+
+    private List<ASNNode> m_Chidren = null;
     private TypeDef m_Schema = null;
     private string m_SchemaName = null;
 
@@ -65,18 +65,11 @@ namespace ASN1Viewer {
       System.Diagnostics.Debug.WriteLine("[" + elementStart + ", " + elementEnd + "] [" + contentStart + ", " + contentEnd + "]");
     }
     public int GetChildCount() {
-      int count = 0;
-      for (ASNNode n = m_FirstChild; n != null; n = n.m_Next) {
-        count++;
-      }
-      return count;
+      return m_Chidren == null ? 0 : m_Chidren.Count;
     }
     public ASNNode GetChild(int idx) {
-      int cur = 0;
-      for (ASNNode n = m_FirstChild; n != null; n = n.m_Next, cur++) {
-        if (cur == idx) return n;
-      }
-      return null;
+      if (idx < 0 || idx >= GetChildCount()) return null;
+      return m_Chidren[idx];
     }
     public bool IsSequence() {
       return IsConstructed(m_Tag) && GetTagNum(m_Tag) == UNIVERSAL_SEQ_SEQOF;
@@ -133,11 +126,10 @@ namespace ASN1Viewer {
           n.RemoveAt(n.Count - 1);
           an.m_Schema = null;
           an.m_SchemaName = "";
-          an = an.m_FirstChild;
-          while (an != null) {
-            n.Add(an);
-            an = an.m_Next;
+          for (int i = 0; i < an.GetChildCount(); i++) {
+            n.Add(an.GetChild(i));
           }
+          
         }
       }
       return b;
@@ -155,7 +147,7 @@ namespace ASN1Viewer {
       }
 
       if (primeType == "ANY" ) {
-        if (m_FirstChild == null) {
+        if (GetChildCount() == 0) {
           m_SchemaName = name;
           m_Schema = t;
           return true;
@@ -180,19 +172,19 @@ namespace ASN1Viewer {
       }
 
       if (tag != null && tag.Count > 0) {
-        return m_FirstChild != null && m_FirstChild.MatchSchema(name, primeType, null, t);
+        return GetChildCount() > 0 && GetChild(0).MatchSchema(name, primeType, null, t);
       }
 
       if (primeType == "SEQUENCE") {
         int i = 0;
-        ASNNode c = m_FirstChild;
+        int idx = 0;
+        ASNNode c = GetChild(idx);
         if (t.Fields == null) {
           while (c != null) {
             if (!c.MatchSchema(t.TypeName, t.TypeObj.PrimeType, t.TypeObj.Tag, t.TypeObj)) {
               return false;
             }
-
-            c = c.m_Next;
+            c = GetChild(++idx);
           }
         } else {
           while (c != null && i < t.Fields.Count) {
@@ -202,13 +194,13 @@ namespace ASN1Viewer {
               }
 
               i++;
-              c = c.m_Next;
+              c = GetChild(++idx);
             } else {
               if (!c.MatchSchema(t.Fields[i].Name, t.Fields[i].PrimeType, t.Fields[i].Tag, t.Fields[i].TypeObj)) {
                 i++;
               } else {
                 i++;
-                c = c.m_Next;
+                c = GetChild(++idx);
               }
             }
           }
@@ -223,13 +215,14 @@ namespace ASN1Viewer {
           }
         }
       } else if (primeType == "SET") {
-        ASNNode c = m_FirstChild;
+        int idx = 0;
+        ASNNode c = GetChild(idx);
         if (t.Fields == null) {
           while (c != null) {
             if (!c.MatchSchema(t.TypeName, t.TypeObj.PrimeType, t.TypeObj.Tag, t.TypeObj)) {
               return false;
             }
-            c = c.m_Next;
+            c = GetChild(++idx);
           }
         } else {
           throw new Exception("TODO:");
@@ -269,7 +262,7 @@ namespace ASN1Viewer {
         else if (GetTagNum() == UNIVERSAL_STRING)          str += "UniversalString " + GetValue();
         else if (GetTagNum() == UNIVERSAL_BMPSTRING)       str += "BMPString "       + GetValue();
       }
-      if (m_FirstChild != null) {
+      if (GetChildCount() > 0) {
         str += " (" + GetChildCount() + " elem)";
       }
       if (str.Length > 0) return str;
@@ -344,10 +337,10 @@ namespace ASN1Viewer {
         throw new Exception("Failed to parse child.");
       };
 
-      m_FirstChild = new ASNNode((byte)retType, retElementStart, retElementEnd, retContentStart, retContentEnd, data);
+      m_Chidren = new List<ASNNode>();
+      m_Chidren.Add(new ASNNode((byte)retType, retElementStart, retElementEnd, retContentStart, retContentEnd, data));
       start = retElementEnd;
 
-      ASNNode pre = m_FirstChild;
       while (start < end) {
         if (!MeasureElement(data, start, end,
           ref retType,
@@ -358,14 +351,13 @@ namespace ASN1Viewer {
           throw new Exception("Failed to parse child.(next)");
         };
 
-        pre.m_Next = new ASNNode((byte)retType, retElementStart, retElementEnd, retContentStart, retContentEnd, data);
-        pre = pre.m_Next;
+        m_Chidren.Add(new ASNNode((byte)retType, retElementStart, retElementEnd, retContentStart, retContentEnd, data));
         start = retElementEnd;
       }
       if (start != end) throw new Exception("Invalid ASN data.");
 
-      for (ASNNode n = m_FirstChild; n != null; n = n.m_Next) {
-        n.ParseChild();
+      for (int i = 0; m_Chidren != null && i < m_Chidren.Count; i++) {
+        GetChild(i).ParseChild();
       }
     }
 
