@@ -105,14 +105,14 @@ namespace ASN1Viewer
       ASNNode an = tn.Tag as ASNNode;
       this.hexViewer1.SelectNode(an.Start, an.End, an.ContentStart, an.ContentEnd);
       this.lbStatus.ForeColor = SystemColors.WindowText;
-      this.lbStatus.Text = String.Format(Lang.T["STATUS_ASNINFO"], an.Start, an.GetTagNum(), an.ContentEnd - an.ContentStart);
+      this.lbStatus.Text = String.Format(Lang.T["STATUS_ASNINFO"], an.Start, an.TagNum, an.ContentEnd - an.ContentStart);
     }
 
     private TreeNode CreateNode(ASNNode n) {
       TreeNode t = new TreeNode(n.ToString());
       t.Tag = n;
-      for (int i = 0; i < n.GetChildCount(); i++) {
-        t.Nodes.Add(CreateNode(n.GetChild(i)));
+      for (int i = 0; i < n.Count; i++) {
+        t.Nodes.Add(CreateNode(n[i]));
       }
       return t;
     }
@@ -138,7 +138,7 @@ namespace ASN1Viewer
       this.tabPageBytes.Text = Lang.T["TAB_BYTES"];
       if (this.treeView1.SelectedNode != null) {
         ASNNode an = this.treeView1.SelectedNode.Tag as ASNNode;
-        if (an != null) this.lbStatus.Text = String.Format(Lang.T["STATUS_ASNINFO"], an.Start, an.GetTagNum(), an.ContentEnd - an.ContentStart);
+        if (an != null) this.lbStatus.Text = String.Format(Lang.T["STATUS_ASNINFO"], an.Start, an.TagNum, an.ContentEnd - an.ContentStart);
       } else {
 
       }

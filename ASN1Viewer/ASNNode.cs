@@ -43,16 +43,16 @@ namespace ASN1Viewer {
     public const int UNIVERSAL_STRING           = 0x1C;
     public const int UNIVERSAL_BMPSTRING        = 0x1E;
 
-    private byte   m_Tag = 0x00;  
+    private byte   m_Tag          = 0x00;  
     private int    m_ElementStart = 0x00;
-    private int    m_ElementEnd = 0x00;
+    private int    m_ElementEnd   = 0x00;
     private int    m_ContentStart = 0x00;
-    private int    m_ContentEnd = 0x00;
-    private byte[] m_Data = null;
+    private int    m_ContentEnd   = 0x00;
+    private byte[] m_Data         = null;
 
-    private List<ASNNode> m_Chidren = null;
-    private TypeDef m_Schema = null;
-    private string m_SchemaName = null;
+    private List<ASNNode> m_Chidren    = null;
+    private TypeDef       m_Schema     = null;
+    private string        m_SchemaName = null;
 
     private ASNNode(byte tag, int elementStart, int elementEnd, int contentStart, int contentEnd, byte[] data) {
       m_Tag = tag;
@@ -64,34 +64,30 @@ namespace ASN1Viewer {
 
       System.Diagnostics.Debug.WriteLine("[" + elementStart + ", " + elementEnd + "] [" + contentStart + ", " + contentEnd + "]");
     }
-    public int GetChildCount() {
-      return m_Chidren == null ? 0 : m_Chidren.Count;
+
+    public int Count {
+      get { return m_Chidren == null ? 0 : m_Chidren.Count; }
     }
-    public ASNNode GetChild(int idx) {
-      if (idx < 0 || idx >= GetChildCount()) return null;
-      return m_Chidren[idx];
+    public ASNNode this[int idx] {
+      get {
+        if (idx < 0 || idx >= Count) return null;
+        return m_Chidren[idx];
+      }
     }
-    public bool IsSequence() {
-      return IsConstructed(m_Tag) && GetTagNum(m_Tag) == UNIVERSAL_SEQ_SEQOF;
-    }
-    public bool IsConstructed() {
-      return IsConstructed(m_Tag);
-    }
-    public int GetClass() {
-      return GetTagClass(m_Tag);
-    }
-    public int GetTagNum() {
-      return GetTagNum(m_Tag);
-    }
+
+    public bool IsSequence    { get { return IsConstructed && TagNum == UNIVERSAL_SEQ_SEQOF;           } }
+    public bool IsConstructed { get { return (m_Tag & NODE_CONSTRUCTED_MASK) == NODE_CONSTRUCTED_MASK; } }
+    public int TagClass       { get { return m_Tag & NODE_CLASS_MASK;      } }
+    public int TagNum         { get { return m_Tag & NODE_TAG_NUMBER_MASK; } }
+    public int Tag            { get { return m_Tag;                        } }
+    public int Start          { get { return m_ElementStart;               } }
+    public int End            { get { return m_ElementEnd;                 } }
+    public int ContentStart   { get { return m_ContentStart;               } }
+    public int ContentEnd     { get { return m_ContentEnd;                 } }
 
     public TypeDef Schema {
-      get { return m_Schema;  }
+      get { return m_Schema; }
     }
-
-    public int Start { get { return m_ElementStart;  } }
-    public int End { get { return m_ElementEnd; } }
-    public int ContentStart { get { return m_ContentStart; } }
-    public int ContentEnd   { get { return m_ContentEnd; } }
 
     private byte GetSchemaTag(string primeType, List<string> tag) {
       if (tag != null && tag.Count > 0) {
@@ -126,16 +122,14 @@ namespace ASN1Viewer {
           n.RemoveAt(n.Count - 1);
           an.m_Schema = null;
           an.m_SchemaName = "";
-          for (int i = 0; i < an.GetChildCount(); i++) {
-            n.Add(an.GetChild(i));
+          for (int i = 0; i < an.Count; i++) {
+            n.Add(an[i]);
           }
           
         }
       }
       return b;
     }
-
-
     public bool MatchSchema(string name, string primeType, List<string> tag, TypeDef t) {
       if (t != null) {
         primeType = t.PrimeType;
@@ -147,7 +141,7 @@ namespace ASN1Viewer {
       }
 
       if (primeType == "ANY" ) {
-        if (GetChildCount() == 0) {
+        if (Count == 0) {
           m_SchemaName = name;
           m_Schema = t;
           return true;
@@ -167,24 +161,24 @@ namespace ASN1Viewer {
         return false;
       }
 
-      if (GetSchemaTag(primeType, tag) != GetTagNum()) {
+      if (GetSchemaTag(primeType, tag) != TagNum) {
         return false;
       }
 
       if (tag != null && tag.Count > 0) {
-        return GetChildCount() > 0 && GetChild(0).MatchSchema(name, primeType, null, t);
+        return Count > 0 && this[0].MatchSchema(name, primeType, null, t);
       }
 
       if (primeType == "SEQUENCE") {
         int i = 0;
         int idx = 0;
-        ASNNode c = GetChild(idx);
+        ASNNode c = this[idx];
         if (t.Fields == null) {
           while (c != null) {
             if (!c.MatchSchema(t.TypeName, t.TypeObj.PrimeType, t.TypeObj.Tag, t.TypeObj)) {
               return false;
             }
-            c = GetChild(++idx);
+            c = this[++idx];
           }
         } else {
           while (c != null && i < t.Fields.Count) {
@@ -194,13 +188,13 @@ namespace ASN1Viewer {
               }
 
               i++;
-              c = GetChild(++idx);
+              c = this[++idx];
             } else {
               if (!c.MatchSchema(t.Fields[i].Name, t.Fields[i].PrimeType, t.Fields[i].Tag, t.Fields[i].TypeObj)) {
                 i++;
               } else {
                 i++;
-                c = GetChild(++idx);
+                c = this[++idx];
               }
             }
           }
@@ -216,13 +210,13 @@ namespace ASN1Viewer {
         }
       } else if (primeType == "SET") {
         int idx = 0;
-        ASNNode c = GetChild(idx);
+        ASNNode c = this[idx];
         if (t.Fields == null) {
           while (c != null) {
             if (!c.MatchSchema(t.TypeName, t.TypeObj.PrimeType, t.TypeObj.Tag, t.TypeObj)) {
               return false;
             }
-            c = GetChild(++idx);
+            c = this[++idx];
           }
         } else {
           throw new Exception("TODO:");
@@ -238,32 +232,32 @@ namespace ASN1Viewer {
       if (m_SchemaName != null) {
         str = m_SchemaName + " ";
       }
-      if (GetClass() != NODE_CLASS_UNIVERSAL) {
-        if      (GetClass() == NODE_CLASS_APPLICATION)  str += "[Application][" + GetTagNum() + "]";
-        else if (GetClass() == NODE_CLASS_CONTEXT)      str += "[Context]["     + GetTagNum() + "]";
-        else if (GetClass() == NODE_CLASS_PRIVATE)      str += "[Private]["     + GetTagNum() + "]";
+      if (TagClass != NODE_CLASS_UNIVERSAL) {
+        if      (TagClass == NODE_CLASS_APPLICATION)  str += "[Application][" + TagNum + "]";
+        else if (TagClass == NODE_CLASS_CONTEXT)      str += "[Context]["     + TagNum + "]";
+        else if (TagClass == NODE_CLASS_PRIVATE)      str += "[Private]["     + TagNum + "]";
       } else {
-        if      (GetTagNum() == UNIVERSAL_BOOLEAN)         str += "BOOLEAN "         + GetValue();
-        else if (GetTagNum() == UNIVERSAL_INTEGER)         str += "INTEGER "         + GetValue();
-        else if (GetTagNum() == UNIVERSAL_BITSTRING)       str += "BITSTRING "       + GetValue();
-        else if (GetTagNum() == UNIVERSAL_OCTETSTRING)     str += "OCTETSTRING "     + GetValue();
-        else if (GetTagNum() == UNIVERSAL_NULL)            str += "NULL";
-        else if (GetTagNum() == UNIVERSAL_OID)             str += "OID "             + GetValue();
-        else if (GetTagNum() == UNIVERSAL_SEQ_SEQOF)       str += "SEQUENCE "        + GetValue();
-        else if (GetTagNum() == UNIVERSAL_SET_SETOF)       str += "SET "             + GetValue();
-        else if (GetTagNum() == UNIVERSAL_PRINTABLESTRING) str += "PrintableString " + GetValue();
-        else if (GetTagNum() == UNIVERSAL_T61STRING)       str += "T61String "       + GetValue();
-        else if (GetTagNum() == UNIVERSAL_IA5STRING)       str += "IA5String "       + GetValue();
-        else if (GetTagNum() == UNIVERSAL_UTCTIME)         str += "UTCTime "         + GetValue();
-        else if (GetTagNum() == UNIVERSAL_GENTIME)         str += "GeneralizedTime " + GetValue();
-        else if (GetTagNum() == UNIVERSAL_GRAPHIC_STR)     str += "GraphicString "   + GetValue();
-        else if (GetTagNum() == UNIVERSAL_ISO646STR)       str += "ISO646String "    + GetValue();
-        else if (GetTagNum() == UNIVERSAL_GENERAL_STR)     str += "GeneralString "   + GetValue();
-        else if (GetTagNum() == UNIVERSAL_STRING)          str += "UniversalString " + GetValue();
-        else if (GetTagNum() == UNIVERSAL_BMPSTRING)       str += "BMPString "       + GetValue();
+        if      (TagNum == UNIVERSAL_BOOLEAN)         str += "BOOLEAN "         + GetValue();
+        else if (TagNum == UNIVERSAL_INTEGER)         str += "INTEGER "         + GetValue();
+        else if (TagNum == UNIVERSAL_BITSTRING)       str += "BITSTRING "       + GetValue();
+        else if (TagNum == UNIVERSAL_OCTETSTRING)     str += "OCTETSTRING "     + GetValue();
+        else if (TagNum == UNIVERSAL_NULL)            str += "NULL";
+        else if (TagNum == UNIVERSAL_OID)             str += "OID "             + GetValue();
+        else if (TagNum == UNIVERSAL_SEQ_SEQOF)       str += "SEQUENCE "        + GetValue();
+        else if (TagNum == UNIVERSAL_SET_SETOF)       str += "SET "             + GetValue();
+        else if (TagNum == UNIVERSAL_PRINTABLESTRING) str += "PrintableString " + GetValue();
+        else if (TagNum == UNIVERSAL_T61STRING)       str += "T61String "       + GetValue();
+        else if (TagNum == UNIVERSAL_IA5STRING)       str += "IA5String "       + GetValue();
+        else if (TagNum == UNIVERSAL_UTCTIME)         str += "UTCTime "         + GetValue();
+        else if (TagNum == UNIVERSAL_GENTIME)         str += "GeneralizedTime " + GetValue();
+        else if (TagNum == UNIVERSAL_GRAPHIC_STR)     str += "GraphicString "   + GetValue();
+        else if (TagNum == UNIVERSAL_ISO646STR)       str += "ISO646String "    + GetValue();
+        else if (TagNum == UNIVERSAL_GENERAL_STR)     str += "GeneralString "   + GetValue();
+        else if (TagNum == UNIVERSAL_STRING)          str += "UniversalString " + GetValue();
+        else if (TagNum == UNIVERSAL_BMPSTRING)       str += "BMPString "       + GetValue();
       }
-      if (GetChildCount() > 0) {
-        str += " (" + GetChildCount() + " elem)";
+      if (Count > 0) {
+        str += " (" + Count + " elem)";
       }
       if (str.Length > 0) return str;
       else
@@ -272,22 +266,22 @@ namespace ASN1Viewer {
 
     public object GetValue() {
       
-      if (GetChildCount() == 0) {
+      if (Count == 0) {
         byte[] d = new byte[m_ContentEnd - m_ContentStart];
         Array.Copy(m_Data, m_ContentStart, d, 0, d.Length);
-        if (GetTagNum() == UNIVERSAL_INTEGER) {
+        if (TagNum == UNIVERSAL_INTEGER) {
           ulong val = 0;
           for (int i = 0; i < d.Length; i++) {
             val = (val << 8) | d[i];
           }
           return val.ToString();
-        } else if (GetTagNum() == UNIVERSAL_BITSTRING) {
+        } else if (TagNum == UNIVERSAL_BITSTRING) {
           int paddingCount = d[0];
           int bitCount = (d.Length - 1)*8 - paddingCount;
           return String.Format("({0} bits){1}", bitCount, Utils.HexEncode(d, 1, d.Length - 1));
         }
-        else if (GetTagNum() == UNIVERSAL_OCTETSTRING)  return GetString(d);
-        else if (GetTagNum() == UNIVERSAL_OID) {
+        else if (TagNum == UNIVERSAL_OCTETSTRING)  return GetString(d);
+        else if (TagNum == UNIVERSAL_OID) {
           StringBuilder sb = new StringBuilder();
           sb.Append(String.Format("{0}.{1}", d[0]/40, d[0]%40));
           int pos = 1;
@@ -304,18 +298,18 @@ namespace ASN1Viewer {
           String oid = sb.ToString();
           return oid + " " + GetOIDName(oid) ;
         } 
-        else if (GetTagNum() == UNIVERSAL_PRINTABLESTRING) return GetString(d);
-        else if (GetTagNum() == UNIVERSAL_T61STRING) return GetString(d);
-        else if (GetTagNum() == UNIVERSAL_IA5STRING) return GetString(d);
-        else if (GetTagNum() == UNIVERSAL_UTCTIME) return ParseUTCTime(d);
-        else if (GetTagNum() == UNIVERSAL_GENTIME) return ParseGeneralizedTime(d);
+        else if (TagNum == UNIVERSAL_PRINTABLESTRING) return GetString(d);
+        else if (TagNum == UNIVERSAL_T61STRING) return GetString(d);
+        else if (TagNum == UNIVERSAL_IA5STRING) return GetString(d);
+        else if (TagNum == UNIVERSAL_UTCTIME) return ParseUTCTime(d);
+        else if (TagNum == UNIVERSAL_GENTIME) return ParseGeneralizedTime(d);
       }
       // For a constructed type, its value is empty.
       return "";
     }
 
     public void ParseChild() {
-      if (!(IsConstructed() || (m_Tag == UNIVERSAL_OCTETSTRING && IsValidASN(m_Data, m_ContentStart, m_ContentEnd)))) return;
+      if (!(IsConstructed || (m_Tag == UNIVERSAL_OCTETSTRING && IsValidASN(m_Data, m_ContentStart, m_ContentEnd)))) return;
 
       byte[] data = m_Data;
       int start = m_ContentStart;
@@ -357,22 +351,14 @@ namespace ASN1Viewer {
       if (start != end) throw new Exception("Invalid ASN data.");
 
       for (int i = 0; m_Chidren != null && i < m_Chidren.Count; i++) {
-        GetChild(i).ParseChild();
+        this[i].ParseChild();
       }
     }
 
     //=====================================
     // Static members
     //=====================================
-    public static int GetTagClass(byte tag) {
-      return tag & NODE_CLASS_MASK;
-    }
-    public static int GetTagNum(byte tag) {
-      return tag & NODE_TAG_NUMBER_MASK;
-    }
-    public static bool IsConstructed(byte tag) {
-      return (tag & NODE_CONSTRUCTED_MASK) == NODE_CONSTRUCTED_MASK;
-    }
+
     public static ASNNode Parse(byte[] asn) {
       int retType = 0;
       int retContentStart = 0;
@@ -404,7 +390,6 @@ namespace ASN1Viewer {
       return "(" + d.Length + " bytes)" + Utils.HexEncode(d, 0, d.Length);
 
     }
-
     private static Dictionary<String, String> oids = null; 
     private static String GetOIDName(String oid) {
       if (oids == null) {
