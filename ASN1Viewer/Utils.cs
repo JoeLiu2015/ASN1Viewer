@@ -108,7 +108,7 @@ namespace ASN1Viewer {
         '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
       return "" + d[(c & 0xFF) >> 4] + d[c & 0x0F];
     }
-    public static String HexDump(byte[] val, int offset, int length, string prefix) {
+    public static String HexDump(byte[] val, int position) {
       if (val == null || val.Length == 0) return "";
 
       StringBuilder sb = new StringBuilder();
@@ -118,27 +118,26 @@ namespace ASN1Viewer {
       };
       byte[] defaultBuf = Get8BitBytes("                                                  |                 "); // length: 67 (16*3 + 3 + 8 + 1 + 8)
       byte[] buf = CopyBytes(defaultBuf, 0, defaultBuf.Length);
-      int len = length;
+      int len = val.Length;
       int len16 = (len + 15) / 16 * 16; // Extend length to multiple of 16, or use as-is if it's already a multiple of 16.
 
       for (int i = 0; i < len16;) {
         for (int j = 0; j < 16; j++, i++) {
           if (i < len) {
-            byte c = val[i + offset];
+            byte c = val[i];
             // Offsets into buf for byte characters and text character. (Offset 51 is where text characters start.)
-            int pos1 = j * 3, pos2 = 51 + j;
+            int pos1 = j * 3, pos2 = 16*3 + 3 + j;
             if (j >= 8) { pos1 += 1; pos2 += 1; }
-            buf[pos1] = d[(c & 0xFF) >> 4];
+            buf[pos1]     = d[(c & 0xFF) >> 4];
             buf[pos1 + 1] = d[c & 0x0F];
-            buf[pos2] = (c < 0x20 || c > 0x7E) ? (byte)'.' : c;
+            buf[pos2]     = (c < 0x20 || c > 0x7E) ? (byte)'.' : c;
           } // Else: Do nothing, the positions already hold space (0x20) characters.
         }
 
-        if (!String.IsNullOrEmpty(prefix)) sb.Append(prefix);
-        sb.Append(IntToHex(i - 16));
+        sb.Append(IntToHex(i - 16 + position));
         sb.Append("|  ");
         sb.Append(Get8BitString(buf));
-        if (i < len) sb.Append("\r\n"); // Make sure we don't add an extra LF after the data.
+        if (i < len) sb.Append("\r\n"); // Make sure we don't add an extra CRLF after the data.
         buf = CopyBytes(defaultBuf, 0, defaultBuf.Length);
       }
 

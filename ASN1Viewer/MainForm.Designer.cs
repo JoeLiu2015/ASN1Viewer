@@ -148,7 +148,6 @@
       // hexViewer1
       // 
       this.hexViewer1.BackColor = System.Drawing.SystemColors.Window;
-      this.hexViewer1.Data = null;
       this.hexViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
       this.hexViewer1.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.hexViewer1.ForeColor = System.Drawing.Color.Gray;

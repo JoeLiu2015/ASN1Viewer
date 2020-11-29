@@ -189,7 +189,7 @@ namespace ASN1Viewer
         if (b64Data != null) {
           this.txtInput.Text = Utils.FixCRLF(File.ReadAllText(file));
         } else {
-          this.txtInput.Text = Utils.HexDump(data, 0, data.Length, "");
+          this.txtInput.Text = Utils.HexDump(data, 0);
         }
         this.txtInput.TextChanged += this.txtInput_TextChanged;
 
@@ -231,7 +231,8 @@ namespace ASN1Viewer
         this.treeView1.Nodes.Add(CreateNode(a));
         this.lbStatus.Text = "Succeed.";
         this.lbStatus.ForeColor = Color.Green;
-        this.hexViewer1.Data = data;
+        this.hexViewer1.AddData(data, 0);
+        this.hexViewer1.RefreshView();
         return true;
       } catch (Exception ex) {
         Err(ex.Message);

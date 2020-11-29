@@ -20,44 +20,59 @@ namespace ASN1Viewer
       this.WordWrap = false;
     }
 
-    private byte[] m_Data = null;
-    private int m_Start = 0;
-    private int m_End = 0;
+    private List<Block> m_Blocks = new List<Block>();
+    private int m_SelectionStart = 0;
+    private int m_SelectionEnd   = 0;
 
-    public byte[] Data {
-      get { return this.m_Data; }
-      set {
-        m_Data = value;
-        if (value == null || m_Data.Length == 0) {
-          this.Text = "";
-          return;
-        }
-        this.Text = Utils.HexDump(value, 0, value.Length, "");
+    public void AddData(byte[] data, int position) {
+      Block b = new Block();
+      b.Data = data;
+      b.Position = position;
+      m_Blocks.Add(b);
+    }
+    public void RefreshView() {
+      if (m_Blocks.Count == 1) {
+        this.Text = Utils.HexDump(m_Blocks[0].Data, 0);
+        m_Blocks[0].Line = 0;
+        return;
       }
+      int line = 0;
+      StringBuilder sb = new StringBuilder();
+      for (int i = 0; i < m_Blocks.Count; i++) {
+        m_Blocks[i].Line = line;
+        sb.Append(Utils.HexDump(m_Blocks[i].Data, m_Blocks[i].Position));
+        line += (m_Blocks[i].EndPosition - m_Blocks[i].Position + 15) / 16;
+        if (i + 1 < m_Blocks.Count) {
+          int skip = m_Blocks[i + 1].Position - m_Blocks[i].EndPosition;
+          string text = String.Format(Lang.T["TXT_SKIP"], skip, skip / 16);
+          sb.Append(EMPTY_LINE).
+             Append(new string(' ', SKIP_TXT_OFFSET)).Append(text).Append(new string(' ', EMPTY_LINE_LEN - text.Length - SKIP_TXT_OFFSET)).
+             Append(EMPTY_LINE);
+          line += 3;
+        }
+      }
+      this.Text = sb.ToString();
     }
 
-
-
     public void SelectNode(int start, int end, int contentStart, int contentEnd) {
-      if (m_End > m_Start) {
-        this.Select(m_Start, m_End - m_Start);
+      if (m_SelectionEnd > m_SelectionStart) {
+        this.Select(m_SelectionStart, m_SelectionEnd - m_SelectionStart);
         this.SelectionColor = ForeColor;
-        m_Start = m_End = 0;
+        m_SelectionStart = m_SelectionEnd = 0;
       }
       if (end > start) {
-        StopRepaint();
         SetColor(start, 1, Color.Red);
         SetColor(start + 1, contentStart - start - 1, Color.Blue);
         SetColor(contentEnd, end - contentEnd, Color.Blue);
         SetColor(contentStart, contentEnd - contentStart, Color.Green);
-        StartRepaint();
-        m_Start = start / 16 * LINE_LEN;
-        m_End = end / 16 * LINE_LEN + LINE_LEN;
-        this.SelectionStart = m_Start;
+        m_SelectionStart = BytesPos2Line(start) * LINE_LEN;
+        m_SelectionEnd = BytesPos2Line(end - 1) * LINE_LEN + LINE_LEN - 1;
+        this.SelectionStart = m_SelectionStart;
         this.ScrollToCaret();
       }
     }
 
+   
     private void SetColor(int line, int offset, int len, Color c) {
       if (len == 0) return;
       int offset1 = LINE_LEN * line + BYTE_OFFSET + offset * 3;
@@ -76,47 +91,45 @@ namespace ASN1Viewer
     public const int LINE_LEN    = 8 /*Offset*/ + 3 /*Separators*/ + 16 * 3 /*Bytes*/ + 3 /*Separators*/ + (8 + 1 + 8) /*Text*/ + 1 /*LF*/;
     public const int BYTE_OFFSET = 8 /*Offset*/ + 3 /*Separators*/;
     public const int TXT_OFFSET  = 8 /*Offset*/ + 3 /*Separators*/ + 16 * 3 /*Bytes*/ + 3 /*Separators*/;
+    public const int EMPTY_LINE_LEN  = LINE_LEN - 1; // Get rid of LF
+    public const int SKIP_TXT_OFFSET = 25;
+    public static readonly string EMPTY_LINE = "\r\n" + new string(' ', EMPTY_LINE_LEN) + "\r\n";  
+
 
     public void SetColor(int pos, int len, Color c) {
       if (len <= 0) return;
-      int startLine = pos / 16;
-      int endLine   = (pos + len) / 16;
+      int startLine = BytesPos2Line(pos);
+      int endLine = BytesPos2Line(pos + len - 1);
       int startOffset = pos % 16;
-      int endOffset   = (pos + len) % 16;
+      int endOffset = (pos + len - 1) % 16;
 
       if (startLine == endLine) {
         SetColor(startLine, startOffset, len, c);
         return;
       }
-      
+
       SetColor(startLine, startOffset, 16 - startOffset, c);
-      SetColor(endLine, 0, endOffset, c);
+      SetColor(endLine, 0, endOffset + 1, c);
       for (int i = startLine + 1; i < endLine; i++) SetColor(i, 0, 16, c);
     }
 
-    private const int WM_USER = 0x0400;
-    private const int EM_GETEVENTMASK = (WM_USER + 59);
-    private const int EM_SETEVENTMASK = (WM_USER + 69);
-    private const int WM_SETREDRAW = 0x0b;
-    private IntPtr eventMask;
-
-    [DllImport("user32.dll", CharSet = CharSet.Auto)]
-    private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
-
-    private void StopRepaint() {
-      // Stop redrawing:
-      SendMessage(this.Handle, WM_SETREDRAW, IntPtr.Zero, IntPtr.Zero);
-      // Stop sending of events:
-      eventMask = SendMessage(this.Handle, EM_GETEVENTMASK, IntPtr.Zero, IntPtr.Zero);
+    private int BytesPos2Line(int pos) {
+      for (int i = 0; i < m_Blocks.Count; i++) {
+        if (pos >= m_Blocks[i].Position && pos < m_Blocks[i].EndPosition) {
+          return m_Blocks[i].Line + (pos - m_Blocks[i].Position) / 16;
+        }
+      }
+      throw new Exception("BytesPos2Line: Impossible");
     }
+  }
 
-    private void StartRepaint() {
-      // turn on events
-      SendMessage(this.Handle, EM_SETEVENTMASK, IntPtr.Zero, eventMask);
-      // turn on redrawing
-      SendMessage(this.Handle, WM_SETREDRAW, (IntPtr)1, IntPtr.Zero);
-      // this forces a repaint, which for some reason is necessary in some cases.
-      this.Invalidate();
+  class Block {
+    public int    Position  = 0;
+    public int    Line      = 0;
+    public byte[] Data = null;
+
+    public int    EndPosition {
+      get { return Position + Data.Length;  }
     }
   }
   

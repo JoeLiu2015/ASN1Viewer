@@ -17,3 +17,4 @@ ABOUT_TITLE    : About {0}
 ABOUT_COPYRIGHT: Copyright © 2020-{0} ASN.1 Viewer Ltd
 ABOUT_BUILD    : Version {0}  Build {1}
 MSG_NOFILE     : File "{0}" is not found.
+TXT_SKIP       : Skip {0} bytes ({1} lines)
