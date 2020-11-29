@@ -16,7 +16,7 @@ namespace ASN1Viewer
       this.ReadOnly = true;
       this.BackColor = SystemColors.Window;
       this.ForeColor = Color.Gray;
-      this.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.Font = new System.Drawing.Font("YouYuan", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.WordWrap = false;
     }
 

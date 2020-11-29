@@ -51,7 +51,6 @@ namespace ASN1Viewer {
     private byte[] m_Data         = null;
 
     private List<ASNNode> m_Chidren    = null;
-    private ASNNode       m_Parent     = null;
     private TypeDef       m_Schema     = null;
     private string        m_SchemaName = null;
 
