@@ -142,6 +142,7 @@ namespace ASN1Viewer
       } else {
 
       }
+      this.UpdateHexBytesView(null, null);
     }
     private void UpdateRecentFiles() {
       this.menuRecent.DropDownItems.Clear();
@@ -242,7 +243,7 @@ namespace ASN1Viewer
    
     private void UpdateHexBytesView(byte[] data, ASNNode a) {
       if (a == null) {
-        this.hexViewer1.RefreshView();
+        if (hexViewer1.BlockCount > 1) this.hexViewer1.RefreshView();
       } else {
         this.hexViewer1.ClearData();
         List<int> ranges = ASNNode.GetDisplayBytes(a);

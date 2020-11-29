@@ -24,6 +24,7 @@ namespace ASN1Viewer
     private int m_SelectionStart = 0;
     private int m_SelectionEnd   = 0;
 
+    public int  BlockCount {  get { return m_Blocks.Count;  } }
     public void ClearData() { m_Blocks.Clear(); }
     public void AddData(byte[] data, int position) {
       Block b = new Block();
