@@ -24,12 +24,20 @@ namespace ASN1Viewer
     private int m_SelectionStart = 0;
     private int m_SelectionEnd   = 0;
 
+    public void ClearData() { m_Blocks.Clear(); }
     public void AddData(byte[] data, int position) {
       Block b = new Block();
       b.Data = data;
       b.Position = position;
       m_Blocks.Add(b);
     }
+    public void AddData(byte[] data, int position, int len) {
+      Block b = new Block();
+      b.Data = Utils.CopyBytes(data, position, len);
+      b.Position = position;
+      m_Blocks.Add(b);
+    }
+
     public void RefreshView() {
       if (m_Blocks.Count == 1) {
         this.Text = Utils.HexDump(m_Blocks[0].Data, 0);

@@ -231,8 +231,7 @@ namespace ASN1Viewer
         this.treeView1.Nodes.Add(CreateNode(a));
         this.lbStatus.Text = "Succeed.";
         this.lbStatus.ForeColor = Color.Green;
-        this.hexViewer1.AddData(data, 0);
-        this.hexViewer1.RefreshView();
+        this.UpdateHexBytesView(data, a);
         return true;
       } catch (Exception ex) {
         Err(ex.Message);
@@ -241,5 +240,17 @@ namespace ASN1Viewer
       return false;
     }
    
+    private void UpdateHexBytesView(byte[] data, ASNNode a) {
+      if (a == null) {
+        this.hexViewer1.RefreshView();
+      } else {
+        this.hexViewer1.ClearData();
+        List<int> ranges = ASNNode.GetDisplayBytes(a);
+        for (int i = 0; i < ranges.Count / 2; i++) {
+          this.hexViewer1.AddData(data, ranges[i * 2], ranges[i * 2 + 1]);
+        }
+        this.hexViewer1.RefreshView();
+      }
+    }
   }
 }

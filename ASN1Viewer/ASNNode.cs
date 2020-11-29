@@ -51,6 +51,7 @@ namespace ASN1Viewer {
     private byte[] m_Data         = null;
 
     private List<ASNNode> m_Chidren    = null;
+    private ASNNode       m_Parent     = null;
     private TypeDef       m_Schema     = null;
     private string        m_SchemaName = null;
 
@@ -61,8 +62,7 @@ namespace ASN1Viewer {
       m_ContentStart = contentStart;
       m_ContentEnd = contentEnd;
       m_Data = data;
-
-      System.Diagnostics.Debug.WriteLine("[" + elementStart + ", " + elementEnd + "] [" + contentStart + ", " + contentEnd + "]");
+      //System.Diagnostics.Debug.WriteLine("[" + elementStart + ", " + elementEnd + "] [" + contentStart + ", " + contentEnd + "]");
     }
 
     public int Count {
@@ -383,7 +383,29 @@ namespace ASN1Viewer {
       node.ParseChild();
       return node;
     }
-
+    public static List<int> GetDisplayBytes(ASNNode root) {
+      int start = 0;
+      Stack<ASNNode> n = new Stack<ASNNode>();
+      List<int> ret = new List<int>();
+      n.Push(root);
+      while (n.Count > 0) {
+        ASNNode an = n.Pop();
+        if (an.Count > 0) {
+          for (int i = an.Count - 1; i >= 0; i--) n.Push(an[i]);
+        } else {
+          if (an.End - an.Start > 8192) {
+            int skipStart = (an.Start + 16 * 4) / 16 * 16;
+            int skipEnd = (an.End - 16 * 4) / 16 * 16;
+            ret.Add(start);
+            ret.Add(skipStart - start); // length
+            start = skipEnd;
+          }
+        }
+      }
+      ret.Add(start);
+      ret.Add(root.End - start);
+      return ret;
+    }
 
     private static String GetString(byte[] d) {
       if (Utils.IsPrintable(d)) return Utils.GetUtf8String(d);
