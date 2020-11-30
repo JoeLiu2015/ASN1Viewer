@@ -195,7 +195,10 @@ namespace ASN1Viewer
         this.txtInput.TextChanged += this.txtInput_TextChanged;
 
         // Update recent files
-        Config.Instance.History.Insert(0, file);
+        string normalizePath = Path.GetFullPath(new Uri(file).LocalPath)
+          .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        if (Config.Instance.History.Contains(normalizePath)) Config.Instance.History.Remove(normalizePath);
+        Config.Instance.History.Insert(0, normalizePath);
         if (Config.Instance.History.Count > Config.Instance.MaxHistory) {
           Config.Instance.History.RemoveAt(Config.Instance.History.Count - 1);
         }

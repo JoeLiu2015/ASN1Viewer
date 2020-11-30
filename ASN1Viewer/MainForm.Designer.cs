@@ -33,10 +33,9 @@
       this.splitContainer1 = new System.Windows.Forms.SplitContainer();
       this.tabControl1 = new System.Windows.Forms.TabControl();
       this.tabPageInput = new System.Windows.Forms.TabPage();
-      this.txtInput = new System.Windows.Forms.TextBox();
+      this.txtInput = new System.Windows.Forms.RichTextBox();
       this.tabPageBytes = new System.Windows.Forms.TabPage();
       this.panel1 = new System.Windows.Forms.Panel();
-      this.hexViewer1 = new ASN1Viewer.HexViewer();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.menuFile = new System.Windows.Forms.ToolStripMenuItem();
       this.menuOpen = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,6 +51,7 @@
       this.menuAbout = new System.Windows.Forms.ToolStripMenuItem();
       this.statusStrip1 = new System.Windows.Forms.StatusStrip();
       this.lbStatus = new System.Windows.Forms.ToolStripStatusLabel();
+      this.hexViewer1 = new ASN1Viewer.HexViewer();
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
@@ -115,11 +115,11 @@
       // txtInput
       // 
       this.txtInput.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.txtInput.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.txtInput.Font = new System.Drawing.Font("YouYuan", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.txtInput.Location = new System.Drawing.Point(3, 3);
       this.txtInput.Multiline = true;
       this.txtInput.Name = "txtInput";
-      this.txtInput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+      this.txtInput.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
       this.txtInput.Size = new System.Drawing.Size(607, 362);
       this.txtInput.TabIndex = 0;
       this.txtInput.WordWrap = false;
@@ -144,20 +144,6 @@
       this.panel1.Name = "panel1";
       this.panel1.Size = new System.Drawing.Size(607, 362);
       this.panel1.TabIndex = 0;
-      // 
-      // hexViewer1
-      // 
-      this.hexViewer1.BackColor = System.Drawing.SystemColors.Window;
-      this.hexViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.hexViewer1.ForeColor = System.Drawing.Color.Gray;
-      this.hexViewer1.Location = new System.Drawing.Point(0, 0);
-      this.hexViewer1.Name = "hexViewer1";
-      this.hexViewer1.ReadOnly = true;
-      this.hexViewer1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-      this.hexViewer1.Size = new System.Drawing.Size(607, 362);
-      this.hexViewer1.TabIndex = 0;
-      this.hexViewer1.Text = "";
-      this.hexViewer1.WordWrap = false;
       // 
       // menuStrip1
       // 
@@ -280,6 +266,21 @@
       this.lbStatus.Size = new System.Drawing.Size(400, 21);
       this.lbStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
+      // hexViewer1
+      // 
+      this.hexViewer1.BackColor = System.Drawing.SystemColors.Window;
+      this.hexViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.hexViewer1.Font = new System.Drawing.Font("YouYuan", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.hexViewer1.ForeColor = System.Drawing.Color.Gray;
+      this.hexViewer1.Location = new System.Drawing.Point(0, 0);
+      this.hexViewer1.Name = "hexViewer1";
+      this.hexViewer1.ReadOnly = true;
+      this.hexViewer1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+      this.hexViewer1.Size = new System.Drawing.Size(607, 362);
+      this.hexViewer1.TabIndex = 0;
+      this.hexViewer1.Text = "";
+      this.hexViewer1.WordWrap = false;
+      // 
       // MainForm
       // 
       this.AllowDrop = true;
@@ -328,7 +329,7 @@
     private System.Windows.Forms.ToolStripMenuItem menuOptions;
     private System.Windows.Forms.ToolStripMenuItem menuHelp;
     private System.Windows.Forms.StatusStrip statusStrip1;
-    private System.Windows.Forms.TextBox txtInput;
+    private System.Windows.Forms.RichTextBox txtInput;
     private System.Windows.Forms.Panel panel1;
     private HexViewer hexViewer1;
     private System.Windows.Forms.ToolStripMenuItem menuOpen;
