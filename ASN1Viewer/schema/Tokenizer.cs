@@ -29,6 +29,20 @@ namespace ASN1Viewer.schema {
       if (m_Segment.Count == 0) return null;
       return m_Segment[0];
     }
+    public void Skip(string tok) {
+      string next = Next();
+      if (next != tok) throw new Exception(string.Format("Expect '{0}' but get '{1}'.", tok, next));
+    }
+    public string[] ReadTo(string word) {
+      List<string> ret = new List<string>();
+      string w = Next();
+      while (true) {
+        if (w == null || w == word) break;
+        ret.Add(w);
+        w = Next();
+      }
+      return ret.ToArray();
+    } 
 
     private void FillToks() {
       while (m_Toks.Count < 20) {
