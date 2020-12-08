@@ -75,12 +75,16 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Schema.cs" />
+    <Compile Include="schema\EnumDef.cs" />
+    <Compile Include="schema\FieldDef.cs" />
     <Compile Include="schema\ImportDef.cs" />
     <Compile Include="schema\OidDef.cs" />
     <Compile Include="schema\SchemaFile.cs" />
     <Compile Include="schema\SchemaManager.cs" />
+    <Compile Include="schema\SizeDef.cs" />
     <Compile Include="schema\Tokenizer.cs" />
     <Compile Include="schema\TypeDef.cs" />
+    <Compile Include="schema\Utils.cs" />
     <Compile Include="Utils.cs" />
     <EmbeddedResource Include="About.resx">
       <DependentUpon>About.cs</DependentUpon>

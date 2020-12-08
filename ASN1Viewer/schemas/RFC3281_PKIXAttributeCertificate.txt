@@ -53,7 +53,7 @@
              }
 
              AttributeCertificateInfo ::= SEQUENCE {
-                version        AttCertVersion  -- version is v2,
+                version        AttCertVersion,  -- version is v2
                 holder         Holder,
                 issuer         AttCertIssuer,
                 signature      AlgorithmIdentifier,

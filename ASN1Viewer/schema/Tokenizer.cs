@@ -26,8 +26,16 @@ namespace ASN1Viewer.schema {
     }
     public string Peek() {
       if (m_Segment.Count == 0) FillSegments();
-      if (m_Segment.Count == 0) return null;
+      if (m_Segment.Count == 0) return "";
       return m_Segment[0];
+    }
+
+    public string Peek(int count) {
+      if (m_Segment.Count < count) FillSegments();
+      if (m_Segment.Count < count) return "";
+      StringBuilder sb = new StringBuilder();
+      for (int i = 0; i < count; i++) sb.Append(m_Segment[i]);
+      return sb.ToString();
     }
     public void Skip(string tok) {
       string next = Next();
@@ -122,15 +130,6 @@ namespace ASN1Viewer.schema {
       return m_Toks[0];
     }
 
-    private string FetchSize() {
-      String ret = "SIZE (";
-      NextTok();
-      if (NextTok() != "(") throw new Exception("FetchSize: can not find '('");
-      while (PeekTok() != ")") ret += NextTok();
-      NextTok();
-      ret += ")";
-      return ret;
-    }
     private void FillSegments() {
       string size = null;
       while (m_Segment.Count < 20) {
@@ -152,23 +151,6 @@ namespace ASN1Viewer.schema {
           case "DEFINED":
             if (PeekTok() == "BY") m_Segment.Add("DEFINED " + NextTok());
             else m_Segment.Add("DEFINED");
-            break;
-          case "SET":
-            size = null;
-            if (PeekTok() == "SIZE") size = FetchSize();
-            if (PeekTok() == "OF") m_Segment.Add("SET " + NextTok());
-            else m_Segment.Add("SET");
-            if (size != null) m_Segment.Add(size);
-            break;
-          case "SEQUENCE":
-            size = null;
-            if (PeekTok() == "SIZE") size = FetchSize();
-            if (PeekTok() == "OF") m_Segment.Add("SEQUENCE " + NextTok());
-            else m_Segment.Add("SEQUENCE");
-            if (size != null) m_Segment.Add(size);
-            break;
-          case "SIZE":
-            m_Segment.Add(FetchSize());
             break;
           default:
             m_Segment.Add(tok);

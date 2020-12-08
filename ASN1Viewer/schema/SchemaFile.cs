@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 using System.IO;
@@ -54,7 +55,11 @@ namespace ASN1Viewer.schema {
           }
           SchemaFile schemaFile = SCHEMA_FILES[docName];
           for (int m = 0; m < importTypes.Length; m++) {
-            m_Imports.Add(importTypes[m], schemaFile.GetTypeValue(importTypes[m]));
+            object val = schemaFile.GetTypeValue(importTypes[m]);
+            if (val is int) m_Consts.Add(importTypes[m], (int)val);
+            else if (val is OidDef) m_Oids.Add(importTypes[m], (OidDef)val);
+            else if (val is TypeDef) m_Types.Add(importTypes[m], (TypeDef)val);
+            else throw new Exception("Unknown import type '" + importTypes[m] + "'");
           }
         }
       }
@@ -72,10 +77,17 @@ namespace ASN1Viewer.schema {
           t.Parse(tok);
           m_Types.Add(t.TypeName, t);
         } else {
-          throw new Exception("Failed to parse expression");
+          throw new Exception("Failed to parse type.");
         }
 
-        words = tok.ReadTo("::=");
+        if (tok.Peek() == "END") break;
+        else  words = tok.ReadTo("::=");
+      }
+      tok.Skip("END");
+
+      foreach (KeyValuePair<string, TypeDef> ts in m_Types) {
+        ts.Value.FixValue(m_Types);
+        ts.Value.FixSize(m_Consts);
       }
     }
 
