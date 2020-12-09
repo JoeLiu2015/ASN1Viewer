@@ -79,6 +79,12 @@
     <Compile Include="schema\FieldDef.cs" />
     <Compile Include="schema\ImportDef.cs" />
     <Compile Include="schema\OidDef.cs" />
+    <Compile Include="schema\SchemaDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="schema\SchemaDlg.Designer.cs">
+      <DependentUpon>SchemaDlg.cs</DependentUpon>
+    </Compile>
     <Compile Include="schema\SchemaFile.cs" />
     <Compile Include="schema\SchemaManager.cs" />
     <Compile Include="schema\SizeDef.cs" />
@@ -102,6 +108,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="schema\SchemaDlg.resx">
+      <DependentUpon>SchemaDlg.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="lang\en_US.txt" />

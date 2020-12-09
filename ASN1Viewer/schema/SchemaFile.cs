@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
-using System.Linq;
-using System.Text;
+using System.Windows.Forms;
 using System.IO;
 
 namespace ASN1Viewer.schema {
   public class SchemaFile {
     private static Dictionary<string, SchemaFile> SCHEMA_FILES = new Dictionary<string, SchemaFile>();
+    public  static Dictionary<string, SchemaFile> PARSED_SCHEMA = new Dictionary<string, SchemaFile>();
+    private string m_FileName = "";
     private string m_Name     = "";
     private OidDef m_Oid      = null;
     private bool   m_Implicit = false;
@@ -24,7 +24,19 @@ namespace ASN1Viewer.schema {
       throw new Exception(String.Format("Failed to find the type '{0}' in the schema '{1}'", name, m_Name));
     }
 
+    public static SchemaFile ParseFrom(string file) {
+      file = new FileInfo(file).FullName;
+      if (PARSED_SCHEMA.ContainsKey(file)) return PARSED_SCHEMA[file];
+
+      SchemaFile sf = new SchemaFile();
+      sf.Parse(file);
+      SCHEMA_FILES[sf.m_Name] = sf;
+      PARSED_SCHEMA[file] = sf;
+      return sf;
+    }
+
     public void Parse(string file) {
+      m_FileName = file;
       Tokenizer tok = new Tokenizer(File.ReadAllText(file));
       m_Name = tok.Next();
       m_Oid  = OidDef.Parse(m_Name, tok);
@@ -49,6 +61,7 @@ namespace ASN1Viewer.schema {
                 SchemaFile sfi = new SchemaFile();
                 sfi.Parse(fs[j].FullName);
                 SCHEMA_FILES.Add(docName, sfi);
+                PARSED_SCHEMA.Add(fs[j].FullName, sfi);
                 break;
               }
             }
@@ -89,6 +102,30 @@ namespace ASN1Viewer.schema {
         ts.Value.FixValue(m_Types);
         ts.Value.FixSize(m_Consts);
       }
+    }
+
+    public TreeNode ExportToTreeNode() {
+      string name = m_FileName;
+      int pos = name.LastIndexOfAny(new char[] { '\\', '/'});
+      if (pos >= 0) name = name.Substring(pos + 1);
+      TreeNode ret = new TreeNode(String.Format("{0} ({1} {2})", name, m_Name, m_Oid.GetValue()));
+      if (m_Types.Count > 0) {
+        TreeNode types = new TreeNode(String.Format("Types ({0})", m_Types.Count));
+        foreach (KeyValuePair<string, TypeDef> val in m_Types) {
+          TreeNode p = val.Value.ExportToTreeNode();
+          if (p.Parent != null) types.Nodes.Add(p.Clone() as TreeNode);
+          else types.Nodes.Add(p);
+        }
+        ret.Nodes.Add(types);
+      }
+      if (m_Oids.Count > 0) {
+        TreeNode oids = new TreeNode(String.Format("OIDs ({0})", m_Oids.Count));
+        foreach (KeyValuePair<string, OidDef> val in m_Oids) {
+          oids.Nodes.Add(new TreeNode(String.Format("{0} {1}", val.Value.Name, val.Value.GetValue())));
+        }
+        ret.Nodes.Add(oids);
+      }
+      return ret;
     }
 
     private bool IsOID(string typeName) {

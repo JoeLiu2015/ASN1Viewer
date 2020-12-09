@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
-using System.Linq;
-using System.Text;
+using System.Windows.Forms;
 
 namespace ASN1Viewer.schema {
   public class TypeDef {
@@ -25,6 +23,8 @@ namespace ASN1Viewer.schema {
     private bool    m_SizeFixed     = false;
     
     private EnumDef m_Enum          = null;
+
+    private TreeNode m_TreeNode     = null;
     
 
     public TypeDef(string name, bool isImplicit) {
@@ -118,6 +118,21 @@ namespace ASN1Viewer.schema {
 
     }
 
+    public TreeNode ExportToTreeNode() {
+      if (m_TreeNode != null) return m_TreeNode;
+      m_TreeNode = new TreeNode(String.Format("{0}({1})", m_TypeName, m_BaseTypeName));
+      if (m_SeqOfTypeName != null) {
+        m_TreeNode.Nodes.Add(new TreeNode(m_SeqOfTypeName));
+      } else if (m_SeqOfType != null) {
+        m_TreeNode.Nodes.Add(m_SeqOfType.ExportToTreeNode());
+      }
+      if (m_Fields != null && m_Fields.Count > 0) {
+        for (int i = 0; i < m_Fields.Count; i++) m_TreeNode.Nodes.Add(m_Fields[i].ExportToTreeNode());
+      }
+      return m_TreeNode;
+
+    }
+
     private void ParseTag(Tokenizer tok) {
       tok.Skip("[");
       if (tok.Peek() == "UNIVERSAL") tok.Next();
@@ -126,7 +141,6 @@ namespace ASN1Viewer.schema {
       m_Tag = int.Parse(tag);
       tok.Skip("]");
     }
-
     private void ParseSeqFields(Tokenizer tok) {
       m_Fields = new List<FieldDef>();
       tok.Skip("{");

@@ -9,9 +9,13 @@ namespace ASN1Viewer.schema {
     // { iso(1) identified-organization(3) dod(6) internet(1) security(5) mechanisms(5) pkix(7) }
     // { pkcs-9 1 }
     private List<OidPart> m_Parts  = new List<OidPart>(); 
+    private string m_Name = "";
 
     public string GetValue() {
       return ToString();
+    }
+    public string Name {
+      get { return m_Name; }
     }
 
     public void FixValue(Dictionary<string, OidDef> oids) {
@@ -23,6 +27,7 @@ namespace ASN1Viewer.schema {
     public static OidDef Parse(string name, Tokenizer tok) {
       try {
         OidDef oid = new OidDef();
+        oid.m_Name = name;
         tok.Skip("{");
         string word = tok.Next();
         while (true) {
