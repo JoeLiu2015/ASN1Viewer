@@ -10,6 +10,7 @@ namespace ASN1Viewer.schema {
     private bool   m_Implicit  = false;
     private bool   m_Optional  = false;
     private string m_Default   = null;
+    private bool   m_TagSpecified = false;
 
     private TypeDef m_Type     = null;
 
@@ -17,12 +18,31 @@ namespace ASN1Viewer.schema {
 
     private TreeNode m_TreeNode = null;
 
+    public bool IsOptional {
+      get { return m_Optional; }
+    }
 
     public void FixValue(Dictionary<string, TypeDef> vals) {
       if (m_Type == null && m_TypeName != null) {
         if (!Utils.IsPrimeType(m_TypeName)) {
           m_Type = vals[m_TypeName];
         }
+      }
+    }
+    public void FixTag() {
+      if (m_Tag >= 0) {
+        if (m_TagSpecified && !m_Implicit) m_Tag |= ASNNode.NODE_CONSTRUCTED_MASK;
+        return;
+      }
+      if (m_TypeName == "CHOICE" || m_TypeName == "ANY") {
+
+      } else if (Utils.IsPrimeType(m_TypeName)) {
+        m_Tag = Utils.GetPrimeTypeTag(m_TypeName);
+        return;
+      }
+      if (m_Type != null) {
+        m_Type.FixTag();
+        m_Tag = m_Type.Tag;
       }
     }
     public void FixSize(Dictionary<string, int> vals) {
@@ -74,6 +94,19 @@ namespace ASN1Viewer.schema {
       }
     }
 
+    public bool Match(IASNNode asnNode) {
+      if (m_TagSpecified && !m_Implicit && m_Tag > 0) {
+        if (m_Tag != asnNode.Tag) return false;
+        if (asnNode.ChildCount != 1) return false;
+        asnNode = asnNode.GetChild(0);
+      }
+      if (m_Type != null) {
+        return m_Type.Match(asnNode);
+      } else {
+        if (m_TypeName == "ANY") return true;
+        return m_Tag == asnNode.Tag;
+      }
+    }
     public TreeNode ExportToTreeNode() {
       if (m_TreeNode != null) return m_TreeNode;
       m_TreeNode = new TreeNode(String.Format("{0} {1}", m_FieldName, m_TypeName == null ? "" : m_TypeName));
@@ -89,9 +122,16 @@ namespace ASN1Viewer.schema {
       return m_TreeNode;
     }
     private void ParseTag(Tokenizer tok) {
+      m_TagSpecified = true;
       tok.Skip("[");
-      if (tok.Peek() == "UNIVERSAL") tok.Next();
-      m_Tag = int.Parse(tok.Next());
+      int val = 0;
+      if      (tok.Peek() == "UNIVERSAL")   { val = 0x00; tok.Next(); }  // 0000 0000
+      else if (tok.Peek() == "APPLICATION") { val = 0x40; tok.Next(); }  // 0100 0000
+      else if (tok.Peek() == "PRIVATE")     { val = 0xC0; tok.Next(); }  // 1100 0000
+      else                                  { val = 0x80;             }  // 1000 0000
+      string v = tok.Next();
+      m_Tag = int.Parse(v);
+      m_Tag |= val;
       tok.Skip("]");
     }
   }

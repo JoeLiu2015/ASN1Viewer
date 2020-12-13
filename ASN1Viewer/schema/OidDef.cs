@@ -28,6 +28,14 @@ namespace ASN1Viewer.schema {
       try {
         OidDef oid = new OidDef();
         oid.m_Name = name;
+        if (tok.Peek() != "{") {
+          // id-oc OBJECT IDENTIFIER ::= objectClass
+          OidPart p = new OidPart();
+          p.Name = tok.Next();
+          oid.m_Parts.Add(p);
+          return oid;
+        }
+
         tok.Skip("{");
         string word = tok.Next();
         while (true) {

@@ -40,6 +40,10 @@ namespace ASN1Viewer.schema {
       get { return m_BaseTypeName; }
     }
 
+    public int Tag {
+      get { return m_Tag; }
+    }
+
     public string GetPrimeType() {
       if (Utils.IsPrimeType(m_BaseTypeName)) return m_BaseTypeName;
       if (m_BaseType != null) return m_BaseType.GetPrimeType();
@@ -61,6 +65,25 @@ namespace ASN1Viewer.schema {
 
       if (m_Fields != null) {
         for (int i = 0; i < m_Fields.Count; i++) m_Fields[i].FixValue(vals);
+      }
+    }
+
+    public void FixTag() {
+      if (m_Tag >= 0) return;
+      if (m_BaseTypeName == "CHOICE" || m_BaseTypeName == "ANY") goto FIX_CHILD;
+      if (Utils.IsPrimeType(m_BaseTypeName)) {
+        m_Tag = Utils.GetPrimeTypeTag(m_BaseTypeName);
+        goto FIX_CHILD;
+      }
+      if (m_BaseType != null) {
+        m_BaseType.FixTag();
+        m_Tag = m_BaseType.m_Tag;
+        goto FIX_CHILD;
+      }
+      
+FIX_CHILD:
+      if (m_Fields != null && m_Fields.Count > 0) {
+        for (int i = 0; i < m_Fields.Count; i++) m_Fields[i].FixTag();
       }
     }
 
@@ -118,6 +141,89 @@ namespace ASN1Viewer.schema {
 
     }
 
+    public bool Match(IASNNode asnNode) {
+      string primeType = GetPrimeType();
+      if (primeType == "ANY") return true;
+      if (primeType == "CHOICE") {
+        for (int i = 0; i < m_Fields.Count; i++) {
+          if (m_Fields[i].Match(asnNode)) return true;
+        }
+        return false;
+      }
+      if (m_Tag != asnNode.Tag) {
+        return false;
+      }
+      if (m_SeqOfTypeName != null || m_SeqOfType != null) {
+        if (m_SeqOfType != null) {
+          for (int i = 0; i < asnNode.ChildCount; i++) {
+            if (!m_SeqOfType.Match(asnNode.GetChild(i))) {
+              return false;
+            }
+          }
+          return true;
+        } else {
+          int tag = Utils.GetPrimeTypeTag(m_SeqOfTypeName);
+          for (int i = 0; i < asnNode.ChildCount; i++) {
+            if (tag != asnNode.GetChild(i).Tag) {
+              return false;
+            }
+          }
+          return true;
+        }
+      }
+      if (m_Fields != null && m_Fields.Count > 0) {
+        if (primeType == "SEQUENCE") {
+          int j = 0;
+          for (int i = 0; i < asnNode.ChildCount; i++) {
+            bool matched = false;
+            while (j < m_Fields.Count) {
+              if (m_Fields[j].Match(asnNode.GetChild(i))) {
+                j++;
+                matched = true;
+                break;
+              } else {
+                if (!m_Fields[j].IsOptional) {
+                  return false;
+                } else {
+                  j++;
+                }
+              }
+            }
+            if (!matched) {
+              return false;
+            }
+          }
+          for (; j < m_Fields.Count; j++) {
+            if (!m_Fields[j].IsOptional) {
+              return false;
+            }
+          }
+        } else if (primeType == "SET") {
+          List<FieldDef> matchedFields = new List<FieldDef>();
+          for (int i = 0; i < asnNode.ChildCount; i++) {
+            bool matched = false;
+            for (int j = 0; !matched && j < m_Fields.Count; j++) {
+              if (m_Fields[j].Match(asnNode.GetChild(i))) {
+                if (!matchedFields.Contains(m_Fields[j])) matchedFields.Add(m_Fields[j]);
+                matched = true;
+              }
+            }
+            if (!matched) {
+              return false;
+            }
+          }
+          for (int j = 0; j < m_Fields.Count; j++) {
+            if (!matchedFields.Contains(matchedFields[j]) && !matchedFields[j].IsOptional) {
+              return false;
+            }
+          }
+          return true;
+        } else {
+          throw new Exception("Impossible.");
+        }
+      }
+      return true;
+    }
     public TreeNode ExportToTreeNode() {
       if (m_TreeNode != null) return m_TreeNode;
       m_TreeNode = new TreeNode(String.Format("{0}({1})", m_TypeName, m_BaseTypeName));
@@ -135,10 +241,14 @@ namespace ASN1Viewer.schema {
 
     private void ParseTag(Tokenizer tok) {
       tok.Skip("[");
-      if (tok.Peek() == "UNIVERSAL") tok.Next();
-      if (tok.Peek() == "APPLICATION") tok.Next();
+      int val = 0;
+      if (tok.Peek() == "UNIVERSAL")        { val = 0x00; tok.Next(); }  // 0000 0000
+      else if (tok.Peek() == "APPLICATION") { val = 0x40; tok.Next(); }  // 0100 0000
+      else if (tok.Peek() == "PRIVATE")     { val = 0xC0; tok.Next(); }  // 1100 0000
+      else                                  { val = 0x80;             }  // 1000 0000
       string tag = tok.Next();
       m_Tag = int.Parse(tag);
+      m_Tag |= val;
       tok.Skip("]");
     }
     private void ParseSeqFields(Tokenizer tok) {

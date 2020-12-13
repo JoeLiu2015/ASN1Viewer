@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 
 namespace ASN1Viewer {
-  public class ASNNode {
+  public class ASNNode : schema.IASNNode {
     // Bits 8 and 7 specify the class (see Table 2), bit 6 has value "0," indicating that the encoding is primitive, and bits 5-1 give the tag number.
     // Universal        - for types whose meaning is the same in all applications; these types are only defined in X.208.
     // Application      - for types whose meaning is specific to an application, such as X.500 directory services; types in two different applications may have the same application-specific tag and different meanings.
@@ -32,13 +32,13 @@ namespace ASN1Viewer {
     public const int UNIVERSAL_SET_SETOF        = 0x11;
     public const int UNIVERSAL_NUMSTRING        = 0x12;
     public const int UNIVERSAL_PRINTABLESTRING  = 0x13;
-    public const int UNIVERSAL_T61STRING        = 0x14;
+    public const int UNIVERSAL_T61STRING        = 0x14;  // TeletexString 
     public const int UNIVERSAL_VIDEOTEXSTRING   = 0x15;
     public const int UNIVERSAL_IA5STRING        = 0x16;
     public const int UNIVERSAL_UTCTIME          = 0x17;
     public const int UNIVERSAL_GENTIME          = 0x18;
     public const int UNIVERSAL_GRAPHIC_STR      = 0x19;
-    public const int UNIVERSAL_ISO646STR        = 0x1A;
+    public const int UNIVERSAL_ISO646STR        = 0x1A; // VisibleString 
     public const int UNIVERSAL_GENERAL_STR      = 0x1B;
     public const int UNIVERSAL_STRING           = 0x1C;
     public const int UNIVERSAL_BMPSTRING        = 0x1E;
@@ -62,6 +62,14 @@ namespace ASN1Viewer {
       m_ContentEnd = contentEnd;
       m_Data = data;
       //System.Diagnostics.Debug.WriteLine("[" + elementStart + ", " + elementEnd + "] [" + contentStart + ", " + contentEnd + "]");
+    }
+
+    public int ChildCount {
+      get { return m_Chidren == null ? 0 : m_Chidren.Count; }
+    }
+    public schema.IASNNode GetChild(int idx) {
+      if (m_Chidren == null || idx < 0 || idx >= m_Chidren.Count) return null;
+      return m_Chidren[idx];
     }
 
     public int Count {

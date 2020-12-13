@@ -16,6 +16,9 @@ namespace ASN1Viewer.schema {
     private Dictionary<string, int>     m_Consts = new Dictionary<string, int>();
     private Dictionary<string, object>  m_Imports = new Dictionary<string, object>();
 
+    public Dictionary<string, TypeDef> Types {
+      get { return m_Types; }
+    }
 
     public object GetTypeValue(string name) {
       if (m_Types.ContainsKey(name))  return m_Types[name];
@@ -42,10 +45,12 @@ namespace ASN1Viewer.schema {
       m_Oid  = OidDef.Parse(m_Name, tok);
       tok.Skip("DEFINITIONS");
       string imp = tok.Next();
+      if (imp == "::=") goto BEGIN;
       if (imp != "IMPLICIT" && imp != "EXPLICIT") throw new Exception(String.Format("Failed to parse file '{0}', expect 'IMPLICIT' or 'EXPLICIT'.", file));
       m_Implicit = (imp == "IMPLICIT");
       tok.Skip("TAGS");
       tok.Skip("::=");
+BEGIN:
       tok.Skip("BEGIN");
 
       if (tok.Peek() == "IMPORTS") {
@@ -101,6 +106,7 @@ namespace ASN1Viewer.schema {
       foreach (KeyValuePair<string, TypeDef> ts in m_Types) {
         ts.Value.FixValue(m_Types);
         ts.Value.FixSize(m_Consts);
+        ts.Value.FixTag();
       }
     }
 
