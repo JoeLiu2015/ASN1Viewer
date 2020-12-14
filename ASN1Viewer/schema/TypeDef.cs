@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace ASN1Viewer.schema {
-  public class TypeDef {
+  public class TypeDef : ISchemaNode {
     private string  m_TypeName = null;
     private string  m_BaseTypeName = null;
     private TypeDef m_BaseType = null;
@@ -32,6 +32,10 @@ namespace ASN1Viewer.schema {
       m_Implicit = isImplicit;
     }
 
+    public string Name {
+      get { return m_TypeName; }
+    }
+
     public string TypeName {
       get { return m_TypeName; }
     }
@@ -48,6 +52,10 @@ namespace ASN1Viewer.schema {
       if (Utils.IsPrimeType(m_BaseTypeName)) return m_BaseTypeName;
       if (m_BaseType != null) return m_BaseType.GetPrimeType();
       throw new Exception("Failed to get the prime type of '" + m_BaseTypeName + "'");
+    }
+    public List<FieldDef> GetBaseFileds() {
+      if (m_Fields == null && m_BaseType != null) return m_BaseType.GetBaseFileds();
+      return m_Fields;
     }
 
     public void FixValue(Dictionary<string, TypeDef> vals) {
@@ -82,6 +90,12 @@ namespace ASN1Viewer.schema {
       }
       
 FIX_CHILD:
+      if (m_Fields == null) {
+        string primeType = GetPrimeType();
+        if (primeType == "SEQUENCE" || primeType == "SET" || primeType == "CHOICE") {
+          m_Fields = GetBaseFileds();
+        }
+      }
       if (m_Fields != null && m_Fields.Count > 0) {
         for (int i = 0; i < m_Fields.Count; i++) m_Fields[i].FixTag();
       }
@@ -141,12 +155,18 @@ FIX_CHILD:
 
     }
 
-    public bool Match(IASNNode asnNode) {
+    public bool Match(IASNNode asnNode, bool setSchema) {
       string primeType = GetPrimeType();
-      if (primeType == "ANY") return true;
+      if (primeType == "ANY") {
+        if (setSchema) asnNode.Schema = this;
+        return true;
+      }
       if (primeType == "CHOICE") {
         for (int i = 0; i < m_Fields.Count; i++) {
-          if (m_Fields[i].Match(asnNode)) return true;
+          if (m_Fields[i].Match(asnNode, setSchema)) {
+            if (setSchema) asnNode.Schema = m_Fields[i];
+            return true;
+          }
         }
         return false;
       }
@@ -156,7 +176,7 @@ FIX_CHILD:
       if (m_SeqOfTypeName != null || m_SeqOfType != null) {
         if (m_SeqOfType != null) {
           for (int i = 0; i < asnNode.ChildCount; i++) {
-            if (!m_SeqOfType.Match(asnNode.GetChild(i))) {
+            if (!m_SeqOfType.Match(asnNode.GetChild(i), setSchema)) {
               return false;
             }
           }
@@ -177,7 +197,7 @@ FIX_CHILD:
           for (int i = 0; i < asnNode.ChildCount; i++) {
             bool matched = false;
             while (j < m_Fields.Count) {
-              if (m_Fields[j].Match(asnNode.GetChild(i))) {
+              if (m_Fields[j].Match(asnNode.GetChild(i), setSchema)) {
                 j++;
                 matched = true;
                 break;
@@ -203,7 +223,7 @@ FIX_CHILD:
           for (int i = 0; i < asnNode.ChildCount; i++) {
             bool matched = false;
             for (int j = 0; !matched && j < m_Fields.Count; j++) {
-              if (m_Fields[j].Match(asnNode.GetChild(i))) {
+              if (m_Fields[j].Match(asnNode.GetChild(i), setSchema)) {
                 if (!matchedFields.Contains(m_Fields[j])) matchedFields.Add(m_Fields[j]);
                 matched = true;
               }
@@ -222,6 +242,7 @@ FIX_CHILD:
           throw new Exception("Impossible.");
         }
       }
+      asnNode.Schema = this;
       return true;
     }
     public TreeNode ExportToTreeNode() {

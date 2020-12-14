@@ -8,5 +8,7 @@ namespace ASN1Viewer.schema {
     int Tag { get; }
     int ChildCount { get; }
     IASNNode GetChild(int i);
+
+    ISchemaNode Schema { set; }
   }
 }

@@ -51,8 +51,7 @@ namespace ASN1Viewer {
     private byte[] m_Data         = null;
 
     private List<ASNNode> m_Chidren    = null;
-    private TypeDef       m_Schema     = null;
-    private string        m_SchemaName = null;
+    private schema.ISchemaNode m_SchemaNode = null;
 
     private ASNNode(byte tag, int elementStart, int elementEnd, int contentStart, int contentEnd, byte[] data) {
       m_Tag = tag;
@@ -70,6 +69,12 @@ namespace ASN1Viewer {
     public schema.IASNNode GetChild(int idx) {
       if (m_Chidren == null || idx < 0 || idx >= m_Chidren.Count) return null;
       return m_Chidren[idx];
+    }
+
+    public schema.ISchemaNode Schema {
+      set {
+        m_SchemaNode = value;
+      }
     }
 
     public int Count {
@@ -92,152 +97,11 @@ namespace ASN1Viewer {
     public int ContentStart   { get { return m_ContentStart;               } }
     public int ContentEnd     { get { return m_ContentEnd;                 } }
 
-    public TypeDef Schema {
-      get { return m_Schema; }
-    }
-
-    private byte GetSchemaTag(string primeType, List<string> tag) {
-      if (tag != null && tag.Count > 0) {
-        if (tag.Count == 1) return (byte)int.Parse(tag[0]);
-      }
-      switch (primeType) {
-        case "SEQUENCE":          return UNIVERSAL_SEQ_SEQOF;
-        case "OCTET STRING":      return UNIVERSAL_OCTETSTRING;
-        case "OBJECT IDENTIFIER": return UNIVERSAL_OID;
-        case "BIT STRING":        return UNIVERSAL_BITSTRING;
-        case "INTEGER":           return UNIVERSAL_INTEGER;
-        case "BOOLEAN":           return UNIVERSAL_BOOLEAN;
-        case "PrintableString":   return UNIVERSAL_PRINTABLESTRING;
-        case "NumericString":     return UNIVERSAL_OCTETSTRING;
-        case "IA5String":         return UNIVERSAL_IA5STRING;
-        case "UTCTime":           return UNIVERSAL_UTCTIME;
-        case "GeneralizedTime":   return UNIVERSAL_GENTIME;
-        case "TeletexString":     return UNIVERSAL_T61STRING;
-        case "SET":               return UNIVERSAL_SET_SETOF;
-      }
-
-      throw new Exception("Failed to get schema tag");
-    }
-
-    public bool MatchSchema(string name, TypeDef t) {
-      bool b = MatchSchema(name, t.PrimeType, t.Tag, t);
-      if (!b) {
-        List<ASNNode> n = new List<ASNNode>();
-        n.Add(this);
-        while (n.Count > 0) {
-          ASNNode an = n[n.Count - 1];
-          n.RemoveAt(n.Count - 1);
-          an.m_Schema = null;
-          an.m_SchemaName = "";
-          for (int i = 0; i < an.Count; i++) {
-            n.Add(an[i]);
-          }
-          
-        }
-      }
-      return b;
-    }
-    public bool MatchSchema(string name, string primeType, List<string> tag, TypeDef t) {
-      if (t != null) {
-        primeType = t.PrimeType;
-      }
-      
-
-      if (tag == null && t != null) {
-        tag = t.Tag;
-      }
-
-      if (primeType == "ANY" ) {
-        if (Count == 0) {
-          m_SchemaName = name;
-          m_Schema = t;
-          return true;
-        } else {
-          return false;
-        }
-      }
-      if (primeType == "CHOICE") {
-        for (int i = 0; i < t.Fields.Count; i++) {
-          if (MatchSchema(t.Fields[i].Name, t.Fields[i].PrimeType, t.Fields[i].Tag, t.Fields[i].TypeObj)) {
-            m_SchemaName = String.IsNullOrEmpty(name) ? t.Fields[i].Name : name;
-            m_Schema = t.Fields[i].TypeObj;
-            return true;
-          }
-        }
-
-        return false;
-      }
-
-      if (GetSchemaTag(primeType, tag) != TagNum) {
-        return false;
-      }
-
-      if (tag != null && tag.Count > 0) {
-        return Count > 0 && this[0].MatchSchema(name, primeType, null, t);
-      }
-
-      if (primeType == "SEQUENCE") {
-        int i = 0;
-        int idx = 0;
-        ASNNode c = this[idx];
-        if (t.Fields == null) {
-          while (c != null) {
-            if (!c.MatchSchema(t.TypeName, t.TypeObj.PrimeType, t.TypeObj.Tag, t.TypeObj)) {
-              return false;
-            }
-            c = this[++idx];
-          }
-        } else {
-          while (c != null && i < t.Fields.Count) {
-            if (!t.Fields[i].Optional) {
-              if (!c.MatchSchema(t.Fields[i].Name, t.Fields[i].PrimeType, t.Fields[i].Tag, t.Fields[i].TypeObj)) {
-                return false;
-              }
-
-              i++;
-              c = this[++idx];
-            } else {
-              if (!c.MatchSchema(t.Fields[i].Name, t.Fields[i].PrimeType, t.Fields[i].Tag, t.Fields[i].TypeObj)) {
-                i++;
-              } else {
-                i++;
-                c = this[++idx];
-              }
-            }
-          }
-
-          if (c == null) {
-            for (; i < t.Fields.Count; i++) {
-              if (!t.Fields[i].Optional)
-                return false;
-            }
-          } else {
-            return false;
-          }
-        }
-      } else if (primeType == "SET") {
-        int idx = 0;
-        ASNNode c = this[idx];
-        if (t.Fields == null) {
-          while (c != null) {
-            if (!c.MatchSchema(t.TypeName, t.TypeObj.PrimeType, t.TypeObj.Tag, t.TypeObj)) {
-              return false;
-            }
-            c = this[++idx];
-          }
-        } else {
-          throw new Exception("TODO:");
-        }
-      }
-      m_SchemaName = name;
-      m_Schema = t;
-      return true;
-    }
 
     public override string ToString() {
       String str = "";
-      if (m_SchemaName != null) {
-        str = m_SchemaName + " ";
+      if (m_SchemaNode != null) {
+        str = m_SchemaNode.Name + " ";
       }
       if (TagClass != NODE_CLASS_UNIVERSAL) {
         if      (TagClass == NODE_CLASS_APPLICATION)  str += "[Application][" + TagNum + "]";

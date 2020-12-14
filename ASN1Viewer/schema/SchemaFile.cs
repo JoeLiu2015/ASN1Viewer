@@ -27,6 +27,25 @@ namespace ASN1Viewer.schema {
       throw new Exception(String.Format("Failed to find the type '{0}' in the schema '{1}'", name, m_Name));
     }
 
+    public static Dictionary<string, SchemaFile> Schemas {
+      get {
+        if (SCHEMA_FILES.Count > 0) return SCHEMA_FILES;
+        if (Directory.Exists(".\\schemas")) {
+          string[] files = Directory.GetFiles(".\\schemas");
+          for (int i = 0; i < files.Length; i++) {
+            FileInfo fi = new FileInfo(files[i]);
+            try {
+              SchemaFile sf = SchemaFile.ParseFrom(fi.FullName);
+              SCHEMA_FILES.Add(fi.FullName, sf);
+            } catch (Exception ex) {
+              
+            }
+          }
+        }
+        return SCHEMA_FILES;
+      }
+    }
+
     public static SchemaFile ParseFrom(string file) {
       file = new FileInfo(file).FullName;
       if (PARSED_SCHEMA.ContainsKey(file)) return PARSED_SCHEMA[file];
@@ -106,6 +125,8 @@ BEGIN:
       foreach (KeyValuePair<string, TypeDef> ts in m_Types) {
         ts.Value.FixValue(m_Types);
         ts.Value.FixSize(m_Consts);
+      }
+      foreach (KeyValuePair<string, TypeDef> ts in m_Types) {
         ts.Value.FixTag();
       }
     }

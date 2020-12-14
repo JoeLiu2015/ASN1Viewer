@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace ASN1Viewer.schema {
-  public class FieldDef {
+  public class FieldDef : ISchemaNode {
     private string m_FieldName = null;
     private string m_TypeName  = null;
     private int    m_Tag       = -1;
@@ -18,6 +18,9 @@ namespace ASN1Viewer.schema {
 
     private TreeNode m_TreeNode = null;
 
+    public string Name {
+      get {  return m_FieldName; }
+    }
     public bool IsOptional {
       get { return m_Optional; }
     }
@@ -94,17 +97,25 @@ namespace ASN1Viewer.schema {
       }
     }
 
-    public bool Match(IASNNode asnNode) {
+    public bool Match(IASNNode asnNode, bool setSchema) {
       if (m_TagSpecified && !m_Implicit && m_Tag > 0) {
         if (m_Tag != asnNode.Tag) return false;
         if (asnNode.ChildCount != 1) return false;
         asnNode = asnNode.GetChild(0);
       }
       if (m_Type != null) {
-        return m_Type.Match(asnNode);
+        return m_Type.Match(asnNode, setSchema);
       } else {
-        if (m_TypeName == "ANY") return true;
-        return m_Tag == asnNode.Tag;
+        if (m_TypeName == "ANY") {
+          asnNode.Schema = this;
+          return true;
+        }
+        if (m_Tag == asnNode.Tag) {
+          asnNode.Schema = this;
+          return true;
+        } else {
+          return false;
+        }
       }
     }
     public TreeNode ExportToTreeNode() {

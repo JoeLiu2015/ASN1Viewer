@@ -13,7 +13,7 @@ namespace ASN1Viewer
   public partial class MainForm : Form
   {
     private const long SIZE_100MB = 1024 * 1024 * 100L;
-    private Schema m_Schema = null;
+
     public MainForm()
     {
       InitializeComponent();
@@ -154,16 +154,7 @@ namespace ASN1Viewer
       }
       this.menuRecent.Enabled = this.menuRecent.DropDownItems.Count > 0;
     }
-    private Schema LoadSchema() {
-      if (m_Schema != null) return m_Schema;
-      m_Schema = new Schema();
-      string[] files = Directory.GetFiles("schemas");
-      for (int i = 0; i < files.Length; i++) {
-        m_Schema.Add(files[i]);
-      }
-
-      return m_Schema;
-    }
+    
 
     private void ParseInputFile(string file) {
       FileInfo f = new FileInfo(file);
@@ -224,12 +215,17 @@ namespace ASN1Viewer
     private bool ParseASN1(byte[] data) {
       try {
         ASNNode a = ASNNode.Parse(data);
-        Schema schema = LoadSchema();
-        Dictionary<string, TypeDef> types = schema.Types;
-        foreach (KeyValuePair<string, TypeDef> kv in types) {
-          //if (kv.Key != "Certificate") continue;
-          if (a.MatchSchema(kv.Key, kv.Value)) break;
+        Dictionary<string, schema.SchemaFile> schemas = schema.SchemaFile.Schemas;
+
+        // Match schema
+        Dictionary<string, schema.TypeDef> matched = new Dictionary<string, schema.TypeDef>();
+        foreach (KeyValuePair<string, schema.SchemaFile> kv in schemas) {
+          Dictionary<string, schema.TypeDef> types = kv.Value.Types;
+          foreach (KeyValuePair<string, schema.TypeDef> nt in types) {
+            if (!matched.ContainsKey(nt.Key) && nt.Value.Match(a, false)) matched.Add(nt.Key, nt.Value);
+          }
         }
+        if (matched.ContainsKey("Certificate")) matched["Certificate"].Match(a, true);
 
         this.treeView1.Nodes.Clear();
         this.treeView1.Nodes.Add(CreateNode(a));
