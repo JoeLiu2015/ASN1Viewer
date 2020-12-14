@@ -226,6 +226,7 @@ namespace ASN1Viewer
           }
         }
         if (matched.ContainsKey("Certificate")) matched["Certificate"].Match(a, true);
+        if (matched.ContainsKey("ContentInfo")) matched["ContentInfo"].Match(a, true);
 
         this.treeView1.Nodes.Clear();
         this.treeView1.Nodes.Add(CreateNode(a));
