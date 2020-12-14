@@ -116,9 +116,19 @@ namespace ASN1Viewer.schema {
       
       if (m_Type != null) {
         if (m_TagSpecified && m_Implicit && m_Tag > 0) {
-          return m_Type.Match(asnNode, setSchema, m_Tag);
+          if (m_Type.Match(asnNode, setSchema, m_Tag)) {
+            if (setSchema) asnNode.Schema = this;
+            return true;
+          } else {
+            return false;
+          }
         } else { 
-          return m_Type.Match(asnNode, setSchema);
+          if (m_Type.Match(asnNode, setSchema)) {
+            if (setSchema) asnNode.Schema = this;
+            return true;
+          } else {
+            return false;
+          }
         }
       } else {
         if (m_TypeName == "ANY") {
