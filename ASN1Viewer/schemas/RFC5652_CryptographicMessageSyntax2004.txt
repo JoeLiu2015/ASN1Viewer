@@ -38,10 +38,10 @@
 
    ContentInfo ::= SEQUENCE {
      contentType ContentType,
-     content [0] EXPLICIT ANY DEFINED BY contentType }
+     content [0] EXPLICIT Content} --ANY DEFINED BY contentType }
+
 
    ContentType ::= OBJECT IDENTIFIER
-
 
    SignedData ::= SEQUENCE {
      version CMSVersion,
@@ -331,4 +331,11 @@
 
    Signature ::= BIT STRING
 
+   Content ::= CHOICE {
+      signed-data        SignedData, 
+      enveloped-data     EnvelopedData, 
+      digested-data      DigestedData, 
+      encrypted-data     EncryptedData,
+      authenticated-data AuthenticatedData 
+   }
    END -- of CryptographicMessageSyntax2004

@@ -31,10 +31,20 @@ namespace ASN1Viewer.schema {
           m_Type = vals[m_TypeName];
         }
       }
+      if (m_Type != null && m_TypeName == null) {
+        m_Type.FixValue(vals);
+      }
     }
     public void FixTag() {
       if (m_Tag >= 0) {
         if (m_TagSpecified && !m_Implicit) m_Tag |= ASNNode.NODE_CONSTRUCTED_MASK;
+        if (m_TagSpecified && m_Implicit) {
+          if (m_Type != null && (m_Type.GetPrimeType() == "SEQUENCE" || m_Type.GetPrimeType() == "SET")) {
+            m_Tag |= ASNNode.NODE_CONSTRUCTED_MASK;
+          } else if (m_TypeName == "SEQUENCE" || m_TypeName == "SET") {
+            m_Tag |= ASNNode.NODE_CONSTRUCTED_MASK;
+          }
+        }
         return;
       }
       if (m_TypeName == "CHOICE" || m_TypeName == "ANY") {
@@ -103,15 +113,22 @@ namespace ASN1Viewer.schema {
         if (asnNode.ChildCount != 1) return false;
         asnNode = asnNode.GetChild(0);
       }
+      
       if (m_Type != null) {
-        return m_Type.Match(asnNode, setSchema);
+        if (m_TagSpecified && m_Implicit && m_Tag > 0) {
+          return m_Type.Match(asnNode, setSchema, m_Tag);
+        } else { 
+          return m_Type.Match(asnNode, setSchema);
+        }
       } else {
         if (m_TypeName == "ANY") {
-          asnNode.Schema = this;
+          if (setSchema) asnNode.Schema = this;
           return true;
         }
-        if (m_Tag == asnNode.Tag) {
-          asnNode.Schema = this;
+        int tag = m_Tag;
+        if (m_TagSpecified && !m_Implicit && m_Tag > 0)  tag = Utils.GetPrimeTypeTag(m_TypeName);
+        if (tag == asnNode.Tag || (tag | ASNNode.NODE_CONSTRUCTED_MASK) == asnNode.Tag) {
+          if (setSchema) asnNode.Schema = this;
           return true;
         } else {
           return false;

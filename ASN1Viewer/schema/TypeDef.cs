@@ -156,6 +156,9 @@ FIX_CHILD:
     }
 
     public bool Match(IASNNode asnNode, bool setSchema) {
+      return Match(asnNode, setSchema, m_Tag);
+    }
+    public bool Match(IASNNode asnNode, bool setSchema, int tagVal) {
       string primeType = GetPrimeType();
       if (primeType == "ANY") {
         if (setSchema) asnNode.Schema = this;
@@ -170,7 +173,7 @@ FIX_CHILD:
         }
         return false;
       }
-      if (m_Tag != asnNode.Tag) {
+      if (tagVal != asnNode.Tag) {
         return false;
       }
       if (m_SeqOfTypeName != null || m_SeqOfType != null) {
@@ -242,7 +245,7 @@ FIX_CHILD:
           throw new Exception("Impossible.");
         }
       }
-      asnNode.Schema = this;
+      if (setSchema) asnNode.Schema = this;
       return true;
     }
     public TreeNode ExportToTreeNode() {
