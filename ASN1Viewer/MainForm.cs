@@ -13,7 +13,7 @@ namespace ASN1Viewer
   public partial class MainForm : Form
   {
     private const long SIZE_100MB = 1024 * 1024 * 100L;
-
+    private schema.SchemaDlg m_SchemaDlg = null;
     public MainForm()
     {
       InitializeComponent();
@@ -56,17 +56,6 @@ namespace ASN1Viewer
     }
     private void menuAbout_Click(object sender, EventArgs e) {
       new About().ShowDialog();
-      //Schema sc = new Schema();
-      //sc.Add(@"D:\GitHub\ASN1Viewer\ASN1Viewer\schemas\X509.txt");
-
-      //SchemaTokenizer st = new SchemaTokenizer(File.ReadAllText(@"D:\GitHub\ASN1Viewer\ASN1Viewer\schemas\X509.txt"));
-
-      //string s = st.Next();
-      //while (s != null) {
-      //  System.Diagnostics.Debug.WriteLine(s);
-      //  s = st.Next();
-      //}
-
     }
     private void menuChinese_Click(object sender, EventArgs e) {
       if (this.menuChinese.Checked) return;
@@ -96,6 +85,10 @@ namespace ASN1Viewer
       }
       ParseInputFile(file);
     }
+    private void menuASN1Modules_Click(object sender, EventArgs e) {
+      if (m_SchemaDlg == null) m_SchemaDlg = new schema.SchemaDlg();
+      m_SchemaDlg.ShowDialog();
+    }
     private void txtInput_TextChanged(object sender, EventArgs e) {
       ParseInputText(this.txtInput.Text);
     }
@@ -123,19 +116,20 @@ namespace ASN1Viewer
       this.lbStatus.ForeColor = Color.Red;
     }
     private void LoadLang() {
-      this.Text = Lang.T["PROD_NAME"];
-      this.menuFile.Text = Lang.T["MENU_FILE"];
-      this.menuOptions.Text = Lang.T["MENU_OPTIONS"];
-      this.menuHelp.Text = Lang.T["MENU_HELP"];
-      this.menuOpen.Text = Lang.T["MENU_OPEN"];
-      this.menuExit.Text = Lang.T["MENU_EXIT"];
-      this.menuRecent.Text = Lang.T["MENU_RECENT"];
-      this.menuLanguage.Text = Lang.T["MENU_LANG"];
-      this.menuChinese.Text = Lang.T["MENU_CHINESE"];
-      this.menuEnglish.Text = Lang.T["MENU_ENGLISH"];
-      this.menuAbout.Text = Lang.T["MENU_ABOUT"];
-      this.tabPageInput.Text = Lang.T["TAB_INPUT"];
-      this.tabPageBytes.Text = Lang.T["TAB_BYTES"];
+      this.Text                 = Lang.T["PROD_NAME"];
+      this.menuFile.Text        = Lang.T["MENU_FILE"];
+      this.menuView.Text        = Lang.T["MENU_VIEW"];
+      this.menuASN1Modules.Text = Lang.T["MENU_MODULES"];
+      this.menuHelp.Text        = Lang.T["MENU_HELP"];
+      this.menuOpen.Text        = Lang.T["MENU_OPEN"];
+      this.menuExit.Text        = Lang.T["MENU_EXIT"];
+      this.menuRecent.Text      = Lang.T["MENU_RECENT"];
+      this.menuLanguage.Text    = Lang.T["MENU_LANG"];
+      this.menuChinese.Text     = Lang.T["MENU_CHINESE"];
+      this.menuEnglish.Text     = Lang.T["MENU_ENGLISH"];
+      this.menuAbout.Text       = Lang.T["MENU_ABOUT"];
+      this.tabPageInput.Text    = Lang.T["TAB_INPUT"];
+      this.tabPageBytes.Text    = Lang.T["TAB_BYTES"];
       if (this.treeView1.SelectedNode != null) {
         ASNNode an = this.treeView1.SelectedNode.Tag as ASNNode;
         if (an != null) this.lbStatus.Text = String.Format(Lang.T["STATUS_ASNINFO"], an.Start, an.TagNum, an.ContentEnd - an.ContentStart);
@@ -253,5 +247,7 @@ namespace ASN1Viewer
         this.hexViewer1.RefreshView();
       }
     }
+
+   
   }
 }

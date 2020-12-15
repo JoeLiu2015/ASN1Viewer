@@ -1,7 +1,8 @@
 ﻿
 PROD_NAME      : ASN.1 Viewer
 MENU_FILE      : &File
-MENU_OPTIONS   : &Options
+MENU_VIEW      : &View
+MENU_MODULES   : &ASN.1 Modules
 MENU_HELP      : &Help
 MENU_OPEN      : &Open...
 MENU_EXIT      : &Exit
@@ -18,3 +19,6 @@ ABOUT_COPYRIGHT: Copyright © 2020-{0} ASN.1 Viewer Ltd
 ABOUT_BUILD    : Version {0}  Build {1}
 MSG_NOFILE     : File "{0}" is not found.
 TXT_SKIP       : Skip {0} bytes ({1} lines)
+MODULES_TITLE  : ASN.1 Modules Viewer
+MSG_NOMODULES  : Folder "{0}" is not found.
+MSG_ERROR      : ERROR

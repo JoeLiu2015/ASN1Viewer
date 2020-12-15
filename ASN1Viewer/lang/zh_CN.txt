@@ -1,7 +1,8 @@
 ﻿
 PROD_NAME      : ASN.1查看器
 MENU_FILE      : 文件(&F)
-MENU_OPTIONS   : 选项(&O)
+MENU_VIEW      : 查看(&V)
+MENU_MODULES   : ASN.1 模块(&A)
 MENU_HELP      : 帮助(&H)
 MENU_OPEN      : 打开文件(&O)...
 MENU_EXIT      : 退出(&E)
@@ -18,3 +19,6 @@ ABOUT_COPYRIGHT: 版权 © 2020-{0} ASN.1 Viewer Ltd
 ABOUT_BUILD    : 版本 {0}  内部版本号 {1}
 MSG_NOFILE     : 文件 “{0}” 不存在.
 TXT_SKIP       : 跳过 {0} 字节 ({1} 行)
+MODULES_TITLE  : ASN.1 模块查看器
+MSG_NOMODULES  : 目录 "{0}" 不存在.
+MSG_ERROR      : 错误

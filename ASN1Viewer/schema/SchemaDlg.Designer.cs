@@ -33,17 +33,17 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.treeView1.Location = new System.Drawing.Point(4, 4);
       this.treeView1.Name = "treeView1";
-      this.treeView1.Size = new System.Drawing.Size(931, 564);
+      this.treeView1.Size = new System.Drawing.Size(931, 521);
       this.treeView1.TabIndex = 0;
       // 
       // SchemaDlg
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(938, 571);
+      this.ClientSize = new System.Drawing.Size(938, 527);
       this.Controls.Add(this.treeView1);
       this.Name = "SchemaDlg";
-      this.Text = "Schema Viewer";
+      this.Text = "ASN.1 Modules Viewer";
       this.Load += new System.EventHandler(this.SchemaDlg_Load);
       this.ResumeLayout(false);
 
