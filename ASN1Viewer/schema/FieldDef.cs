@@ -16,8 +16,6 @@ namespace ASN1Viewer.schema {
 
     private SizeDef m_Size     = null;
 
-    private TreeNode m_TreeNode = null;
-
     public string Name {
       get {  return m_FieldName; }
     }
@@ -146,18 +144,16 @@ namespace ASN1Viewer.schema {
       }
     }
     public TreeNode ExportToTreeNode() {
-      if (m_TreeNode != null) return m_TreeNode;
-      m_TreeNode = new TreeNode(String.Format("{0} {1}", m_FieldName, m_TypeName == null ? "" : m_TypeName));
+      TreeNode node = new TreeNode(String.Format("{0} {1}", m_FieldName, m_TypeName == null ? "" : m_TypeName));
       if (m_Type != null){
         TreeNode p = m_Type.ExportToTreeNode();
-        if (p.Parent != null) m_TreeNode.Nodes.Add(p.Clone() as TreeNode);
-        else m_TreeNode.Nodes.Add(p);
+        node.Nodes.Add(p);
         //for (int i = 0; i < p.Nodes.Count; i++) {
         //if (p.Parent != null) m_TreeNode.Nodes.Add(p.Nodes[i].Clone() as TreeNode);
           //else m_TreeNode.Nodes.Add(p.Nodes[i]);
         //}
       }
-      return m_TreeNode;
+      return node;
     }
     private void ParseTag(Tokenizer tok) {
       m_TagSpecified = true;
