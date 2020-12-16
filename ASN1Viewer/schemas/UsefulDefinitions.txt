@@ -1,4 +1,4 @@
-UsefulDefinitions {joint-iso-itu-t ds(5) module(1) usefulDefinitions(0) 8}
+UsefulDefinitions {joint-iso-itu-t(2) ds(5) module(1) usefulDefinitions(0) 8}
 DEFINITIONS ::=
 BEGIN
 
@@ -11,12 +11,12 @@ BEGIN
 
 ID    ::= OBJECT IDENTIFIER
 
-ds ID ::= {joint-iso-itu-t ds(5)}
+ds ID ::= {joint-iso-itu-t(2) ds(5)}
 
 -- The following definition is for ASN.1 definitions moved from 
 -- Rec. ITU-T X.660 | ISO/IEC 9834-1:
 
-id ID ::= {joint-iso-itu-t registration-procedures(17) module(1) directory-defs(2)}
+id ID ::= {joint-iso-itu-t(2) registration-procedures(17) module(1) directory-defs(2)}
 
 -- The following defition is for ASN.1 definitions of LDAP schema
 

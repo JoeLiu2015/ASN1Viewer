@@ -23,6 +23,14 @@ namespace ASN1Viewer.schema {
       get { return m_Optional; }
     }
 
+    public bool HasExplicitTag {
+      get { return m_TagSpecified && !m_Implicit && m_Tag > 0; } 
+    }
+
+    public bool HasImplicitTag {
+      get { return m_TagSpecified && m_Implicit && m_Tag > 0; }
+    }
+
     public void FixValue(Dictionary<string, TypeDef> vals) {
       if (m_Type == null && m_TypeName != null) {
         if (!Utils.IsPrimeType(m_TypeName)) {
@@ -106,22 +114,23 @@ namespace ASN1Viewer.schema {
     }
 
     public bool Match(IASNNode asnNode, bool setSchema) {
-      if (m_TagSpecified && !m_Implicit && m_Tag > 0) {
+      IASNNode node = asnNode;
+      if (HasExplicitTag) {
         if (m_Tag != asnNode.Tag) return false;
         if (asnNode.ChildCount != 1) return false;
-        asnNode = asnNode.GetChild(0);
+        node = asnNode.GetChild(0);
       }
       
       if (m_Type != null) {
-        if (m_TagSpecified && m_Implicit && m_Tag > 0) {
-          if (m_Type.Match(asnNode, setSchema, m_Tag)) {
+        if (HasImplicitTag) {
+          if (m_Type.Match(node, setSchema, m_Tag)) {
             if (setSchema) asnNode.Schema = this;
             return true;
           } else {
             return false;
           }
         } else { 
-          if (m_Type.Match(asnNode, setSchema)) {
+          if (m_Type.Match(node, setSchema)) {
             if (setSchema) asnNode.Schema = this;
             return true;
           } else {
@@ -134,8 +143,8 @@ namespace ASN1Viewer.schema {
           return true;
         }
         int tag = m_Tag;
-        if (m_TagSpecified && !m_Implicit && m_Tag > 0)  tag = Utils.GetPrimeTypeTag(m_TypeName);
-        if (tag == asnNode.Tag || (tag | ASNNode.NODE_CONSTRUCTED_MASK) == asnNode.Tag) {
+        if (HasExplicitTag)  tag = Utils.GetPrimeTypeTag(m_TypeName);
+        if (tag == node.Tag || (tag | ASNNode.NODE_CONSTRUCTED_MASK) == node.Tag) {
           if (setSchema) asnNode.Schema = this;
           return true;
         } else {

@@ -182,6 +182,7 @@ FIX_CHILD:
               return false;
             }
           }
+          if (setSchema) asnNode.Schema = this;
           return true;
         } else {
           int tag = Utils.GetPrimeTypeTag(m_SeqOfTypeName);
@@ -190,6 +191,7 @@ FIX_CHILD:
               return false;
             }
           }
+          if (setSchema) asnNode.Schema = this;
           return true;
         }
       }
@@ -239,6 +241,7 @@ FIX_CHILD:
               return false;
             }
           }
+          if (setSchema) asnNode.Schema = this;
           return true;
         } else {
           throw new Exception("Impossible.");

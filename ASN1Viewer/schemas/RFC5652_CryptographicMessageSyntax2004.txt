@@ -331,11 +331,29 @@
 
    Signature ::= BIT STRING
 
+   -- Compressed data from RFC3274
+   id-alg-zlibCompress OBJECT IDENTIFIER ::= { iso(1) member-body(2)
+       us(840) rsadsi(113549) pkcs(1) pkcs-9(9) smime(16) alg(3) 8 }
+
+   -- Content Type Object Identifiers
+
+   id-ct-compressedData OBJECT IDENTIFIER ::= { iso(1) member-body(2)
+       us(840) rsadsi(113549) pkcs(1) pkcs-9(9) smime(16) ct(1) 9 }
+
+   CompressionAlgorithmIdentifier ::= AlgorithmIdentifier
+
+   CompressedData ::= SEQUENCE {
+     version CMSVersion,       -- Always set to 0
+     compressionAlgorithm CompressionAlgorithmIdentifier,
+     encapContentInfo EncapsulatedContentInfo
+   }
+
    Content ::= CHOICE {
       signed-data        SignedData, 
       enveloped-data     EnvelopedData, 
       digested-data      DigestedData, 
       encrypted-data     EncryptedData,
-      authenticated-data AuthenticatedData 
+      authenticated-data AuthenticatedData,
+      compressed-data    CompressedData
    }
    END -- of CryptographicMessageSyntax2004

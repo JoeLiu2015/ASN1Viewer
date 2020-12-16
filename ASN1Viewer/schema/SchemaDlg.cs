@@ -8,8 +8,19 @@ namespace ASN1Viewer.schema {
       InitializeComponent();
     }
 
+    private bool m_Loaded = false;
     private void SchemaDlg_Load(object sender, EventArgs e) {
       LoadLang();
+      LoadAsn1Modules();
+    }
+
+    private void LoadLang() {
+      this.Text = Lang.T["MODULES_TITLE"];
+    }
+
+    private void LoadAsn1Modules() {
+      if (m_Loaded) return;
+      m_Loaded = true;
       if (Directory.Exists(".\\schemas")) {
         string[] files = Directory.GetFiles(".\\schemas");
         for (int i = 0; i < files.Length; i++) {
@@ -21,15 +32,9 @@ namespace ASN1Viewer.schema {
             this.treeView1.Nodes.Add(fi.Name + String.Format("({0}: {1}", Lang.T["MSG_ERROR"], ex.Message));
           }
         }
-
       } else {
         MessageBox.Show(String.Format(Lang.T["MSG_NOMODULES"], ".\\schemas"), Lang.T["PROD_NAME"], MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
-    }
-
-    private void LoadLang() {
-      this.Text = Lang.T["MODULES_TITLE"];
-      
     }
   }
 }
