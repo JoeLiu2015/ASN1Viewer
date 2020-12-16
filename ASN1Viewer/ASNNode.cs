@@ -286,7 +286,7 @@ namespace ASN1Viewer {
     private static Dictionary<String, String> oids = null; 
     private static String GetOIDName(String oid) {
       if (oids == null) {
-        String[] lines = File.ReadAllLines("oids.txt");
+        String[] lines = File.ReadAllLines(".\\files\\oids.txt");
         oids = new Dictionary<String, String>();
         for (int i = 0; i < lines.Length; i++) {
           String[] parts = lines[i].Split(new char[]{' '}, StringSplitOptions.RemoveEmptyEntries);

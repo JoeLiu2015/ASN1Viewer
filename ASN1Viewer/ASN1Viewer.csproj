@@ -134,6 +134,9 @@
     <Content Include="files\Asn1Modules\UsefulDefinitions.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="files\oids.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="files\TestFiles\PKCS7_CompressedData.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -145,9 +148,6 @@
     </Content>
     <Content Include="lang\en_US.txt" />
     <Content Include="lang\zh_CN.txt" />
-    <Content Include="oids.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
