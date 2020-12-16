@@ -87,7 +87,6 @@
       <DependentUpon>SchemaDlg.cs</DependentUpon>
     </Compile>
     <Compile Include="schema\SchemaFile.cs" />
-    <Compile Include="schema\SchemaManager.cs" />
     <Compile Include="schema\SizeDef.cs" />
     <Compile Include="schema\Tokenizer.cs" />
     <Compile Include="schema\TypeDef.cs" />
@@ -114,29 +113,53 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="files\Asn1Modules\NIST-SHA2.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="files\Asn1Modules\RFC3281_PKIXAttributeCertificate.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="files\Asn1Modules\RFC5280_PKIX1Explicit88.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="files\Asn1Modules\RFC5280_PKIX1Implicit88.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="files\Asn1Modules\RFC5652_AttributeCertificateVersion1.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="files\Asn1Modules\RFC5652_CryptographicMessageSyntax2004.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="files\Asn1Modules\UsefulDefinitions.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="files\TestFiles\PKCS7_CompressedData.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="files\TestFiles\PKCS7_EncryptedData.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="files\TestFiles\PKCS7_SignedData.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="lang\en_US.txt" />
     <Content Include="lang\zh_CN.txt" />
     <Content Include="oids.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="schemas\RFC3281_PKIXAttributeCertificate.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="schemas\RFC5280_PKIX1Explicit88.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="schemas\RFC5280_PKIX1Implicit88.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="schemas\RFC5652_AttributeCertificateVersion1.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="schemas\RFC5652_CryptographicMessageSyntax2004.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="schemas\UsefulDefinitions.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="files\TestFiles\PKCS12.pfx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="files\TestFiles\PKCS7_Certs.p7b">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="files\TestFiles\X509.cer">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -30,8 +30,8 @@ namespace ASN1Viewer.schema {
     public static Dictionary<string, SchemaFile> Schemas {
       get {
         if (SCHEMA_FILES.Count > 0) return SCHEMA_FILES;
-        if (Directory.Exists(".\\schemas")) {
-          string[] files = Directory.GetFiles(".\\schemas");
+        if (Directory.Exists(".\\files\\Asn1Modules")) {
+          string[] files = Directory.GetFiles(".\\files\\Asn1Modules");
           for (int i = 0; i < files.Length; i++) {
             FileInfo fi = new FileInfo(files[i]);
             try {

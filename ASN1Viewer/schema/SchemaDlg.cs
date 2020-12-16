@@ -21,8 +21,8 @@ namespace ASN1Viewer.schema {
     private void LoadAsn1Modules() {
       if (m_Loaded) return;
       m_Loaded = true;
-      if (Directory.Exists(".\\schemas")) {
-        string[] files = Directory.GetFiles(".\\schemas");
+      if (Directory.Exists(".\\files\\Asn1Modules")) {
+        string[] files = Directory.GetFiles(".\\files\\Asn1Modules");
         for (int i = 0; i < files.Length; i++) {
           FileInfo fi = new FileInfo(files[i]);
           try {
