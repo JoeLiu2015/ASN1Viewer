@@ -114,6 +114,7 @@ namespace ASN1Viewer.schema {
     }
 
     public bool Match(IASNNode asnNode, bool setSchema) {
+      bool ret = false;
       IASNNode node = asnNode;
       if (HasExplicitTag) {
         if (m_Tag != asnNode.Tag) return false;
@@ -122,21 +123,9 @@ namespace ASN1Viewer.schema {
       }
       
       if (m_Type != null) {
-        if (HasImplicitTag) {
-          if (m_Type.Match(node, setSchema, m_Tag)) {
-            if (setSchema) asnNode.Schema = this;
-            return true;
-          } else {
-            return false;
-          }
-        } else { 
-          if (m_Type.Match(node, setSchema)) {
-            if (setSchema) asnNode.Schema = this;
-            return true;
-          } else {
-            return false;
-          }
-        }
+        if (HasImplicitTag) ret = m_Type.Match(node, setSchema, m_Tag);
+        else                ret = m_Type.Match(node, setSchema);
+        
       } else {
         if (m_TypeName == "ANY") {
           if (setSchema) asnNode.Schema = this;
@@ -144,13 +133,10 @@ namespace ASN1Viewer.schema {
         }
         int tag = m_Tag;
         if (HasExplicitTag)  tag = Utils.GetPrimeTypeTag(m_TypeName);
-        if (tag == node.Tag || (tag | ASNNode.NODE_CONSTRUCTED_MASK) == node.Tag) {
-          if (setSchema) asnNode.Schema = this;
-          return true;
-        } else {
-          return false;
-        }
+        ret = (tag == node.Tag || (tag | ASNNode.NODE_CONSTRUCTED_MASK) == node.Tag);
       }
+      if (ret && setSchema) asnNode.Schema = this;
+      return ret;
     }
     public TreeNode ExportToTreeNode() {
       TreeNode node = new TreeNode(String.Format("{0} {1}", m_FieldName, m_TypeName == null ? "" : m_TypeName));
