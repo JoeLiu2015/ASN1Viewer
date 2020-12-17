@@ -17,6 +17,7 @@ namespace ASN1Viewer
     public MainForm()
     {
       InitializeComponent();
+      this.txtInput.Font = this.hexViewer1.Font;
     }
 
     private void MainForm_Load(object sender, EventArgs e) {
