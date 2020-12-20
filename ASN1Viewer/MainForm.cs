@@ -220,8 +220,12 @@ namespace ASN1Viewer
             if (!matched.ContainsKey(nt.Key) && nt.Value.Match(a, false)) matched.Add(nt.Key, nt.Value);
           }
         }
-        if (matched.ContainsKey("Certificate")) matched["Certificate"].Match(a, true);
-        if (matched.ContainsKey("ContentInfo")) matched["ContentInfo"].Match(a, true);
+        if      (matched.ContainsKey("Certificate"))    matched["Certificate"].Match(a, true);
+        else if (matched.ContainsKey("ContentInfo"))    matched["ContentInfo"].Match(a, true);
+        else if (matched.ContainsKey("RSAPublicKey"))   matched["RSAPublicKey"].Match(a, true);
+        else if (matched.ContainsKey("RSAPrivateKey"))  matched["RSAPrivateKey"].Match(a, true);
+        else if (matched.ContainsKey("DSAPublicKey")) matched["DSAPublicKey"].Match(a, true);
+        else if (matched.ContainsKey("DSAPrivateKey")) matched["DSAPrivateKey"].Match(a, true);
 
         this.treeView1.Nodes.Clear();
         this.treeView1.Nodes.Add(CreateNode(a));

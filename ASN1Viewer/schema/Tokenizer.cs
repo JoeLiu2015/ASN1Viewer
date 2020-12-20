@@ -41,6 +41,22 @@ namespace ASN1Viewer.schema {
       string next = Next();
       if (next != tok) throw new Exception(string.Format("Expect '{0}' but get '{1}'.", tok, next));
     }
+    public void SKipBracket(string left) {
+      Skip(left);
+      string right = "";
+      if (left == "(")      { right = ")"; }
+      else if (left == "[") { right = "]"; }
+      else if (left == "{") { right = "}"; }
+
+      while (Peek() != right) {
+        if (Peek() == "(" || Peek() == "[" || Peek() == "{") {
+          SKipBracket(Peek());
+          continue;
+        }
+        Next();
+      }
+      Skip(right);
+    }
     public string[] ReadTo(string word) {
       List<string> ret = new List<string>();
       string w = Next();
@@ -107,6 +123,11 @@ namespace ASN1Viewer.schema {
           m_Toks.Add(m_Text.Substring(pos, m_Pos - pos));
           continue;
         }
+        if (ch == '.' && pos + 1 < m_EndPos && m_Text[pos + 1] == '.' && pos + 2 < m_EndPos && m_Text[pos + 2] == '.') {
+          m_Pos += 3;
+          m_Toks.Add(m_Text.Substring(pos, m_Pos - pos));
+          continue;
+        }
         if (ch == '.' && pos + 1 < m_EndPos && m_Text[pos + 1] == '.') {
           m_Pos += 2;
           m_Toks.Add(m_Text.Substring(pos, m_Pos - pos));
@@ -131,7 +152,6 @@ namespace ASN1Viewer.schema {
     }
 
     private void FillSegments() {
-      string size = null;
       while (m_Segment.Count < 20) {
         string tok = this.NextTok();
         if (tok == null) return;
@@ -151,6 +171,9 @@ namespace ASN1Viewer.schema {
           case "DEFINED":
             if (PeekTok() == "BY") m_Segment.Add("DEFINED " + NextTok());
             else m_Segment.Add("DEFINED");
+            break;
+          case "&":
+            m_Segment.Add("&" + NextTok());
             break;
           default:
             m_Segment.Add(tok);
