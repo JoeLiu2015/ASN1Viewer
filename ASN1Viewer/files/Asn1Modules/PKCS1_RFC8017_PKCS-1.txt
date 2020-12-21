@@ -123,14 +123,14 @@
    DSAPublicKey ::= SEQUENCE {
        p    INTEGER,
        q    INTEGER,
-	   g    INTEGER,
+       g    INTEGER,
        Y    INTEGER 
    }
    DSAPrivateKey ::= SEQUENCE {
        version INTEGER,
        p    INTEGER,
        q    INTEGER,
-	   g    INTEGER,
+       g    INTEGER,
        Y    INTEGER,
        X    INTEGER	   
    }

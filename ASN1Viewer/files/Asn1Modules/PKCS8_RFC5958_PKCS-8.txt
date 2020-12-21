@@ -51,5 +51,10 @@ EncryptedPrivateKeyInfo ::= SEQUENCE {
 EncryptedData ::= OCTET STRING
 
 
+PublicKeyInfo ::= SEQUENCE {
+  publicAlgorithm AlgorithmIdentifier,
+  publicKey       BIT STRING
+}
+
 
 END

@@ -180,11 +180,19 @@ namespace ASN1Viewer {
     }
 
     public void ParseChild() {
-      if (!(IsConstructed || (m_Tag == UNIVERSAL_OCTETSTRING && IsValidASN(m_Data, m_ContentStart, m_ContentEnd)))) return;
+      bool   hasChild = IsConstructed;
+      byte[] data     = m_Data;
+      int    start    = m_ContentStart;
+      int    end      = m_ContentEnd;
 
-      byte[] data = m_Data;
-      int start = m_ContentStart;
-      int end = m_ContentEnd;
+      if (!hasChild && m_Tag == UNIVERSAL_OCTETSTRING) {
+        hasChild = IsValidASN(data, start, end);
+      }
+      if (!hasChild && m_Tag == UNIVERSAL_BITSTRING) {
+        if (data[start] == 0) start++;
+        hasChild = IsValidASN(data, start, end);
+      }
+      if (!hasChild) return;
       if (start >= end) return;
 
       int retType = 0;
