@@ -189,7 +189,7 @@ namespace ASN1Viewer {
         hasChild = IsValidASN(data, start, end);
       }
       if (!hasChild && m_Tag == UNIVERSAL_BITSTRING) {
-        if (data[start] == 0) start++;
+        start++; // Skip padding length byte
         hasChild = IsValidASN(data, start, end);
       }
       if (!hasChild) return;
