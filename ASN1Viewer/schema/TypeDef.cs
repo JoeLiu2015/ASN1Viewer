@@ -172,7 +172,7 @@ FIX_CHILD:
         }
         return false;
       }
-      if (tagVal != asnNode.Tag) {
+      if (tagVal != asnNode.Tag && tagVal != (asnNode.Tag | ASNNode.NODE_CONSTRUCTED_MASK)) {
         return false;
       }
       if (m_SeqOfTypeName != null || m_SeqOfType != null) {

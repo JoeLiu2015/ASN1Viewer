@@ -356,4 +356,12 @@
       authenticated-data AuthenticatedData,
       compressed-data    CompressedData
    }
+
+
+   DigestInfo ::= SEQUENCE {
+     digestAlgorithm DigestAlgorithmIdentifier,
+     digest Digest 
+   }
+
+
    END -- of CryptographicMessageSyntax2004
