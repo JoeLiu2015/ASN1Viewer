@@ -66,17 +66,17 @@ PublicKeyInfo ::= CHOICE {
   dsaPublicKey  SEQUENCE {
                             publicAlgorithm SEQUENCE {
                                                 algorithmID  OBJECT IDENTIFIER,
-                                                dsaParams   SEQUENCE {
-                                                   p    INTEGER,
-                                                   q    INTEGER,
-                                                   g    INTEGER
-                                                }
+                                                dsaParams DSAParams 
                                               },
                             publicKey       [UNIVERSAL 3] EXPLICIT DSAParams-Y
                          }
 
 }
-
+DSAParams ::= SEQUENCE {
+        p    INTEGER,
+        q    INTEGER,
+        g    INTEGER
+    }
 RSAParams ::= SEQUENCE {
         modulus           INTEGER,  -- n
         publicExponent    INTEGER   -- e
