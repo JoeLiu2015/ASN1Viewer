@@ -51,10 +51,35 @@ EncryptedPrivateKeyInfo ::= SEQUENCE {
 EncryptedData ::= OCTET STRING
 
 
-PublicKeyInfo ::= SEQUENCE {
-  publicAlgorithm AlgorithmIdentifier,
-  publicKey       BIT STRING
+PublicKeyInfo ::= CHOICE {
+  rsaPublicKey  SEQUENCE {
+                            publicAlgorithm AlgorithmIdentifier,
+                            publicKey       [UNIVERSAL 3] EXPLICIT RSAParams
+                         },
+  ecPublicKey   SEQUENCE {
+                            publicAlgorithm SEQUENCE {
+                              algorithmID  OBJECT IDENTIFIER,
+                              parameter    OBJECT IDENTIFIER
+                            },
+                            publicKey   BIT STRING
+                         },
+  dsaPublicKey  SEQUENCE {
+                            publicAlgorithm SEQUENCE {
+                                                algorithmID  OBJECT IDENTIFIER,
+                                                dsaParams   SEQUENCE {
+                                                   p    INTEGER,
+                                                   q    INTEGER,
+                                                   g    INTEGER
+                                                }
+                                              },
+                            publicKey       [UNIVERSAL 3] EXPLICIT DSAParams-Y
+                         }
+
 }
 
-
+RSAParams ::= SEQUENCE {
+        modulus           INTEGER,  -- n
+        publicExponent    INTEGER   -- e
+    }
+DSAParams-Y ::= INTEGER
 END

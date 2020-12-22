@@ -117,7 +117,8 @@ namespace ASN1Viewer.schema {
       bool ret = false;
       IASNNode node = asnNode;
       if (HasExplicitTag) {
-        if (m_Tag != asnNode.Tag) return false;
+	    // Ignore NODE_CONSTRUCTED_MASK
+        if (m_Tag != asnNode.Tag && m_Tag != (asnNode.Tag | ASNNode.NODE_CONSTRUCTED_MASK)) return false;
         if (asnNode.ChildCount != 1) return false;
         node = asnNode.GetChild(0);
       }
