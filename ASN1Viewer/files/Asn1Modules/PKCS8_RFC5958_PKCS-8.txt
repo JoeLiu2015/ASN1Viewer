@@ -16,7 +16,12 @@ BEGIN
 -- All types and values defined in this module is exported for use in
 -- other ASN.1 modules.
 
+IMPORTS
 
+
+
+
+ RSAPrivateKey FROM PKCS-1 {iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1) pkcs-1(1) modules(0) pkcs-1(1)};
 
 
 -- Private-key information syntax
@@ -27,12 +32,15 @@ AlgorithmIdentifier ::= SEQUENCE {
 PrivateKeyInfo ::= SEQUENCE {
    version Version,
    privateKeyAlgorithm AlgorithmIdentifier,
-   privateKey PrivateKey,
+   privateKey [UNIVERSAL 4] PrivateKey,
    attributes [0] Attributes OPTIONAL }
 
 Version ::= INTEGER {v1(0)}
 
-PrivateKey ::= OCTET STRING
+PrivateKey ::= CHOICE {
+  rsaPrivateKey RSAPrivateKey,
+  privateKey    ANY
+}
 
 Attribute  ::= SEQUENCE {
    id  OBJECT IDENTIFIER,
