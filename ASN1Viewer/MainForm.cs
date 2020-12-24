@@ -217,6 +217,9 @@ namespace ASN1Viewer
         foreach (KeyValuePair<string, schema.SchemaFile> kv in schemas) {
           Dictionary<string, schema.TypeDef> types = kv.Value.Types;
           foreach (KeyValuePair<string, schema.TypeDef> nt in types) {
+            if (nt.Key == "PFX") {
+              int debug = 1;
+            }
             if (!matched.ContainsKey(nt.Key) && nt.Value.Match(a, false)) matched.Add(nt.Key, nt.Value);
           }
         }
@@ -229,6 +232,7 @@ namespace ASN1Viewer
         else if (matched.ContainsKey("EncryptedPrivateKeyInfo")) matched["EncryptedPrivateKeyInfo"].Match(a, true);
         else if (matched.ContainsKey("PrivateKeyInfo"))          matched["PrivateKeyInfo"].Match(a, true);
         else if (matched.ContainsKey("PublicKeyInfo"))  matched["PublicKeyInfo"].Match(a, true);
+        else if (matched.ContainsKey("PFX"))            matched["PFX"].Match(a, true);
 
         this.treeView1.Nodes.Clear();
         this.treeView1.Nodes.Add(CreateNode(a));

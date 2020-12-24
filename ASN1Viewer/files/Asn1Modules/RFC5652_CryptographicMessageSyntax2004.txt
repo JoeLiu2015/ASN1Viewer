@@ -354,7 +354,8 @@
       digested-data      DigestedData, 
       encrypted-data     EncryptedData,
       authenticated-data AuthenticatedData,
-      compressed-data    CompressedData
+      compressed-data    CompressedData,
+      data               OCTET STRING
    }
 
 
