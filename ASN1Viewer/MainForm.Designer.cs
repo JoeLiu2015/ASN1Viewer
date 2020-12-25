@@ -122,7 +122,6 @@
       // txtInput
       // 
       this.txtInput.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.txtInput.Font = new System.Drawing.Font("YouYuan", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.txtInput.Location = new System.Drawing.Point(3, 3);
       this.txtInput.Name = "txtInput";
       this.txtInput.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
@@ -309,7 +308,6 @@
       // 
       this.hexViewer1.BackColor = System.Drawing.SystemColors.Window;
       this.hexViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.hexViewer1.Font = new System.Drawing.Font("YouYuan", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.hexViewer1.ForeColor = System.Drawing.Color.Gray;
       this.hexViewer1.Location = new System.Drawing.Point(0, 0);
       this.hexViewer1.Name = "hexViewer1";
