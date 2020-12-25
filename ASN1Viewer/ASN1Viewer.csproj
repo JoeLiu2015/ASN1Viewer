@@ -92,6 +92,7 @@
     <Compile Include="schema\Tokenizer.cs" />
     <Compile Include="schema\TypeDef.cs" />
     <Compile Include="schema\Utils.cs" />
+    <Compile Include="Updater.cs" />
     <Compile Include="Utils.cs" />
     <EmbeddedResource Include="About.resx">
       <DependentUpon>About.cs</DependentUpon>

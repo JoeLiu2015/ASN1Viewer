@@ -90,6 +90,14 @@ namespace ASN1Viewer
       if (m_SchemaDlg == null) m_SchemaDlg = new schema.SchemaDlg();
       m_SchemaDlg.ShowDialog();
     }
+    private void ctxMenuCollapse_Click(object sender, EventArgs e) {
+      TreeNode n = ctxMenuTree.Tag as TreeNode;
+      n.Collapse();
+    }
+    private void ctxMenuExpand_Click(object sender, EventArgs e) {
+      TreeNode n = ctxMenuTree.Tag as TreeNode;
+      n.ExpandAll();
+    }
     private void txtInput_TextChanged(object sender, EventArgs e) {
       ParseInputText(this.txtInput.Text);
     }
@@ -100,6 +108,13 @@ namespace ASN1Viewer
       this.hexViewer1.SelectNode(an.Start, an.End, an.ContentStart, an.ContentEnd);
       this.lbStatus.ForeColor = SystemColors.WindowText;
       this.lbStatus.Text = String.Format(Lang.T["STATUS_ASNINFO"], an.Start, an.TagNum, an.ContentEnd - an.ContentStart);
+    }
+    private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e) {
+      if (e.Button == MouseButtons.Right && e.Node.Nodes.Count > 0) {
+        this.treeView1.SelectedNode = e.Node;
+        ctxMenuTree.Tag = e.Node;
+        this.ctxMenuTree.Show(this.treeView1, e.Location);
+      }
     }
 
     private TreeNode CreateNode(ASNNode n) {
@@ -129,6 +144,8 @@ namespace ASN1Viewer
       this.menuChinese.Text     = Lang.T["MENU_CHINESE"];
       this.menuEnglish.Text     = Lang.T["MENU_ENGLISH"];
       this.menuAbout.Text       = Lang.T["MENU_ABOUT"];
+      this.ctxMenuCollapse.Text = Lang.T["MENU_COLLAPSE"];
+      this.ctxMenuExpand.Text   = Lang.T["MENU_EXPAND"];
       this.tabPageInput.Text    = Lang.T["TAB_INPUT"];
       this.tabPageBytes.Text    = Lang.T["TAB_BYTES"];
       if (this.treeView1.SelectedNode != null) {
@@ -189,6 +206,9 @@ namespace ASN1Viewer
           Config.Instance.History.RemoveAt(Config.Instance.History.Count - 1);
         }
         UpdateRecentFiles();
+
+        // Update Form title
+        UpdateFormTitle(file);
       }
     }
     private void ParseInputText(string text) {
@@ -205,7 +225,9 @@ namespace ASN1Viewer
         return;
       }
 
-      ParseASN1(data);
+      if (ParseASN1(data)) {
+        UpdateFormTitle(text);
+      }
     }
     private bool ParseASN1(byte[] data) {
       try {
@@ -246,7 +268,7 @@ namespace ASN1Viewer
 
       return false;
     }
-   
+
     private void UpdateHexBytesView(byte[] data, ASNNode a) {
       if (a == null) {
         if (hexViewer1.BlockCount > 1) this.hexViewer1.RefreshView();
@@ -259,7 +281,15 @@ namespace ASN1Viewer
         this.hexViewer1.RefreshView();
       }
     }
-
-   
+    private void UpdateFormTitle(string fileOrText) {
+      if (File.Exists(fileOrText)) {
+        this.Text = Lang.T["PROD_NAME"] + " - " + fileOrText;
+      } else if (!String.IsNullOrEmpty(fileOrText)) {
+        this.Text = Lang.T["PROD_NAME"] + " - " + Lang.T["TXT_TEXT"];
+      } else {
+        this.Text = Lang.T["PROD_NAME"];
+      }
+    }
+    
   }
 }

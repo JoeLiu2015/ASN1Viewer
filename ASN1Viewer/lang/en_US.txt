@@ -11,6 +11,8 @@ MENU_ABOUT     : &About
 MENU_LANG      : Language
 MENU_CHINESE   : Chinese
 MENU_ENGLISH   : English
+MENU_COLLAPSE  : &Collapse
+MENU_EXPAND    : &Expand
 TAB_INPUT      : Input Text
 TAB_BYTES      : ASN.1 Bytes
 STATUS_ASNINFO : Tag[{1}], Offset[{0}], Length[{2}]
@@ -19,6 +21,7 @@ ABOUT_COPYRIGHT: Copyright © 2020-{0} ASN.1 Viewer Ltd
 ABOUT_BUILD    : Version {0}  Build {1}
 MSG_NOFILE     : File "{0}" is not found.
 TXT_SKIP       : Skip {0} bytes ({1} lines)
+TXT_TEXT       : Text
 MODULES_TITLE  : ASN.1 Modules Viewer
 MSG_NOMODULES  : Folder "{0}" is not found.
 MSG_ERROR      : ERROR

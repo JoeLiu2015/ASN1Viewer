@@ -35,9 +35,7 @@ namespace ASN1Viewer {
           if (val.Contains("%")) {
             //val = val.Replace("%VERSION%", prod.version + "." + prod.build);
           }
-          if (val.Contains("\\n")) {
-            val = val.Replace("\\n", "\r\n");
-          }
+          if (val.Contains("\\n")) val = val.Replace("\\n", "\r\n");
           m_Data[key] = val;
         }
       }
@@ -48,10 +46,16 @@ namespace ASN1Viewer {
       }
       StringBuilder sb = new StringBuilder();
       if (m_Data.ContainsKey("max_history")) {
-        sb.Append("max_history=").Append(m_Data["max_history"]).Append("\r\n");
+        sb.AppendFormat("max_history={0}\r\n", m_Data["max_history"]);
       }
       if (m_Data.ContainsKey("history")) {
-        sb.Append("history=").Append(m_Data["history"]).Append("\r\n");
+        sb.AppendFormat("history={0}\r\n", m_Data["history"]);
+      }
+      if (m_Data.ContainsKey("auto_update")) {
+        sb.AppendFormat("auto_update={0}\r\n", m_Data["auto_update"]);
+      }
+      if (m_Data.ContainsKey("auto_update_asn1_modules")) {
+        sb.AppendFormat("auto_update_asn1_modules={0}\r\n", m_Data["auto_update_asn1_modules"]);
       }
       File.WriteAllText(INI_FILE, sb.ToString());
     }
@@ -72,17 +76,35 @@ namespace ASN1Viewer {
     public int MaxHistory {
       get {
         return getInt("max_history", 15);
-      } 
-      set {
+      } set {
         m_Data["max_history"] = value + "";
       }
     }
+
+    public bool AuthUpdate {
+      get { return getBool("auto_update", true); }
+      set { m_Data["auto_update"] = value + "";  }
+    }
+    public bool AuthUpdateASN1Modules {
+      get { return getBool("auto_update_asn1_modules", true); }
+      set { m_Data["auto_update_asn1_modules"] = value + ""; }
+    }
+
 
     private int getInt(string name, int defValue) {
       if (!m_Data.ContainsKey(name)) return defValue;
       try {
         int val = int.Parse(m_Data[name]);
         return val; 
+      } catch (Exception) {
+        return defValue;
+      }
+    }
+    private bool getBool(string name, bool defValue) {
+      if (!m_Data.ContainsKey(name)) return defValue;
+      try {
+        bool val = bool.Parse(m_Data[name]);
+        return val;
       } catch (Exception) {
         return defValue;
       }

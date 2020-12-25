@@ -11,6 +11,8 @@ MENU_ABOUT     : 关于(&A)
 MENU_LANG      : 语言
 MENU_CHINESE   : 中文
 MENU_ENGLISH   : 英文
+MENU_COLLAPSE  : 收起(&C)
+MENU_EXPAND    : 展开(&E)
 TAB_INPUT      : 输入文本
 TAB_BYTES      : 二进制字节
 STATUS_ASNINFO : 类型[{1}], 位置[{0}], 内容长度[{2}]
@@ -19,6 +21,7 @@ ABOUT_COPYRIGHT: 版权 © 2020-{0} ASN.1 Viewer Ltd
 ABOUT_BUILD    : 版本 {0}  内部版本号 {1}
 MSG_NOFILE     : 文件 “{0}” 不存在.
 TXT_SKIP       : 跳过 {0} 字节 ({1} 行)
+TXT_TEXT       : 文本
 MODULES_TITLE  : ASN.1 模块查看器
 MSG_NOMODULES  : 目录 "{0}" 不存在.
 MSG_ERROR      : 错误
