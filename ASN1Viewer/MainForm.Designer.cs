@@ -37,6 +37,7 @@
       this.txtInput = new System.Windows.Forms.RichTextBox();
       this.tabPageBytes = new System.Windows.Forms.TabPage();
       this.panel1 = new System.Windows.Forms.Panel();
+      this.hexViewer1 = new ASN1Viewer.HexViewer();
       this.menuMainStrip = new System.Windows.Forms.MenuStrip();
       this.menuFile = new System.Windows.Forms.ToolStripMenuItem();
       this.menuOpen = new System.Windows.Forms.ToolStripMenuItem();
@@ -45,6 +46,7 @@
       this.menuRecent = new System.Windows.Forms.ToolStripMenuItem();
       this.menuView = new System.Windows.Forms.ToolStripMenuItem();
       this.menuASN1Modules = new System.Windows.Forms.ToolStripMenuItem();
+      this.menuTestFiles = new System.Windows.Forms.ToolStripMenuItem();
       this.menuHelp = new System.Windows.Forms.ToolStripMenuItem();
       this.menuLanguage = new System.Windows.Forms.ToolStripMenuItem();
       this.menuChinese = new System.Windows.Forms.ToolStripMenuItem();
@@ -56,7 +58,6 @@
       this.ctxMenuTree = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.ctxMenuCollapse = new System.Windows.Forms.ToolStripMenuItem();
       this.ctxMenuExpand = new System.Windows.Forms.ToolStripMenuItem();
-      this.hexViewer1 = new ASN1Viewer.HexViewer();
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
@@ -74,8 +75,9 @@
       // 
       this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
       this.treeView1.Location = new System.Drawing.Point(0, 0);
+      this.treeView1.Margin = new System.Windows.Forms.Padding(6);
       this.treeView1.Name = "treeView1";
-      this.treeView1.Size = new System.Drawing.Size(228, 394);
+      this.treeView1.Size = new System.Drawing.Size(456, 786);
       this.treeView1.TabIndex = 0;
       this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
       this.treeView1.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_NodeMouseClick);
@@ -83,7 +85,8 @@
       // splitContainer1
       // 
       this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.splitContainer1.Location = new System.Drawing.Point(0, 24);
+      this.splitContainer1.Location = new System.Drawing.Point(0, 42);
+      this.splitContainer1.Margin = new System.Windows.Forms.Padding(6);
       this.splitContainer1.Name = "splitContainer1";
       // 
       // splitContainer1.Panel1
@@ -93,8 +96,9 @@
       // splitContainer1.Panel2
       // 
       this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
-      this.splitContainer1.Size = new System.Drawing.Size(853, 394);
-      this.splitContainer1.SplitterDistance = 228;
+      this.splitContainer1.Size = new System.Drawing.Size(1706, 786);
+      this.splitContainer1.SplitterDistance = 456;
+      this.splitContainer1.SplitterWidth = 8;
       this.splitContainer1.TabIndex = 1;
       // 
       // tabControl1
@@ -103,18 +107,20 @@
       this.tabControl1.Controls.Add(this.tabPageBytes);
       this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
       this.tabControl1.Location = new System.Drawing.Point(0, 0);
+      this.tabControl1.Margin = new System.Windows.Forms.Padding(6);
       this.tabControl1.Name = "tabControl1";
       this.tabControl1.SelectedIndex = 0;
-      this.tabControl1.Size = new System.Drawing.Size(621, 394);
+      this.tabControl1.Size = new System.Drawing.Size(1242, 786);
       this.tabControl1.TabIndex = 0;
       // 
       // tabPageInput
       // 
       this.tabPageInput.Controls.Add(this.txtInput);
-      this.tabPageInput.Location = new System.Drawing.Point(4, 22);
+      this.tabPageInput.Location = new System.Drawing.Point(8, 39);
+      this.tabPageInput.Margin = new System.Windows.Forms.Padding(6);
       this.tabPageInput.Name = "tabPageInput";
-      this.tabPageInput.Padding = new System.Windows.Forms.Padding(3);
-      this.tabPageInput.Size = new System.Drawing.Size(613, 368);
+      this.tabPageInput.Padding = new System.Windows.Forms.Padding(6);
+      this.tabPageInput.Size = new System.Drawing.Size(1226, 739);
       this.tabPageInput.TabIndex = 0;
       this.tabPageInput.Text = "Input Text";
       this.tabPageInput.UseVisualStyleBackColor = true;
@@ -122,10 +128,11 @@
       // txtInput
       // 
       this.txtInput.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.txtInput.Location = new System.Drawing.Point(3, 3);
+      this.txtInput.Location = new System.Drawing.Point(6, 6);
+      this.txtInput.Margin = new System.Windows.Forms.Padding(6);
       this.txtInput.Name = "txtInput";
       this.txtInput.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-      this.txtInput.Size = new System.Drawing.Size(607, 362);
+      this.txtInput.Size = new System.Drawing.Size(1214, 727);
       this.txtInput.TabIndex = 0;
       this.txtInput.Text = "";
       this.txtInput.WordWrap = false;
@@ -134,10 +141,11 @@
       // tabPageBytes
       // 
       this.tabPageBytes.Controls.Add(this.panel1);
-      this.tabPageBytes.Location = new System.Drawing.Point(4, 22);
+      this.tabPageBytes.Location = new System.Drawing.Point(8, 39);
+      this.tabPageBytes.Margin = new System.Windows.Forms.Padding(6);
       this.tabPageBytes.Name = "tabPageBytes";
-      this.tabPageBytes.Padding = new System.Windows.Forms.Padding(3);
-      this.tabPageBytes.Size = new System.Drawing.Size(613, 368);
+      this.tabPageBytes.Padding = new System.Windows.Forms.Padding(6);
+      this.tabPageBytes.Size = new System.Drawing.Size(1226, 739);
       this.tabPageBytes.TabIndex = 1;
       this.tabPageBytes.Text = "ASN.1 Bytes";
       this.tabPageBytes.UseVisualStyleBackColor = true;
@@ -146,13 +154,31 @@
       // 
       this.panel1.Controls.Add(this.hexViewer1);
       this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.panel1.Location = new System.Drawing.Point(3, 3);
+      this.panel1.Location = new System.Drawing.Point(6, 6);
+      this.panel1.Margin = new System.Windows.Forms.Padding(6);
       this.panel1.Name = "panel1";
-      this.panel1.Size = new System.Drawing.Size(607, 362);
+      this.panel1.Size = new System.Drawing.Size(1214, 727);
       this.panel1.TabIndex = 0;
+      // 
+      // hexViewer1
+      // 
+      this.hexViewer1.BackColor = System.Drawing.SystemColors.Window;
+      this.hexViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.hexViewer1.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.hexViewer1.ForeColor = System.Drawing.Color.Gray;
+      this.hexViewer1.Location = new System.Drawing.Point(0, 0);
+      this.hexViewer1.Margin = new System.Windows.Forms.Padding(6);
+      this.hexViewer1.Name = "hexViewer1";
+      this.hexViewer1.ReadOnly = true;
+      this.hexViewer1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+      this.hexViewer1.Size = new System.Drawing.Size(1214, 727);
+      this.hexViewer1.TabIndex = 0;
+      this.hexViewer1.Text = "";
+      this.hexViewer1.WordWrap = false;
       // 
       // menuMainStrip
       // 
+      this.menuMainStrip.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
       this.menuMainStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
       this.menuMainStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuFile,
@@ -160,8 +186,7 @@
             this.menuHelp});
       this.menuMainStrip.Location = new System.Drawing.Point(0, 0);
       this.menuMainStrip.Name = "menuMainStrip";
-      this.menuMainStrip.Padding = new System.Windows.Forms.Padding(3, 1, 0, 1);
-      this.menuMainStrip.Size = new System.Drawing.Size(853, 24);
+      this.menuMainStrip.Size = new System.Drawing.Size(1706, 42);
       this.menuMainStrip.TabIndex = 2;
       this.menuMainStrip.Text = "menuMainStrip";
       // 
@@ -173,48 +198,55 @@
             this.menuExit,
             this.menuRecent});
       this.menuFile.Name = "menuFile";
-      this.menuFile.Size = new System.Drawing.Size(37, 22);
+      this.menuFile.Size = new System.Drawing.Size(72, 38);
       this.menuFile.Text = "&File";
       // 
       // menuOpen
       // 
       this.menuOpen.Name = "menuOpen";
-      this.menuOpen.Size = new System.Drawing.Size(136, 22);
+      this.menuOpen.Size = new System.Drawing.Size(275, 44);
       this.menuOpen.Text = "&Open...";
       this.menuOpen.Click += new System.EventHandler(this.menuOpen_Click);
       // 
       // toolStripMenuItem1
       // 
       this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-      this.toolStripMenuItem1.Size = new System.Drawing.Size(133, 6);
+      this.toolStripMenuItem1.Size = new System.Drawing.Size(272, 6);
       // 
       // menuExit
       // 
       this.menuExit.Name = "menuExit";
-      this.menuExit.Size = new System.Drawing.Size(136, 22);
+      this.menuExit.Size = new System.Drawing.Size(275, 44);
       this.menuExit.Text = "&Exit";
       this.menuExit.Click += new System.EventHandler(this.menuExit_Click);
       // 
       // menuRecent
       // 
       this.menuRecent.Name = "menuRecent";
-      this.menuRecent.Size = new System.Drawing.Size(136, 22);
+      this.menuRecent.Size = new System.Drawing.Size(275, 44);
       this.menuRecent.Text = "Recent Files";
       // 
       // menuView
       // 
       this.menuView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuASN1Modules});
+            this.menuASN1Modules,
+            this.menuTestFiles});
       this.menuView.Name = "menuView";
-      this.menuView.Size = new System.Drawing.Size(44, 22);
+      this.menuView.Size = new System.Drawing.Size(86, 38);
       this.menuView.Text = "&View";
       // 
       // menuASN1Modules
       // 
       this.menuASN1Modules.Name = "menuASN1Modules";
-      this.menuASN1Modules.Size = new System.Drawing.Size(155, 22);
+      this.menuASN1Modules.Size = new System.Drawing.Size(359, 44);
       this.menuASN1Modules.Text = "&ASN.1 Modules";
       this.menuASN1Modules.Click += new System.EventHandler(this.menuASN1Modules_Click);
+      // 
+      // menuTestFiles
+      // 
+      this.menuTestFiles.Name = "menuTestFiles";
+      this.menuTestFiles.Size = new System.Drawing.Size(359, 44);
+      this.menuTestFiles.Text = "Test Files";
       // 
       // menuHelp
       // 
@@ -223,7 +255,7 @@
             this.toolStripMenuItem2,
             this.menuAbout});
       this.menuHelp.Name = "menuHelp";
-      this.menuHelp.Size = new System.Drawing.Size(44, 22);
+      this.menuHelp.Size = new System.Drawing.Size(85, 38);
       this.menuHelp.Text = "&Help";
       // 
       // menuLanguage
@@ -232,13 +264,13 @@
             this.menuChinese,
             this.menuEnglish});
       this.menuLanguage.Name = "menuLanguage";
-      this.menuLanguage.Size = new System.Drawing.Size(126, 22);
+      this.menuLanguage.Size = new System.Drawing.Size(253, 44);
       this.menuLanguage.Text = "Language";
       // 
       // menuChinese
       // 
       this.menuChinese.Name = "menuChinese";
-      this.menuChinese.Size = new System.Drawing.Size(116, 22);
+      this.menuChinese.Size = new System.Drawing.Size(234, 44);
       this.menuChinese.Text = "Chinese";
       this.menuChinese.Click += new System.EventHandler(this.menuChinese_Click);
       // 
@@ -247,19 +279,19 @@
       this.menuEnglish.Checked = true;
       this.menuEnglish.CheckState = System.Windows.Forms.CheckState.Checked;
       this.menuEnglish.Name = "menuEnglish";
-      this.menuEnglish.Size = new System.Drawing.Size(116, 22);
+      this.menuEnglish.Size = new System.Drawing.Size(234, 44);
       this.menuEnglish.Text = "English";
       this.menuEnglish.Click += new System.EventHandler(this.menuEnglish_Click);
       // 
       // toolStripMenuItem2
       // 
       this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-      this.toolStripMenuItem2.Size = new System.Drawing.Size(123, 6);
+      this.toolStripMenuItem2.Size = new System.Drawing.Size(250, 6);
       // 
       // menuAbout
       // 
       this.menuAbout.Name = "menuAbout";
-      this.menuAbout.Size = new System.Drawing.Size(126, 22);
+      this.menuAbout.Size = new System.Drawing.Size(253, 44);
       this.menuAbout.Text = "&About";
       this.menuAbout.Click += new System.EventHandler(this.menuAbout_Click);
       // 
@@ -268,9 +300,10 @@
       this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
       this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lbStatus});
-      this.statusStrip1.Location = new System.Drawing.Point(0, 418);
+      this.statusStrip1.Location = new System.Drawing.Point(0, 828);
       this.statusStrip1.Name = "statusStrip1";
-      this.statusStrip1.Size = new System.Drawing.Size(853, 26);
+      this.statusStrip1.Padding = new System.Windows.Forms.Padding(2, 0, 28, 0);
+      this.statusStrip1.Size = new System.Drawing.Size(1706, 26);
       this.statusStrip1.TabIndex = 3;
       this.statusStrip1.Text = "statusStrip1";
       // 
@@ -279,57 +312,45 @@
       this.lbStatus.AutoSize = false;
       this.lbStatus.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
       this.lbStatus.Name = "lbStatus";
-      this.lbStatus.Size = new System.Drawing.Size(400, 21);
+      this.lbStatus.Size = new System.Drawing.Size(400, 16);
       this.lbStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // ctxMenuTree
       // 
+      this.ctxMenuTree.ImageScalingSize = new System.Drawing.Size(32, 32);
       this.ctxMenuTree.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ctxMenuCollapse,
             this.ctxMenuExpand});
       this.ctxMenuTree.Name = "ctxMenuTree";
-      this.ctxMenuTree.Size = new System.Drawing.Size(120, 48);
+      this.ctxMenuTree.Size = new System.Drawing.Size(181, 80);
       // 
       // ctxMenuCollapse
       // 
       this.ctxMenuCollapse.Name = "ctxMenuCollapse";
-      this.ctxMenuCollapse.Size = new System.Drawing.Size(119, 22);
+      this.ctxMenuCollapse.Size = new System.Drawing.Size(180, 38);
       this.ctxMenuCollapse.Text = "&Collapse";
       this.ctxMenuCollapse.Click += new System.EventHandler(this.ctxMenuCollapse_Click);
       // 
       // ctxMenuExpand
       // 
       this.ctxMenuExpand.Name = "ctxMenuExpand";
-      this.ctxMenuExpand.Size = new System.Drawing.Size(119, 22);
+      this.ctxMenuExpand.Size = new System.Drawing.Size(180, 38);
       this.ctxMenuExpand.Text = "&Expand";
       this.ctxMenuExpand.Click += new System.EventHandler(this.ctxMenuExpand_Click);
-      // 
-      // hexViewer1
-      // 
-      this.hexViewer1.BackColor = System.Drawing.SystemColors.Window;
-      this.hexViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.hexViewer1.ForeColor = System.Drawing.Color.Gray;
-      this.hexViewer1.Location = new System.Drawing.Point(0, 0);
-      this.hexViewer1.Name = "hexViewer1";
-      this.hexViewer1.ReadOnly = true;
-      this.hexViewer1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-      this.hexViewer1.Size = new System.Drawing.Size(607, 362);
-      this.hexViewer1.TabIndex = 0;
-      this.hexViewer1.Text = "";
-      this.hexViewer1.WordWrap = false;
       // 
       // MainForm
       // 
       this.AllowDrop = true;
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(853, 444);
+      this.ClientSize = new System.Drawing.Size(1706, 854);
       this.Controls.Add(this.splitContainer1);
       this.Controls.Add(this.menuMainStrip);
       this.Controls.Add(this.statusStrip1);
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.MainMenuStrip = this.menuMainStrip;
-      this.MinimumSize = new System.Drawing.Size(727, 468);
+      this.Margin = new System.Windows.Forms.Padding(6);
+      this.MinimumSize = new System.Drawing.Size(1428, 834);
       this.Name = "MainForm";
       this.Text = "ASN.1 Viewer";
       this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
@@ -383,6 +404,7 @@
     private System.Windows.Forms.ContextMenuStrip ctxMenuTree;
     private System.Windows.Forms.ToolStripMenuItem ctxMenuCollapse;
     private System.Windows.Forms.ToolStripMenuItem ctxMenuExpand;
+    private System.Windows.Forms.ToolStripMenuItem menuTestFiles;
   }
 }
 

@@ -3,6 +3,7 @@ PROD_NAME      : ASN.1 Viewer
 MENU_FILE      : &File
 MENU_VIEW      : &View
 MENU_MODULES   : &ASN.1 Modules
+MENU_TESTFILES : &Test Files
 MENU_HELP      : &Help
 MENU_OPEN      : &Open...
 MENU_EXIT      : &Exit

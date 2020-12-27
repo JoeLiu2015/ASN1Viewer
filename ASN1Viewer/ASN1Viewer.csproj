@@ -168,7 +168,37 @@
     <None Include="files\TestFiles\PKCS12.pfx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="files\TestFiles\PKCS1_DSA_PRIVATE.pem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="files\TestFiles\PKCS1_DSA_PUB.pub">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="files\TestFiles\PKCS1_RSA_PRIVATE.pem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="files\TestFiles\PKCS1_RSA_PUB.pub">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="files\TestFiles\PKCS7_Certs.p7b">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="files\TestFiles\PKCS8_DSA_PRIVATE.pem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="files\TestFiles\PKCS8_DSA_PUB.pub">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="files\TestFiles\PKCS8_EC_PRIVATE.pem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="files\TestFiles\PKCS8_EC_PUB.pub">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="files\TestFiles\PKCS8_RSA_PRIVATE.pem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="files\TestFiles\PKCS8_RSA_PUB.pub">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="files\TestFiles\X509.cer">

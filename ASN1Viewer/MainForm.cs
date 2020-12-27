@@ -23,6 +23,7 @@ namespace ASN1Viewer
     private void MainForm_Load(object sender, EventArgs e) {
       menuChinese_Click(menuChinese, EventArgs.Empty);
       UpdateRecentFiles();
+      UpdateTestFiles();
     }
     private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
       Config.Instance.Save();
@@ -86,6 +87,17 @@ namespace ASN1Viewer
       }
       ParseInputFile(file);
     }
+    private void menuTestFileItem_Click(object sender, EventArgs e) {
+      ToolStripMenuItem item = sender as ToolStripMenuItem;
+      string txt = item.Text;
+      int pos = txt.IndexOf(' ');
+      string filename = new FileInfo(".\\files\\TestFiles\\" + txt.Substring(pos+1).Trim()).FullName;
+      if (!File.Exists(filename)) {
+        MessageBox.Show(this, String.Format(Lang.T["MSG_NOFILE"], filename), Lang.T["PROD_NAME"], MessageBoxButtons.OK, MessageBoxIcon.Error);
+        return;
+      }
+      ParseInputFile(filename);
+    }
     private void menuASN1Modules_Click(object sender, EventArgs e) {
       if (m_SchemaDlg == null) m_SchemaDlg = new schema.SchemaDlg();
       m_SchemaDlg.ShowDialog();
@@ -136,6 +148,7 @@ namespace ASN1Viewer
       this.menuFile.Text        = Lang.T["MENU_FILE"];
       this.menuView.Text        = Lang.T["MENU_VIEW"];
       this.menuASN1Modules.Text = Lang.T["MENU_MODULES"];
+      this.menuTestFiles.Text   = Lang.T["MENU_TESTFILES"];
       this.menuHelp.Text        = Lang.T["MENU_HELP"];
       this.menuOpen.Text        = Lang.T["MENU_OPEN"];
       this.menuExit.Text        = Lang.T["MENU_EXIT"];
@@ -166,7 +179,18 @@ namespace ASN1Viewer
       }
       this.menuRecent.Enabled = this.menuRecent.DropDownItems.Count > 0;
     }
-    
+    private void UpdateTestFiles() {
+      this.menuTestFiles.DropDownItems.Clear();
+      string[] files = Directory.GetFiles(".\\files\\TestFiles");
+      for (int i = 0; i < files.Length; i++) {
+        ToolStripMenuItem mi = new ToolStripMenuItem();
+        mi.Text = (i + 1) + " " + new FileInfo(files[i]).Name;
+        mi.Click += this.menuTestFileItem_Click;
+        this.menuTestFiles.DropDownItems.Add(mi);
+      }
+      this.menuTestFiles.Enabled = this.menuTestFiles.DropDownItems.Count > 0;
+    }
+
 
     private void ParseInputFile(string file) {
       FileInfo f = new FileInfo(file);
@@ -287,6 +311,6 @@ namespace ASN1Viewer
         this.Text = Lang.T["PROD_NAME"];
       }
     }
-    
+
   }
 }

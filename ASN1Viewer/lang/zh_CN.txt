@@ -3,6 +3,7 @@ PROD_NAME      : ASN.1查看器
 MENU_FILE      : 文件(&F)
 MENU_VIEW      : 查看(&V)
 MENU_MODULES   : ASN.1 模块(&A)
+MENU_TESTFILES : 测试文件(&T)
 MENU_HELP      : 帮助(&H)
 MENU_OPEN      : 打开文件(&O)...
 MENU_EXIT      : 退出(&E)
