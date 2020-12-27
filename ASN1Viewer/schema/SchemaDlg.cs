@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace ASN1Viewer.schema {
   public partial class SchemaDlg : Form {
@@ -21,19 +22,9 @@ namespace ASN1Viewer.schema {
     private void LoadAsn1Modules() {
       if (m_Loaded) return;
       m_Loaded = true;
-      if (Directory.Exists(".\\files\\Asn1Modules")) {
-        string[] files = Directory.GetFiles(".\\files\\Asn1Modules");
-        for (int i = 0; i < files.Length; i++) {
-          FileInfo fi = new FileInfo(files[i]);
-          try {
-            SchemaFile sf = SchemaFile.ParseFrom(fi.FullName);
-            this.treeView1.Nodes.Add(sf.ExportToTreeNode());
-          } catch (Exception ex) {
-            this.treeView1.Nodes.Add(fi.Name + String.Format("({0}: {1}", Lang.T["MSG_ERROR"], ex.Message));
-          }
-        }
-      } else {
-        MessageBox.Show(String.Format(Lang.T["MSG_NOMODULES"], ".\\schemas"), Lang.T["PROD_NAME"], MessageBoxButtons.OK, MessageBoxIcon.Error);
+      Dictionary<string, SchemaFile> files = SchemaFile.Schemas;
+      foreach (KeyValuePair<string, SchemaFile> kv in files) {
+        this.treeView1.Nodes.Add(kv.Value.ExportToTreeNode());
       }
     }
   }

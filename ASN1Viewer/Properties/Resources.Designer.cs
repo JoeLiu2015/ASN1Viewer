@@ -19,7 +19,7 @@ namespace ASN1Viewer.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -62,6 +62,24 @@ namespace ASN1Viewer.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to 
+        ///PROD_NAME      : ASN.1 Viewer
+        ///MENU_FILE      : &amp;File
+        ///MENU_VIEW      : &amp;View
+        ///MENU_MODULES   : &amp;ASN.1 Modules
+        ///MENU_TESTFILES : &amp;Test Files
+        ///MENU_HELP      : &amp;Help
+        ///MENU_OPEN      : &amp;Open...
+        ///MENU_EXIT      : &amp;Exit
+        ///MENU_RECENT    : Recent Files
+        ///MENU_ABOUT     : &amp;About
+        ///MENU_LANG      : Language
+        ///MENU_CHINESE   : Chinese
+        ///MENU_ENGLISH   : English
+        ///MENU_COLLAPSE  : &amp;Collapse
+        ///MENU_EXPAND    : &amp;Expand
+        ///TAB_INPUT      : Input Text
+        ///TAB_BYTES      : ASN.1 Bytes
+        ///STATUS_ASNINFO : Tag[{1}], Offset[{0}], Lengt [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string en_US {
             get {
@@ -71,6 +89,26 @@ namespace ASN1Viewer.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to 
+        ///PROD_NAME      : ASN.1查看器
+        ///MENU_FILE      : 文件(&amp;F)
+        ///MENU_VIEW      : 查看(&amp;V)
+        ///MENU_MODULES   : ASN.1 模块(&amp;A)
+        ///MENU_TESTFILES : 测试文件(&amp;T)
+        ///MENU_HELP      : 帮助(&amp;H)
+        ///MENU_OPEN      : 打开文件(&amp;O)...
+        ///MENU_EXIT      : 退出(&amp;E)
+        ///MENU_RECENT    : 最近打开的文件
+        ///MENU_ABOUT     : 关于(&amp;A)
+        ///MENU_LANG      : 语言
+        ///MENU_CHINESE   : 中文
+        ///MENU_ENGLISH   : 英文
+        ///MENU_COLLAPSE  : 收起(&amp;C)
+        ///MENU_EXPAND    : 展开(&amp;E)
+        ///TAB_INPUT      : 输入文本
+        ///TAB_BYTES      : 二进制字节
+        ///STATUS_ASNINFO : 类型[{1}], 位置[{0}], 内容长度[{2}]
+        ///ABOUT_TITLE    : 关于 {0}
+        ///ABOUT_COPYRIG [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string zh_CN {
             get {

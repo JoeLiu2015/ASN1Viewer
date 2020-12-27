@@ -6,7 +6,6 @@ using System.IO;
 namespace ASN1Viewer.schema {
   public class SchemaFile {
     private static Dictionary<string, SchemaFile> SCHEMA_FILES  = new Dictionary<string, SchemaFile>();
-    private static Dictionary<string, SchemaFile> PARSED_SCHEMA = new Dictionary<string, SchemaFile>();
     public  static List<string>                   KNOWN_TYPES   = new List<string>();
     private static Dictionary<string, string>     OID_NAMES     = new Dictionary<string, string>();
 
@@ -45,7 +44,6 @@ namespace ASN1Viewer.schema {
 
     public static void ReloadSchemas() {
       SCHEMA_FILES.Clear();
-      PARSED_SCHEMA.Clear();
       KNOWN_TYPES.Clear();
       OID_NAMES.Clear();
       if (Directory.Exists(".\\files\\Asn1Modules")) {
@@ -71,7 +69,6 @@ namespace ASN1Viewer.schema {
           }
           try {
             SchemaFile sf = SchemaFile.ParseFrom(fi.FullName);
-            SCHEMA_FILES.Add(fi.FullName, sf);
           } catch (Exception ex) {
 
           }
@@ -81,12 +78,8 @@ namespace ASN1Viewer.schema {
 
     public static SchemaFile ParseFrom(string file) {
       file = new FileInfo(file).FullName;
-      if (PARSED_SCHEMA.ContainsKey(file)) return PARSED_SCHEMA[file];
-
       SchemaFile sf = new SchemaFile();
       sf.Parse(file);
-      SCHEMA_FILES[sf.m_Name] = sf;
-      PARSED_SCHEMA[file] = sf;
       return sf;
     }
 
@@ -117,8 +110,6 @@ BEGIN:
               if (fs[j].FullName.EndsWith(docName + ".txt")) {
                 SchemaFile sfi = new SchemaFile();
                 sfi.Parse(fs[j].FullName);
-                SCHEMA_FILES.Add(docName, sfi);
-                PARSED_SCHEMA.Add(fs[j].FullName, sfi);
                 break;
               }
             }
@@ -162,6 +153,8 @@ BEGIN:
       foreach (KeyValuePair<string, TypeDef> ts in m_Types) {
         ts.Value.FixTag();
       }
+
+      SCHEMA_FILES[m_Name] = this;
     }
 
     public TreeNode ExportToTreeNode() {
