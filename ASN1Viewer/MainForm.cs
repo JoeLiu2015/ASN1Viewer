@@ -245,7 +245,7 @@ namespace ASN1Viewer
             if (!matched.ContainsKey(nt.Key) && nt.Value.Match(a, false)) matched.Add(nt.Key, nt.Value);
           }
         }
-        List<string> knownTypes = Config.Instance.KnownASN1Types;
+        List<string> knownTypes = schema.SchemaFile.KNOWN_TYPES;
         for (int i = 0; i < knownTypes.Count; i++) {
           if (matched.ContainsKey(knownTypes[i])) {
             matched[knownTypes[i]].Match(a, true);

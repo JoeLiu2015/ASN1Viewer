@@ -5,8 +5,11 @@ using System.IO;
 
 namespace ASN1Viewer.schema {
   public class SchemaFile {
-    private static Dictionary<string, SchemaFile> SCHEMA_FILES = new Dictionary<string, SchemaFile>();
-    public  static Dictionary<string, SchemaFile> PARSED_SCHEMA = new Dictionary<string, SchemaFile>();
+    private static Dictionary<string, SchemaFile> SCHEMA_FILES  = new Dictionary<string, SchemaFile>();
+    private static Dictionary<string, SchemaFile> PARSED_SCHEMA = new Dictionary<string, SchemaFile>();
+    public  static List<string>                   KNOWN_TYPES   = new List<string>();
+    private static Dictionary<string, string>     OID_NAMES     = new Dictionary<string, string>();
+
     private string m_FileName = "";
     private string m_Name     = "";
     private OidDef m_Oid      = null;
@@ -29,20 +32,50 @@ namespace ASN1Viewer.schema {
 
     public static Dictionary<string, SchemaFile> Schemas {
       get {
-        if (SCHEMA_FILES.Count > 0) return SCHEMA_FILES;
-        if (Directory.Exists(".\\files\\Asn1Modules")) {
-          string[] files = Directory.GetFiles(".\\files\\Asn1Modules");
-          for (int i = 0; i < files.Length; i++) {
-            FileInfo fi = new FileInfo(files[i]);
-            try {
-              SchemaFile sf = SchemaFile.ParseFrom(fi.FullName);
-              SCHEMA_FILES.Add(fi.FullName, sf);
-            } catch (Exception ex) {
-              
+        if (SCHEMA_FILES.Count == 0) ReloadSchemas();
+        return SCHEMA_FILES;
+      }
+    }
+
+    
+    public static String GetOIDName(string oid) {
+      if (OID_NAMES.ContainsKey(oid)) return "(" + OID_NAMES[oid] + ")";
+      return "";
+    }
+
+    public static void ReloadSchemas() {
+      SCHEMA_FILES.Clear();
+      PARSED_SCHEMA.Clear();
+      KNOWN_TYPES.Clear();
+      OID_NAMES.Clear();
+      if (Directory.Exists(".\\files\\Asn1Modules")) {
+        string[] files = Directory.GetFiles(".\\files\\Asn1Modules");
+        for (int i = 0; i < files.Length; i++) {
+          FileInfo fi = new FileInfo(files[i]);
+          if (fi.Name == "oids.txt") {
+            string[] lines = File.ReadAllLines(fi.FullName);
+            for (int j = 0; j < lines.Length; j++) {
+              string[] parts = lines[j].Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+              if (parts.Length == 2) {
+                OID_NAMES.Add(parts[0], parts[1]);
+              }
             }
+            continue;
+          } else if (fi.Name == "Known_ASN1_Types.txt") {
+            string[] lines = File.ReadAllLines(fi.FullName);
+            for (int j = 0; j < lines.Length; j++) {
+              string type = lines[j].Trim();
+              if (type.Length > 0) KNOWN_TYPES.Add(type);
+            }
+            continue;
+          }
+          try {
+            SchemaFile sf = SchemaFile.ParseFrom(fi.FullName);
+            SCHEMA_FILES.Add(fi.FullName, sf);
+          } catch (Exception ex) {
+
           }
         }
-        return SCHEMA_FILES;
       }
     }
 

@@ -291,20 +291,8 @@ namespace ASN1Viewer {
       return "(" + d.Length + " bytes)" + Utils.HexEncode(d, 0, d.Length);
 
     }
-    private static Dictionary<String, String> oids = null; 
     private static String GetOIDName(String oid) {
-      if (oids == null) {
-        String[] lines = File.ReadAllLines(".\\files\\oids.txt");
-        oids = new Dictionary<String, String>();
-        for (int i = 0; i < lines.Length; i++) {
-          String[] parts = lines[i].Split(new char[]{' '}, StringSplitOptions.RemoveEmptyEntries);
-          if (parts.Length == 2) {
-            oids.Add(parts[0], parts[1]);
-          }
-        }
-      }
-      if (oids.ContainsKey(oid)) return "(" + oids[oid] + ")";
-      return "";
+      return schema.SchemaFile.GetOIDName(oid);
     }
     private static String ParseUTCTime(byte[] data) {
       //"YYMMDDhhmm[ss]Z" or "YYMMDDhhmm[ss](+|-)hhmm"

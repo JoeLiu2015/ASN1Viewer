@@ -1,0 +1,10 @@
+﻿Certificate
+ContentInfo
+RSAPublicKey
+RSAPrivateKey
+DSAPublicKey
+DSAPrivateKey
+EncryptedPrivateKeyInfo
+PrivateKeyInfo
+PublicKeyInfo
+PFX

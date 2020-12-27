@@ -20,7 +20,6 @@ namespace ASN1Viewer {
 
     private Dictionary<string, string> m_Data           = new Dictionary<string, string>();
     private List<string>               m_HistoryFiles   = null;
-    private List<string>               m_KnownASN1Types = null;
 
     private Config() { }
     public void Load() {
@@ -58,9 +57,6 @@ namespace ASN1Viewer {
       if (m_Data.ContainsKey("auto_update_asn1_modules")) {
         sb.AppendFormat("auto_update_asn1_modules={0}\r\n", m_Data["auto_update_asn1_modules"]);
       }
-      if (m_Data.ContainsKey("known_asn1_types")) {
-        sb.AppendFormat("known_asn1_types={0}\r\n", m_Data["known_asn1_types"]);
-      }
       File.WriteAllText(INI_FILE, sb.ToString());
     }
     public List<string> History {
@@ -77,33 +73,7 @@ namespace ASN1Viewer {
         return m_HistoryFiles;
       }
     }
-    public List<string> KnownASN1Types {
-      get {
-        if (m_KnownASN1Types == null) {
-          m_KnownASN1Types = new List<string>();
-          if (!m_Data.ContainsKey("known_asn1_types")) {
-            m_KnownASN1Types.AddRange(new string[] {
-              "Certificate",
-              "ContentInfo",
-              "RSAPublicKey",
-              "RSAPrivateKey",
-              "DSAPublicKey",
-              "DSAPrivateKey",
-              "EncryptedPrivateKeyInfo",
-              "PrivateKeyInfo",
-              "PublicKeyInfo",
-              "PFX"
-            });
-            return m_KnownASN1Types;
-          }
-          String s = m_Data["known_asn1_types"];
-          string[] types = s.Split(',');
-          for (int i = 0; i < types.Length; i++) m_KnownASN1Types.Add(types[i].Trim());
-        }
-        return m_HistoryFiles;
-      }
-    }
-
+   
     public int MaxHistory {
       get {
         return getInt("max_history", 15);
