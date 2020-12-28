@@ -173,6 +173,7 @@ namespace ASN1Viewer {
         else if (TagNum == UNIVERSAL_IA5STRING) return GetString(d);
         else if (TagNum == UNIVERSAL_UTCTIME) return ParseUTCTime(d);
         else if (TagNum == UNIVERSAL_GENTIME) return ParseGeneralizedTime(d);
+        else if (TagNum == UNIVERSAL_BMPSTRING) return GetBMPString(d);
       }
       // For a constructed type, its value is empty.
       return "";
@@ -288,7 +289,10 @@ namespace ASN1Viewer {
     private static String GetString(byte[] d) {
       if (Utils.IsPrintable(d)) return Utils.GetUtf8String(d);
       return "(" + d.Length + " bytes)" + Utils.HexEncode(d, 0, d.Length);
-
+    }
+    private static String GetBMPString(byte[] d) {
+      if (d.Length % 2 == 0) return System.Text.Encoding.GetEncoding("UTF-16BE").GetString(d);
+      return "(" + d.Length + " bytes)" + Utils.HexEncode(d, 0, d.Length);
     }
     private static String GetOIDName(String oid) {
       return schema.SchemaFile.GetOIDName(oid);

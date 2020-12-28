@@ -24,12 +24,10 @@ PKCS-12 {
 
  ContentInfo, DigestInfo
      FROM CryptographicMessageSyntax2004 {iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1)
-                  pkcs-7(7) modules(0) pkcs-7(1)}
+                  pkcs-7(7) modules(0) pkcs-7(1)};
 
 
- PrivateKeyInfo, EncryptedPrivateKeyInfo
-     FROM PKCS-8 {iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1)
-                  pkcs-8(8) modules(1) pkcs-8(1)};
+
 
 
 
@@ -58,16 +56,10 @@ PKCS-12 {
 
  PFX ::= SEQUENCE {
      version    INTEGER ,
-     authSafe   AuthSafe,
+     authSafe   ContentInfo,
      macData    MacData OPTIONAL
  }
- AuthSafe ::= SEQUENCE {
-   authSafeType OBJECT IDENTIFIER,
-   authSafeData [0] AuthSafeData
- }
- AuthSafeData ::= [UNIVERSAL 4] SEQUENCE {
-   authentictedSafe AuthenticatedSafe
- }
+
 
  MacData ::= SEQUENCE {
      mac        DigestInfo,
@@ -77,73 +69,6 @@ PKCS-12 {
      -- deprecated.
  }
 
-
-
- AuthenticatedSafe ::= SEQUENCE OF ContentInfo
-     -- Data if unencrypted
-     -- EncryptedData if password-encrypted
-     -- EnvelopedData if public key-encrypted
-
- SafeContents ::= SEQUENCE OF SafeBag
-
- SafeBag ::= SEQUENCE {
-     bagId         OBJECT IDENTIFIER,
-     bagValue      [0] EXPLICIT BAGVALUE,
-     bagAttributes SET OF PKCS12Attribute OPTIONAL
- }
-
- -- ============================
- -- Bag types
- -- ============================
- BAGVALUE ::= CHOICE {
-   keyBag              KeyBag,
-   pkcs8ShroudedKeyBag PKCS8ShroudedKeyBag,
-   certBag             CertBag,
-   crlBag              CRLBag,
-   secretBag           SecretBag,
-   safeContentsBag     SafeContents
- }
-
-
-
-
- -- KeyBag
- KeyBag ::= PrivateKeyInfo
-
- -- Shrouded KeyBag
- PKCS8ShroudedKeyBag ::= EncryptedPrivateKeyInfo
-
-
- -- CertBag
- CertBag ::= SEQUENCE {
-     certId    OBJECT IDENTIFIER,
-     certValue [0] EXPLICIT ANY
- }
-
-
- -- CRLBag
- CRLBag ::= SEQUENCE {
-     crlId     OBJECT IDENTIFIER,
-     crltValue [0] EXPLICIT OCTET STRING
- }
-
-
- -- Secret Bag
- SecretBag ::= SEQUENCE {
-     secretTypeId  OBJECT IDENTIFIER,
-     secretValue   [0] EXPLICIT OCTET STRING
- }
-
-
- -- ============================
- -- Attributes
- -- ============================
-
-
- PKCS12Attribute ::= SEQUENCE {
-     attrId      OBJECT IDENTIFIER,
-     attrValues  ANY
- } 
 
 
 

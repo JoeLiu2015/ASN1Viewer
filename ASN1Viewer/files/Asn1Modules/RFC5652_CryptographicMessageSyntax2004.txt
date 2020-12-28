@@ -27,6 +27,10 @@
                      internet(1) security(5) mechanisms(5) pkix(7)
                      mod(0) attribute-cert(12) }
 
+           PrivateKeyInfo, EncryptedPrivateKeyInfo
+              FROM PKCS-8 {iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1)
+                  pkcs-8(8) modules(1) pkcs-8(1)}
+ 
      -- Imports from Appendix B of this document
            AttributeCertificateV1
               FROM AttributeCertificateVersion1
@@ -355,9 +359,69 @@
       encrypted-data     EncryptedData,
       authenticated-data AuthenticatedData,
       compressed-data    CompressedData,
-      data               OCTET STRING
+      data               [UNIVERSAL 4] ContentData
+   }
+   
+   ContentData ::= CHOICE {
+     authenticatedSafe SEQUENCE OF ContentInfo,
+                       -- Data if unencrypted
+                       -- EncryptedData if password-encrypted
+                       -- EnvelopedData if public key-encrypted
+     safeContents      SEQUENCE OF SafeBag,
+     data-value        ANY
    }
 
+   SafeBag ::= SEQUENCE {
+     bagId         OBJECT IDENTIFIER,
+     bagValue      [0] EXPLICIT BAGVALUE,
+     bagAttributes SET OF PKCS12Attribute OPTIONAL
+   }
+
+    PKCS12Attribute ::= SEQUENCE {
+        attrId      OBJECT IDENTIFIER,
+        attrValues  ANY
+    } 
+ -- ============================
+ -- Bag types
+ -- ============================
+ BAGVALUE ::= CHOICE {
+   keyBag              KeyBag,
+   pkcs8ShroudedKeyBag PKCS8ShroudedKeyBag,
+   certBag             CertBag,
+   crlBag              CRLBag,
+   secretBag           SecretBag,
+   safeContentsBag     ANY
+ }
+
+
+
+
+ -- KeyBag
+ KeyBag ::= PrivateKeyInfo
+
+ -- Shrouded KeyBag
+ PKCS8ShroudedKeyBag ::= EncryptedPrivateKeyInfo
+
+
+ -- CertBag
+ CertBag ::= SEQUENCE {
+     certId    OBJECT IDENTIFIER,
+     certValue [0] EXPLICIT ANY
+ }
+
+
+ -- CRLBag
+ CRLBag ::= SEQUENCE {
+     crlId     OBJECT IDENTIFIER,
+     crltValue [0] EXPLICIT OCTET STRING
+ }
+
+
+ -- Secret Bag
+ SecretBag ::= SEQUENCE {
+     secretTypeId  OBJECT IDENTIFIER,
+     secretValue   [0] EXPLICIT OCTET STRING
+ }
 
    DigestInfo ::= SEQUENCE {
      digestAlgorithm DigestAlgorithmIdentifier,
