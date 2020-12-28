@@ -58,7 +58,7 @@
       this.ctxMenuTree = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.ctxMenuCollapse = new System.Windows.Forms.ToolStripMenuItem();
       this.ctxMenuExpand = new System.Windows.Forms.ToolStripMenuItem();
-      //((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+      this.menuCheckUpdate = new System.Windows.Forms.ToolStripMenuItem();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
       this.splitContainer1.SuspendLayout();
@@ -238,14 +238,14 @@
       // menuASN1Modules
       // 
       this.menuASN1Modules.Name = "menuASN1Modules";
-      this.menuASN1Modules.Size = new System.Drawing.Size(359, 44);
+      this.menuASN1Modules.Size = new System.Drawing.Size(313, 44);
       this.menuASN1Modules.Text = "&ASN.1 Modules";
       this.menuASN1Modules.Click += new System.EventHandler(this.menuASN1Modules_Click);
       // 
       // menuTestFiles
       // 
       this.menuTestFiles.Name = "menuTestFiles";
-      this.menuTestFiles.Size = new System.Drawing.Size(359, 44);
+      this.menuTestFiles.Size = new System.Drawing.Size(313, 44);
       this.menuTestFiles.Text = "Test Files";
       // 
       // menuHelp
@@ -253,7 +253,8 @@
       this.menuHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuLanguage,
             this.toolStripMenuItem2,
-            this.menuAbout});
+            this.menuAbout,
+            this.menuCheckUpdate});
       this.menuHelp.Name = "menuHelp";
       this.menuHelp.Size = new System.Drawing.Size(85, 38);
       this.menuHelp.Text = "&Help";
@@ -264,7 +265,7 @@
             this.menuChinese,
             this.menuEnglish});
       this.menuLanguage.Name = "menuLanguage";
-      this.menuLanguage.Size = new System.Drawing.Size(253, 44);
+      this.menuLanguage.Size = new System.Drawing.Size(359, 44);
       this.menuLanguage.Text = "Language";
       // 
       // menuChinese
@@ -286,12 +287,12 @@
       // toolStripMenuItem2
       // 
       this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-      this.toolStripMenuItem2.Size = new System.Drawing.Size(250, 6);
+      this.toolStripMenuItem2.Size = new System.Drawing.Size(356, 6);
       // 
       // menuAbout
       // 
       this.menuAbout.Name = "menuAbout";
-      this.menuAbout.Size = new System.Drawing.Size(253, 44);
+      this.menuAbout.Size = new System.Drawing.Size(359, 44);
       this.menuAbout.Text = "&About";
       this.menuAbout.Click += new System.EventHandler(this.menuAbout_Click);
       // 
@@ -338,6 +339,12 @@
       this.ctxMenuExpand.Text = "&Expand";
       this.ctxMenuExpand.Click += new System.EventHandler(this.ctxMenuExpand_Click);
       // 
+      // menuCheckUpdate
+      // 
+      this.menuCheckUpdate.Name = "menuCheckUpdate";
+      this.menuCheckUpdate.Size = new System.Drawing.Size(359, 44);
+      this.menuCheckUpdate.Text = "&Check Update";
+      // 
       // MainForm
       // 
       this.AllowDrop = true;
@@ -359,7 +366,6 @@
       this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainForm_DragEnter);
       this.splitContainer1.Panel1.ResumeLayout(false);
       this.splitContainer1.Panel2.ResumeLayout(false);
-      //((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
       this.splitContainer1.ResumeLayout(false);
       this.tabControl1.ResumeLayout(false);
       this.tabPageInput.ResumeLayout(false);
@@ -405,6 +411,7 @@
     private System.Windows.Forms.ToolStripMenuItem ctxMenuCollapse;
     private System.Windows.Forms.ToolStripMenuItem ctxMenuExpand;
     private System.Windows.Forms.ToolStripMenuItem menuTestFiles;
+    private System.Windows.Forms.ToolStripMenuItem menuCheckUpdate;
   }
 }
 

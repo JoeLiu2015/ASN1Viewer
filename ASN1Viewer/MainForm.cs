@@ -154,6 +154,7 @@ namespace ASN1Viewer
       this.menuChinese.Text     = Lang.T["MENU_CHINESE"];
       this.menuEnglish.Text     = Lang.T["MENU_ENGLISH"];
       this.menuAbout.Text       = Lang.T["MENU_ABOUT"];
+      this.menuCheckUpdate.Text = Lang.T["MENU_CHECKVER"];
       this.ctxMenuCollapse.Text = Lang.T["MENU_COLLAPSE"];
       this.ctxMenuExpand.Text   = Lang.T["MENU_EXPAND"];
       this.tabPageInput.Text    = Lang.T["TAB_INPUT"];

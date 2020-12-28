@@ -12,6 +12,7 @@ MENU_ABOUT     : 关于(&A)
 MENU_LANG      : 语言
 MENU_CHINESE   : 中文
 MENU_ENGLISH   : 英文
+MENU_CHECKVER  : 检查版本更新(&C)...
 MENU_COLLAPSE  : 收起(&C)
 MENU_EXPAND    : 展开(&E)
 TAB_INPUT      : 输入文本

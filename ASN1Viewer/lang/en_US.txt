@@ -12,6 +12,7 @@ MENU_ABOUT     : &About
 MENU_LANG      : Language
 MENU_CHINESE   : Chinese
 MENU_ENGLISH   : English
+MENU_CHECKVER  : &Check Update...
 MENU_COLLAPSE  : &Collapse
 MENU_EXPAND    : &Expand
 TAB_INPUT      : Input Text
