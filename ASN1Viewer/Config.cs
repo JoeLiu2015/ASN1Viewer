@@ -55,6 +55,10 @@ namespace ASN1Viewer {
         m_MaxHistoryCount = value;
       }
     }
+    public string Language {
+      get {  return m_Lang; }
+      set { m_Lang = value; }
+    }
     public void Load() {
       string cfgFile = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName + ".config";
       XmlDocument xmlDoc = new XmlDocument();

@@ -19,7 +19,8 @@ namespace ASN1Viewer
     }
 
     private void MainForm_Load(object sender, EventArgs e) {
-      menuChinese_Click(menuChinese, EventArgs.Empty);
+      if (Config.Instance.Language == "zh_CN") menuChinese_Click(menuChinese, EventArgs.Empty);
+      else                                     menuEnglish_Click(menuChinese, EventArgs.Empty);
       UpdateRecentFiles();
       UpdateTestFiles();
     }
@@ -62,6 +63,7 @@ namespace ASN1Viewer
       this.menuChinese.Checked = true;
       this.menuEnglish.Checked = false;
       Lang.Select("zh_CN");
+      Config.Instance.Language = "zh_CN";
       LoadLang();
     }
     private void menuEnglish_Click(object sender, EventArgs e) {
@@ -69,6 +71,7 @@ namespace ASN1Viewer
       this.menuChinese.Checked = false;
       this.menuEnglish.Checked = true;
       Lang.Select("en_US");
+      Config.Instance.Language = "en_US";
       LoadLang();
     }
     private void menuRentFileItem_Click(object sender, EventArgs e) {
