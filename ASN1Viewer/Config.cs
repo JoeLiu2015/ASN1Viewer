@@ -2,10 +2,27 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Xml;
 
 namespace ASN1Viewer {
   internal class Config {
-    private const  string INI_FILE = "settings.ini";
+    private const string DEFAULT = @"<?xml version=""1.0"" encoding=""utf-8""?>
+<configuration>
+  <startup useLegacyV2RuntimeActivationPolicy=""true"">
+    <supportedRuntime version=""v2.0.50727""/>
+    <supportedRuntime version=""v4.0"" sku="".NETFramework,Version=v4.0""/>
+  </startup>
+  <appSettings>
+    <AutoUpdateASN1Modules>{0}</AutoUpdateASN1Modules>
+    <Language>{1}</Language>
+    <AutoUpdateInterval>{2}</AutoUpdateInterval>
+    <LastUpdateDate>{3}</LastUpdateDate>
+    <MaxHistoryCount>{4}</MaxHistoryCount>
+    <History>{5}</History> 
+  </appSettings>
+</configuration>
+";
+
     private static Config m_Ins = null;
     public static Config Instance {
       get {
@@ -17,97 +34,100 @@ namespace ASN1Viewer {
       }
     }
 
-    private Dictionary<string, string> m_Data           = new Dictionary<string, string>();
-    private List<string>               m_HistoryFiles   = null;
+   
+    private List<string> m_HistoryFiles          = new List<string>();
+    private bool         m_AutoUpdateASN1Modules = true;
+    private int          m_AutoUpdateInterval    = 1; // day
+    private DateTime     m_LastUpdteDate         = DateTime.Now;
+    private string       m_Lang                  = "zh_CN";
+    private int          m_MaxHistoryCount       = 15;
 
     private Config() { }
+
+    public List<string> History {
+      get {  return m_HistoryFiles; }
+    }
+    public int MaxHistoryCount {
+      get {
+        return m_MaxHistoryCount;
+      }
+      set {
+        m_MaxHistoryCount = value;
+      }
+    }
     public void Load() {
-      if (!File.Exists(INI_FILE)) return;
-      string[] lines = File.ReadAllLines(INI_FILE);
-      for (int i = 0; i < lines.Length; i++) {
-        string line = lines[i].Trim(' ', '\t');
-        if (line.StartsWith("#") || line.StartsWith("//") || line.StartsWith(";") || line.StartsWith("[")) continue;
-        int pos = line.IndexOf('=');
-        if (pos > 0) {
-          string key = line.Substring(0, pos).Trim();
-          string val = line.Substring(pos + 1).Trim();
-          if (val.Contains("%")) {
-            //val = val.Replace("%VERSION%", prod.version + "." + prod.build);
-          }
-          if (val.Contains("\\n")) val = val.Replace("\\n", "\r\n");
-          m_Data[key] = val;
+      string cfgFile = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName + ".config";
+      XmlDocument xmlDoc = new XmlDocument();
+      if (!File.Exists(cfgFile)) return;
+      try {
+        xmlDoc.Load(cfgFile);
+        XmlNode settings = xmlDoc.SelectSingleNode("/configuration/appSettings");
+        for (int i = 0; i < settings.ChildNodes.Count; i++) {
+          XmlNode node = settings.ChildNodes[i];
+          if (node.Name.Equals("AutoUpdateASN1Modules", StringComparison.OrdinalIgnoreCase))   m_AutoUpdateASN1Modules = ParseBool(node.InnerText, true);
+          else if (node.Name.Equals("AutoUpdateInterval", StringComparison.OrdinalIgnoreCase)) m_AutoUpdateInterval = ParseInt(node.InnerText, 1);
+          else if (node.Name.Equals("LastUpdteDate", StringComparison.OrdinalIgnoreCase))      m_LastUpdteDate = ParseDate(node.InnerText);
+          else if (node.Name.Equals("Language", StringComparison.OrdinalIgnoreCase))           m_Lang = ParseLang(node.InnerText);
+          else if (node.Name.Equals("MaxHistoryCount", StringComparison.OrdinalIgnoreCase))    m_MaxHistoryCount = ParseInt(node.InnerText, 15);
+          else if (node.Name.Equals("History", StringComparison.OrdinalIgnoreCase))            m_HistoryFiles = ParseHistory(node.InnerText); 
         }
+      } catch (Exception ex) {
       }
     }
     public void Save() {
-      if (m_HistoryFiles != null) { 
-        m_Data["history"] = String.Join(",", m_HistoryFiles.ToArray());
-      }
-      StringBuilder sb = new StringBuilder();
-      if (m_Data.ContainsKey("max_history")) {
-        sb.AppendFormat("max_history={0}\r\n", m_Data["max_history"]);
-      }
-      if (m_Data.ContainsKey("history")) {
-        sb.AppendFormat("history={0}\r\n", m_Data["history"]);
-      }
-      if (m_Data.ContainsKey("auto_update")) {
-        sb.AppendFormat("auto_update={0}\r\n", m_Data["auto_update"]);
-      }
-      if (m_Data.ContainsKey("auto_update_asn1_modules")) {
-        sb.AppendFormat("auto_update_asn1_modules={0}\r\n", m_Data["auto_update_asn1_modules"]);
-      }
-      File.WriteAllText(INI_FILE, sb.ToString());
+      string cfgFile = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName + ".config";
+      string file = string.Format(DEFAULT,
+        m_AutoUpdateASN1Modules,
+        m_Lang,
+        m_AutoUpdateInterval,
+        m_LastUpdteDate.ToString("yyyy-MM-dd"),
+        m_MaxHistoryCount,
+        string.Join(";", m_HistoryFiles.ToArray())
+        );
+      File.WriteAllText(cfgFile, file);
     }
-    public List<string> History {
-      get {
-        if (m_HistoryFiles == null) {
-          m_HistoryFiles = new List<string>();
-          if (!m_Data.ContainsKey("history")) return m_HistoryFiles;
-          String s = m_Data["history"];
-          string[] his = s.Split(',');
-          for (int i = 0; i < his.Length; i++) {
-            if (File.Exists(his[i])) m_HistoryFiles.Add(his[i]);
-          }
-        }
-        return m_HistoryFiles;
-      }
-    }
-   
-    public int MaxHistory {
-      get {
-        return getInt("max_history", 15);
-      } set {
-        m_Data["max_history"] = value + "";
-      }
-    }
-
-    public bool AuthUpdate {
-      get { return getBool("auto_update", true); }
-      set { m_Data["auto_update"] = value + "";  }
-    }
-    public bool AuthUpdateASN1Modules {
-      get { return getBool("auto_update_asn1_modules", true); }
-      set { m_Data["auto_update_asn1_modules"] = value + ""; }
-    }
-
-
-    private int getInt(string name, int defValue) {
-      if (!m_Data.ContainsKey(name)) return defValue;
+    private bool ParseBool(string v, bool defValue) {
       try {
-        int val = int.Parse(m_Data[name]);
-        return val; 
-      } catch (Exception) {
-        return defValue;
-      }
-    }
-    private bool getBool(string name, bool defValue) {
-      if (!m_Data.ContainsKey(name)) return defValue;
-      try {
-        bool val = bool.Parse(m_Data[name]);
+        bool val = bool.Parse(v);
         return val;
       } catch (Exception) {
         return defValue;
       }
+    }
+    private int ParseInt(string v, int defValue) {
+      try {
+        int val = int.Parse(v);
+        return val;
+      } catch (Exception) {
+        return defValue;
+      }
+    }
+
+    private DateTime ParseDate(string v) {
+      try {
+        DateTime val = DateTime.ParseExact(v, "yyyy-MM-dd", null);
+        return val;
+      } catch (Exception) {
+        return DateTime.Now;
+      }
+    }
+    private string ParseLang(string v) {
+      if (v.ToLower() == "zh_cn") return "zh_CN";
+      return "en_US";
+    }
+
+    private List<string> ParseHistory(string v) {
+      List<string> ret = new List<string>();
+      try { 
+        v = v.Trim();
+        string[] vals = v.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+        for (int i = 0; i < vals.Length; i++) {
+          if (vals[i].Trim().Length > 0) ret.Add(vals[i].Trim());
+        }
+      } catch (Exception ex) {
+
+      }
+      return ret;
     }
   }
 }

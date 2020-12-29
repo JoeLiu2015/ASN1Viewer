@@ -15,6 +15,7 @@ namespace ASN1Viewer
     {
       InitializeComponent();
       this.txtInput.Font = this.hexViewer1.Font;
+      
     }
 
     private void MainForm_Load(object sender, EventArgs e) {
@@ -224,7 +225,7 @@ namespace ASN1Viewer
           .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
         if (Config.Instance.History.Contains(normalizePath)) Config.Instance.History.Remove(normalizePath);
         Config.Instance.History.Insert(0, normalizePath);
-        if (Config.Instance.History.Count > Config.Instance.MaxHistory) {
+        if (Config.Instance.History.Count > Config.Instance.MaxHistoryCount) {
           Config.Instance.History.RemoveAt(Config.Instance.History.Count - 1);
         }
         UpdateRecentFiles();
