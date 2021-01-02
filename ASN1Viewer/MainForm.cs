@@ -321,10 +321,11 @@ namespace ASN1Viewer
     private void CheckUpdate() {
       if (!Config.Instance.AutoUpdate) return;
       System.Threading.Thread.Sleep(10000); // 10s
+      
       CheckUpdate(false);
     }
     private void CheckUpdate(bool byUI) {
-      string msg = "";
+      if (this.Cursor == Cursors.WaitCursor) return;
       if (byUI) Cursor.Current = Cursors.WaitCursor;
       try {
         DateTime[] vers = Updater.GetVersions();
