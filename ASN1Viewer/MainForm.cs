@@ -23,6 +23,7 @@ namespace ASN1Viewer
       else                                     menuEnglish_Click(menuChinese, EventArgs.Empty);
       UpdateRecentFiles();
       UpdateTestFiles();
+      new System.Threading.Thread(CheckUpdate).Start();
     }
     private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
       Config.Instance.Save();
@@ -102,6 +103,9 @@ namespace ASN1Viewer
     private void menuASN1Modules_Click(object sender, EventArgs e) {
       if (m_SchemaDlg == null) m_SchemaDlg = new schema.SchemaDlg();
       m_SchemaDlg.ShowDialog();
+    }
+    private void menuCheckUpdate_Click(object sender, EventArgs e) {
+      CheckUpdate(true);
     }
     private void ctxMenuCollapse_Click(object sender, EventArgs e) {
       TreeNode n = ctxMenuTree.Tag as TreeNode;
@@ -314,5 +318,25 @@ namespace ASN1Viewer
       }
     }
 
+    private void CheckUpdate() {
+      //CheckUpdate(false);
+    }
+    private void CheckUpdate(bool byUI) {
+      if (byUI) Cursor.Current = Cursors.WaitCursor;
+      try {
+        DateTime[] vers = Updater.GetVersions();
+        if (vers == null) return;
+        if (vers[0] > Config.Instance.ASN1ViewerMT) {
+          Updater.UpdateASN1Viewer();
+        }
+        if (vers[1] > Config.Instance.ASN1ModulesMT) {
+          Updater.UpdateFiles();
+        }
+      } finally {
+        if (byUI) Cursor.Current = Cursors.Default;
+      }
+    }
+
+    
   }
 }

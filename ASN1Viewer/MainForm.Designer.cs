@@ -53,12 +53,13 @@
       this.menuEnglish = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
       this.menuAbout = new System.Windows.Forms.ToolStripMenuItem();
+      this.menuCheckUpdate = new System.Windows.Forms.ToolStripMenuItem();
       this.statusStrip1 = new System.Windows.Forms.StatusStrip();
       this.lbStatus = new System.Windows.Forms.ToolStripStatusLabel();
       this.ctxMenuTree = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.ctxMenuCollapse = new System.Windows.Forms.ToolStripMenuItem();
       this.ctxMenuExpand = new System.Windows.Forms.ToolStripMenuItem();
-      this.menuCheckUpdate = new System.Windows.Forms.ToolStripMenuItem();
+      this.lbStatusRight = new System.Windows.Forms.ToolStripStatusLabel();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
       this.splitContainer1.SuspendLayout();
@@ -77,7 +78,7 @@
       this.treeView1.Location = new System.Drawing.Point(0, 0);
       this.treeView1.Margin = new System.Windows.Forms.Padding(6);
       this.treeView1.Name = "treeView1";
-      this.treeView1.Size = new System.Drawing.Size(456, 786);
+      this.treeView1.Size = new System.Drawing.Size(456, 770);
       this.treeView1.TabIndex = 0;
       this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
       this.treeView1.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_NodeMouseClick);
@@ -96,7 +97,7 @@
       // splitContainer1.Panel2
       // 
       this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
-      this.splitContainer1.Size = new System.Drawing.Size(1706, 786);
+      this.splitContainer1.Size = new System.Drawing.Size(1706, 770);
       this.splitContainer1.SplitterDistance = 456;
       this.splitContainer1.SplitterWidth = 8;
       this.splitContainer1.TabIndex = 1;
@@ -110,7 +111,7 @@
       this.tabControl1.Margin = new System.Windows.Forms.Padding(6);
       this.tabControl1.Name = "tabControl1";
       this.tabControl1.SelectedIndex = 0;
-      this.tabControl1.Size = new System.Drawing.Size(1242, 786);
+      this.tabControl1.Size = new System.Drawing.Size(1242, 770);
       this.tabControl1.TabIndex = 0;
       // 
       // tabPageInput
@@ -120,7 +121,7 @@
       this.tabPageInput.Margin = new System.Windows.Forms.Padding(6);
       this.tabPageInput.Name = "tabPageInput";
       this.tabPageInput.Padding = new System.Windows.Forms.Padding(6);
-      this.tabPageInput.Size = new System.Drawing.Size(1226, 739);
+      this.tabPageInput.Size = new System.Drawing.Size(1226, 723);
       this.tabPageInput.TabIndex = 0;
       this.tabPageInput.Text = "Input Text";
       this.tabPageInput.UseVisualStyleBackColor = true;
@@ -132,7 +133,7 @@
       this.txtInput.Margin = new System.Windows.Forms.Padding(6);
       this.txtInput.Name = "txtInput";
       this.txtInput.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-      this.txtInput.Size = new System.Drawing.Size(1214, 727);
+      this.txtInput.Size = new System.Drawing.Size(1214, 711);
       this.txtInput.TabIndex = 0;
       this.txtInput.Text = "";
       this.txtInput.WordWrap = false;
@@ -238,14 +239,14 @@
       // menuASN1Modules
       // 
       this.menuASN1Modules.Name = "menuASN1Modules";
-      this.menuASN1Modules.Size = new System.Drawing.Size(313, 44);
+      this.menuASN1Modules.Size = new System.Drawing.Size(359, 44);
       this.menuASN1Modules.Text = "&ASN.1 Modules";
       this.menuASN1Modules.Click += new System.EventHandler(this.menuASN1Modules_Click);
       // 
       // menuTestFiles
       // 
       this.menuTestFiles.Name = "menuTestFiles";
-      this.menuTestFiles.Size = new System.Drawing.Size(313, 44);
+      this.menuTestFiles.Size = new System.Drawing.Size(359, 44);
       this.menuTestFiles.Text = "Test Files";
       // 
       // menuHelp
@@ -296,15 +297,23 @@
       this.menuAbout.Text = "&About";
       this.menuAbout.Click += new System.EventHandler(this.menuAbout_Click);
       // 
+      // menuCheckUpdate
+      // 
+      this.menuCheckUpdate.Name = "menuCheckUpdate";
+      this.menuCheckUpdate.Size = new System.Drawing.Size(359, 44);
+      this.menuCheckUpdate.Text = "&Check Update";
+      this.menuCheckUpdate.Click += new System.EventHandler(this.menuCheckUpdate_Click);
+      // 
       // statusStrip1
       // 
       this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
       this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.lbStatus});
-      this.statusStrip1.Location = new System.Drawing.Point(0, 828);
+            this.lbStatus,
+            this.lbStatusRight});
+      this.statusStrip1.Location = new System.Drawing.Point(0, 812);
       this.statusStrip1.Name = "statusStrip1";
       this.statusStrip1.Padding = new System.Windows.Forms.Padding(2, 0, 28, 0);
-      this.statusStrip1.Size = new System.Drawing.Size(1706, 26);
+      this.statusStrip1.Size = new System.Drawing.Size(1706, 42);
       this.statusStrip1.TabIndex = 3;
       this.statusStrip1.Text = "statusStrip1";
       // 
@@ -313,7 +322,7 @@
       this.lbStatus.AutoSize = false;
       this.lbStatus.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
       this.lbStatus.Name = "lbStatus";
-      this.lbStatus.Size = new System.Drawing.Size(400, 16);
+      this.lbStatus.Size = new System.Drawing.Size(400, 32);
       this.lbStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // ctxMenuTree
@@ -339,11 +348,13 @@
       this.ctxMenuExpand.Text = "&Expand";
       this.ctxMenuExpand.Click += new System.EventHandler(this.ctxMenuExpand_Click);
       // 
-      // menuCheckUpdate
+      // lbStatusRight
       // 
-      this.menuCheckUpdate.Name = "menuCheckUpdate";
-      this.menuCheckUpdate.Size = new System.Drawing.Size(359, 44);
-      this.menuCheckUpdate.Text = "&Check Update";
+      this.lbStatusRight.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      this.lbStatusRight.Name = "lbStatusRight";
+      this.lbStatusRight.Size = new System.Drawing.Size(1276, 32);
+      this.lbStatusRight.Spring = true;
+      this.lbStatusRight.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
       // 
       // MainForm
       // 
@@ -412,6 +423,7 @@
     private System.Windows.Forms.ToolStripMenuItem ctxMenuExpand;
     private System.Windows.Forms.ToolStripMenuItem menuTestFiles;
     private System.Windows.Forms.ToolStripMenuItem menuCheckUpdate;
+    private System.Windows.Forms.ToolStripStatusLabel lbStatusRight;
   }
 }
 

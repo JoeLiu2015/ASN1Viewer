@@ -13,12 +13,13 @@ namespace ASN1Viewer {
     <supportedRuntime version=""v4.0"" sku="".NETFramework,Version=v4.0""/>
   </startup>
   <appSettings>
-    <AutoUpdateASN1Modules>{0}</AutoUpdateASN1Modules>
-    <Language>{1}</Language>
-    <AutoUpdateInterval>{2}</AutoUpdateInterval>
-    <LastUpdateDate>{3}</LastUpdateDate>
-    <MaxHistoryCount>{4}</MaxHistoryCount>
-    <History>{5}</History> 
+    <Language>{0}</Language>
+    <AutoUpdate>{1}</AutoUpdate>
+    <UpdateLocation>{2}</UpdateLocation>
+    <ASN1ViewerMT>{3}</ASN1ViewerMT>
+    <ASN1ModulesMT>{4}</ASN1ModulesMT>
+    <MaxHistoryCount>{5}</MaxHistoryCount>
+    <History>{6}</History>
   </appSettings>
 </configuration>
 ";
@@ -35,29 +36,49 @@ namespace ASN1Viewer {
     }
 
    
-    private List<string> m_HistoryFiles          = new List<string>();
-    private bool         m_AutoUpdateASN1Modules = true;
-    private int          m_AutoUpdateInterval    = 1; // day
-    private DateTime     m_LastUpdteDate         = DateTime.Now;
-    private string       m_Lang                  = "zh_CN";
-    private int          m_MaxHistoryCount       = 15;
+    
+    private string       m_Lang            = "zh_CN";
+    private bool         m_AutoUpdate      = true;
+    private string       m_UpdateLocation  = "";
+    private DateTime     m_ASN1ViewerMT    = DateTime.MinValue;
+    private DateTime     m_ASN1ModulesMT   = DateTime.MinValue;
+    private int          m_MaxHistoryCount = 15;
+    private List<string> m_HistoryFiles    = new List<string>();
 
     private Config() { }
 
+    public string Language {
+      get { return m_Lang; }
+      set { m_Lang = value; }
+    }
+    public bool AutoUpdate {
+      get { return m_AutoUpdate; }
+      set { m_AutoUpdate = value; }
+    }
+    public string UpdateLocation {
+      get { return m_UpdateLocation; }
+      set { m_UpdateLocation = value; }
+    }
+    public DateTime ASN1ViewerMT {
+      get { return m_ASN1ViewerMT; }
+      set { m_ASN1ViewerMT = value; }
+    }
+    public DateTime ASN1ModulesMT {
+      get { return m_ASN1ModulesMT; }
+      set { m_ASN1ModulesMT = value; }
+    }
     public List<string> History {
       get {  return m_HistoryFiles; }
     }
     public int MaxHistoryCount {
-      get {
-        return m_MaxHistoryCount;
-      }
-      set {
-        m_MaxHistoryCount = value;
-      }
+      get { return m_MaxHistoryCount; }
+      set { m_MaxHistoryCount = value;}
     }
-    public string Language {
-      get {  return m_Lang; }
-      set { m_Lang = value; }
+
+    public static string AppName {
+      get {
+        return System.AppDomain.CurrentDomain.FriendlyName;
+      }
     }
     public void Load() {
       string cfgFile = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName + ".config";
@@ -68,12 +89,13 @@ namespace ASN1Viewer {
         XmlNode settings = xmlDoc.SelectSingleNode("/configuration/appSettings");
         for (int i = 0; i < settings.ChildNodes.Count; i++) {
           XmlNode node = settings.ChildNodes[i];
-          if (node.Name.Equals("AutoUpdateASN1Modules", StringComparison.OrdinalIgnoreCase))   m_AutoUpdateASN1Modules = ParseBool(node.InnerText, true);
-          else if (node.Name.Equals("AutoUpdateInterval", StringComparison.OrdinalIgnoreCase)) m_AutoUpdateInterval = ParseInt(node.InnerText, 1);
-          else if (node.Name.Equals("LastUpdteDate", StringComparison.OrdinalIgnoreCase))      m_LastUpdteDate = ParseDate(node.InnerText);
-          else if (node.Name.Equals("Language", StringComparison.OrdinalIgnoreCase))           m_Lang = ParseLang(node.InnerText);
+          if (node.Name.Equals("Language", StringComparison.OrdinalIgnoreCase))                m_Lang = ParseLang(node.InnerText);
+          else if (node.Name.Equals("AutoUpdate", StringComparison.OrdinalIgnoreCase))         m_AutoUpdate = ParseBool(node.InnerText, true);
+          else if (node.Name.Equals("UpdateLocation", StringComparison.OrdinalIgnoreCase))     m_UpdateLocation = node.InnerText;
+          else if (node.Name.Equals("ASN1ViewerVer", StringComparison.OrdinalIgnoreCase))      m_ASN1ViewerMT = ParseDateTime(node.InnerText);
+          else if (node.Name.Equals("ASN1ModulesVer", StringComparison.OrdinalIgnoreCase))     m_ASN1ModulesMT = ParseDateTime(node.InnerText);
           else if (node.Name.Equals("MaxHistoryCount", StringComparison.OrdinalIgnoreCase))    m_MaxHistoryCount = ParseInt(node.InnerText, 15);
-          else if (node.Name.Equals("History", StringComparison.OrdinalIgnoreCase))            m_HistoryFiles = ParseHistory(node.InnerText); 
+          else if (node.Name.Equals("History", StringComparison.OrdinalIgnoreCase))            m_HistoryFiles = ParseHistory(node.InnerText);
         }
       } catch (Exception ex) {
       }
@@ -81,10 +103,11 @@ namespace ASN1Viewer {
     public void Save() {
       string cfgFile = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName + ".config";
       string file = string.Format(DEFAULT,
-        m_AutoUpdateASN1Modules,
         m_Lang,
-        m_AutoUpdateInterval,
-        m_LastUpdteDate.ToString("yyyy-MM-dd"),
+        m_AutoUpdate,
+        m_UpdateLocation,
+        m_ASN1ViewerMT,
+        m_ASN1ModulesMT,
         m_MaxHistoryCount,
         string.Join(";", m_HistoryFiles.ToArray())
         );
@@ -107,12 +130,12 @@ namespace ASN1Viewer {
       }
     }
 
-    private DateTime ParseDate(string v) {
+    private DateTime ParseDateTime(string v) {
       try {
-        DateTime val = DateTime.ParseExact(v, "yyyy-MM-dd", null);
+        DateTime val = DateTime.ParseExact(v, "yyyyMMddHHmmss", null);
         return val;
       } catch (Exception) {
-        return DateTime.Now;
+        return DateTime.MinValue;
       }
     }
     private string ParseLang(string v) {
