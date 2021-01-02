@@ -56,10 +56,10 @@
       this.menuCheckUpdate = new System.Windows.Forms.ToolStripMenuItem();
       this.statusStrip1 = new System.Windows.Forms.StatusStrip();
       this.lbStatus = new System.Windows.Forms.ToolStripStatusLabel();
+      this.lbStatusRight = new System.Windows.Forms.ToolStripStatusLabel();
       this.ctxMenuTree = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.ctxMenuCollapse = new System.Windows.Forms.ToolStripMenuItem();
       this.ctxMenuExpand = new System.Windows.Forms.ToolStripMenuItem();
-      this.lbStatusRight = new System.Windows.Forms.ToolStripStatusLabel();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
       this.splitContainer1.SuspendLayout();
@@ -146,7 +146,7 @@
       this.tabPageBytes.Margin = new System.Windows.Forms.Padding(6);
       this.tabPageBytes.Name = "tabPageBytes";
       this.tabPageBytes.Padding = new System.Windows.Forms.Padding(6);
-      this.tabPageBytes.Size = new System.Drawing.Size(1226, 739);
+      this.tabPageBytes.Size = new System.Drawing.Size(1226, 723);
       this.tabPageBytes.TabIndex = 1;
       this.tabPageBytes.Text = "ASN.1 Bytes";
       this.tabPageBytes.UseVisualStyleBackColor = true;
@@ -158,7 +158,7 @@
       this.panel1.Location = new System.Drawing.Point(6, 6);
       this.panel1.Margin = new System.Windows.Forms.Padding(6);
       this.panel1.Name = "panel1";
-      this.panel1.Size = new System.Drawing.Size(1214, 727);
+      this.panel1.Size = new System.Drawing.Size(1214, 711);
       this.panel1.TabIndex = 0;
       // 
       // hexViewer1
@@ -172,7 +172,7 @@
       this.hexViewer1.Name = "hexViewer1";
       this.hexViewer1.ReadOnly = true;
       this.hexViewer1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-      this.hexViewer1.Size = new System.Drawing.Size(1214, 727);
+      this.hexViewer1.Size = new System.Drawing.Size(1214, 711);
       this.hexViewer1.TabIndex = 0;
       this.hexViewer1.Text = "";
       this.hexViewer1.WordWrap = false;
@@ -239,14 +239,14 @@
       // menuASN1Modules
       // 
       this.menuASN1Modules.Name = "menuASN1Modules";
-      this.menuASN1Modules.Size = new System.Drawing.Size(359, 44);
+      this.menuASN1Modules.Size = new System.Drawing.Size(313, 44);
       this.menuASN1Modules.Text = "&ASN.1 Modules";
       this.menuASN1Modules.Click += new System.EventHandler(this.menuASN1Modules_Click);
       // 
       // menuTestFiles
       // 
       this.menuTestFiles.Name = "menuTestFiles";
-      this.menuTestFiles.Size = new System.Drawing.Size(359, 44);
+      this.menuTestFiles.Size = new System.Drawing.Size(313, 44);
       this.menuTestFiles.Text = "Test Files";
       // 
       // menuHelp
@@ -325,6 +325,14 @@
       this.lbStatus.Size = new System.Drawing.Size(400, 32);
       this.lbStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
+      // lbStatusRight
+      // 
+      this.lbStatusRight.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      this.lbStatusRight.Name = "lbStatusRight";
+      this.lbStatusRight.Size = new System.Drawing.Size(1276, 32);
+      this.lbStatusRight.Spring = true;
+      this.lbStatusRight.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+      // 
       // ctxMenuTree
       // 
       this.ctxMenuTree.ImageScalingSize = new System.Drawing.Size(32, 32);
@@ -347,14 +355,6 @@
       this.ctxMenuExpand.Size = new System.Drawing.Size(180, 38);
       this.ctxMenuExpand.Text = "&Expand";
       this.ctxMenuExpand.Click += new System.EventHandler(this.ctxMenuExpand_Click);
-      // 
-      // lbStatusRight
-      // 
-      this.lbStatusRight.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-      this.lbStatusRight.Name = "lbStatusRight";
-      this.lbStatusRight.Size = new System.Drawing.Size(1276, 32);
-      this.lbStatusRight.Spring = true;
-      this.lbStatusRight.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
       // 
       // MainForm
       // 

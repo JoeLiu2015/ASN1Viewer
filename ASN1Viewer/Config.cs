@@ -106,8 +106,8 @@ namespace ASN1Viewer {
         m_Lang,
         m_AutoUpdate,
         m_UpdateLocation,
-        m_ASN1ViewerMT,
-        m_ASN1ModulesMT,
+        m_ASN1ViewerMT.ToString("yyyyMMddHHmmss"),
+        m_ASN1ModulesMT.ToString("yyyyMMddHHmmss"),
         m_MaxHistoryCount,
         string.Join(";", m_HistoryFiles.ToArray())
         );

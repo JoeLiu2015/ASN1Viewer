@@ -27,3 +27,6 @@ TXT_TEXT       : 文本
 MODULES_TITLE  : ASN.1 模块查看器
 MSG_NOMODULES  : 目录 "{0}" 不存在.
 MSG_ERROR      : 错误
+MSG_ALREADYLATEST: 已经是最新版本.
+MSG_UPDATESUCCESS: 更新成功.
+MSG_UPDATEFAILED : 更新失败.(错误:{0})

@@ -319,21 +319,60 @@ namespace ASN1Viewer
     }
 
     private void CheckUpdate() {
-      //CheckUpdate(false);
+      if (!Config.Instance.AutoUpdate) return;
+      System.Threading.Thread.Sleep(10000); // 10s
+      CheckUpdate(false);
     }
     private void CheckUpdate(bool byUI) {
+      string msg = "";
       if (byUI) Cursor.Current = Cursors.WaitCursor;
       try {
         DateTime[] vers = Updater.GetVersions();
-        if (vers == null) return;
+        if (vers[0] <= Config.Instance.ASN1ViewerMT && vers[1] <= Config.Instance.ASN1ModulesMT) {
+          ShowUpdateResult("OK", null);
+          return;
+        }
+
         if (vers[0] > Config.Instance.ASN1ViewerMT) {
           Updater.UpdateASN1Viewer();
+          Config.Instance.ASN1ViewerMT = vers[0];
+          Config.Instance.Save();
         }
         if (vers[1] > Config.Instance.ASN1ModulesMT) {
           Updater.UpdateFiles();
+          Config.Instance.ASN1ModulesMT = vers[1];
+          Config.Instance.Save();
         }
+        ShowUpdateResult("Success", null);
+      } catch (Exception ex) {
+        ShowUpdateResult("Failed", ex.Message);
       } finally {
         if (byUI) Cursor.Current = Cursors.Default;
+      }
+    }
+
+    private delegate void ShowUpdatResultHandler(string ret, string error);
+    private void ShowUpdateResult(string ret, string error) {
+      if (this.InvokeRequired) {
+        this.BeginInvoke(new ShowUpdatResultHandler(ShowUpdateResult), ret, error);
+      } else { 
+        switch (ret) {
+          case "OK":
+            this.lbStatusRight.Text = Lang.T["MSG_ALREADYLATEST"];
+            this.lbStatusRight.ForeColor = Color.Green;
+            break;
+          case "Success":
+            this.lbStatusRight.Text = Lang.T["MSG_UPDATESUCCESS"];
+            this.lbStatusRight.ForeColor = Color.Green;
+            break;
+          case "Failed":
+            this.lbStatusRight.Text = string.Format(Lang.T["MSG_UPDATEFAILED"], error);
+            this.lbStatusRight.ForeColor = Color.Red;
+            break;
+          default:
+            this.lbStatusRight.Text = "";
+            break;
+        }
       }
     }
 
