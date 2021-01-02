@@ -333,10 +333,12 @@ namespace ASN1Viewer
           return;
         }
 
+        bool needRestart = false;
         if (vers[0] > Config.Instance.ASN1ViewerMT) {
           Updater.UpdateASN1Viewer();
           Config.Instance.ASN1ViewerMT = vers[0];
           Config.Instance.Save();
+          needRestart = true;
         }
         if (vers[1] > Config.Instance.ASN1ModulesMT) {
           Updater.UpdateFiles();
@@ -344,6 +346,15 @@ namespace ASN1Viewer
           Config.Instance.Save();
         }
         ShowUpdateResult("Success", null);
+        if (byUI && needRestart) {
+          if (MsgBox.Show(this, Lang.T["PROD_NAME"], Lang.T["MST_RESTART"], Lang.T["BTN_YES"], Lang.T["BTN_NO"]) == DialogResult.OK) {
+            this.Close();
+            System.Diagnostics.Process.Start(Config.AppName);
+            return;
+          }
+        } else {
+          schema.SchemaFile.ReloadSchemas();
+        }
       } catch (Exception ex) {
         ShowUpdateResult("Failed", ex.Message);
       } finally {

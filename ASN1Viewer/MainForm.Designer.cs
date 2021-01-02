@@ -370,6 +370,7 @@
       this.Margin = new System.Windows.Forms.Padding(6);
       this.MinimumSize = new System.Drawing.Size(1428, 834);
       this.Name = "MainForm";
+      this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
       this.Text = "ASN.1 Viewer";
       this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
       this.Load += new System.EventHandler(this.MainForm_Load);

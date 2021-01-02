@@ -30,3 +30,6 @@ MSG_ERROR      : 错误
 MSG_ALREADYLATEST: 已经是最新版本.
 MSG_UPDATESUCCESS: 更新成功.
 MSG_UPDATEFAILED : 更新失败.(错误:{0})
+MST_RESTART    : 程序已经更新到最新版本，你要现在就重启程序吗?
+BTN_YES        : 是(&Y)
+BTN_NO         : 否(&N)

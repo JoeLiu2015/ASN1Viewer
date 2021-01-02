@@ -27,6 +27,9 @@ TXT_TEXT       : Text
 MODULES_TITLE  : ASN.1 Modules Viewer
 MSG_NOMODULES  : Folder "{0}" is not found.
 MSG_ERROR      : ERROR
-MSG_ALREADYLATEST: Already be latest version.
+MSG_ALREADYLATEST: Already be the latest version.
 MSG_UPDATESUCCESS: Update successfully.
 MSG_UPDATEFAILED : Update failed.(Error:{0})
+MST_RESTART    : The program already updated. Do you want to restart it immediately?
+BTN_YES        : &Yes
+BTN_NO         : &No
