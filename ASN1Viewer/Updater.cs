@@ -53,7 +53,7 @@ namespace ASN1Viewer {
     }
     public static byte[] ReadFile(string name) {
       if (Config.Instance.UpdateLocation.StartsWith("http")) {
-        return MyWebClient.Download(Config.Instance.UpdateLocation + name, 30);
+        return MyWebClient.Download(Config.Instance.UpdateLocation + name, 5);
       } else {
         return File.ReadAllBytes(Config.Instance.UpdateLocation + name);
       }

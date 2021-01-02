@@ -269,9 +269,9 @@ namespace ASN1Viewer
         foreach (KeyValuePair<string, schema.SchemaFile> kv in schemas) {
           Dictionary<string, schema.TypeDef> types = kv.Value.Types;
           foreach (KeyValuePair<string, schema.TypeDef> nt in types) {
-            if (nt.Key == "PFX") {
-              int debug = 1;
-            }
+            //if (nt.Key == "PFX") {
+            //  int debug = 1;
+            //}
             if (!matched.ContainsKey(nt.Key) && nt.Value.Match(a, false)) matched.Add(nt.Key, nt.Value);
           }
         }
