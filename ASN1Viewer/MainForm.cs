@@ -328,6 +328,7 @@ namespace ASN1Viewer
       if (this.Cursor == Cursors.WaitCursor) return;
       if (byUI) Cursor.Current = Cursors.WaitCursor;
       try {
+        Updater.TryRemoveOldExe();
         DateTime[] vers = Updater.GetVersions();
         if (vers[0] <= Config.Instance.ASN1ViewerMT && vers[1] <= Config.Instance.ASN1ModulesMT) {
           ShowUpdateResult("OK", null);

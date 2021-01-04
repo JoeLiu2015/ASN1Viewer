@@ -28,6 +28,17 @@ namespace ASN1Viewer {
       throw new Exception("Failed to find version information from version.txt");
     }
 
+    public static void TryRemoveOldExe() {
+      string backupName = "." + Config.AppName + ".tmp";
+      if (File.Exists(Config.AppName)) {
+        if (File.Exists(backupName)) {
+          try {
+            File.Delete(backupName);
+          } catch (Exception) {
+          }
+        }
+      }
+    }
     public static void UpdateASN1Viewer() {
       byte[] f = ReadFile("ASN1Viewer.exe");
       string backupName = "." + Config.AppName + ".tmp";

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Text;
 using System.IO;
+using System.Reflection;
 
 namespace ASN1Viewer {
   class Lang {
@@ -61,8 +62,9 @@ namespace ASN1Viewer {
         if (pos > 0) {
           string key = line.Substring(0, pos).Trim();
           string val = line.Substring(pos + 1).Trim();
-          if (val.Contains("%")) {
-            //val = val.Replace("%VERSION%", prod.version + "." + prod.build);
+          if (val.Contains("%VERSION%")) {
+            Version v = Assembly.GetExecutingAssembly().GetName().Version;
+            val = val.Replace("%VERSION%", v.Major + "." + v.Major);
           }
           if (val.Contains("\\n")) {
             val = val.Replace("\\n", "\r\n");

@@ -1,5 +1,5 @@
 ﻿
-PROD_NAME      : ASN.1查看器
+PROD_NAME      : ASN.1查看器(v%VERSION%)
 MENU_FILE      : 文件(&F)
 MENU_VIEW      : 查看(&V)
 MENU_MODULES   : ASN.1 模块(&A)

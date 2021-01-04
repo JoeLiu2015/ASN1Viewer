@@ -1,5 +1,5 @@
 ﻿
-PROD_NAME      : ASN.1 Viewer
+PROD_NAME      : ASN.1 Viewer(v%VERSION%)
 MENU_FILE      : &File
 MENU_VIEW      : &View
 MENU_MODULES   : &ASN.1 Modules

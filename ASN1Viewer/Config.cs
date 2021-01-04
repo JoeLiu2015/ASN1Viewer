@@ -92,8 +92,8 @@ namespace ASN1Viewer {
           if (node.Name.Equals("Language", StringComparison.OrdinalIgnoreCase))                m_Lang = ParseLang(node.InnerText);
           else if (node.Name.Equals("AutoUpdate", StringComparison.OrdinalIgnoreCase))         m_AutoUpdate = ParseBool(node.InnerText, true);
           else if (node.Name.Equals("UpdateLocation", StringComparison.OrdinalIgnoreCase))     m_UpdateLocation = node.InnerText;
-          else if (node.Name.Equals("ASN1ViewerVer", StringComparison.OrdinalIgnoreCase))      m_ASN1ViewerMT = ParseDateTime(node.InnerText);
-          else if (node.Name.Equals("ASN1ModulesVer", StringComparison.OrdinalIgnoreCase))     m_ASN1ModulesMT = ParseDateTime(node.InnerText);
+          else if (node.Name.Equals("ASN1ViewerMT", StringComparison.OrdinalIgnoreCase))      m_ASN1ViewerMT = ParseDateTime(node.InnerText);
+          else if (node.Name.Equals("ASN1ModulesMT", StringComparison.OrdinalIgnoreCase))     m_ASN1ModulesMT = ParseDateTime(node.InnerText);
           else if (node.Name.Equals("MaxHistoryCount", StringComparison.OrdinalIgnoreCase))    m_MaxHistoryCount = ParseInt(node.InnerText, 15);
           else if (node.Name.Equals("History", StringComparison.OrdinalIgnoreCase))            m_HistoryFiles = ParseHistory(node.InnerText);
         }
@@ -106,8 +106,8 @@ namespace ASN1Viewer {
         m_Lang,
         m_AutoUpdate,
         m_UpdateLocation,
-        m_ASN1ViewerMT.ToString("yyyyMMddHHmmss"),
-        m_ASN1ModulesMT.ToString("yyyyMMddHHmmss"),
+        (m_ASN1ViewerMT == DateTime.MinValue ? "" : m_ASN1ViewerMT.ToString("yyyyMMddHHmmss")),
+        (m_ASN1ModulesMT == DateTime.MinValue ? "" : m_ASN1ModulesMT.ToString("yyyyMMddHHmmss")),
         m_MaxHistoryCount,
         string.Join(";", m_HistoryFiles.ToArray())
         );
@@ -132,6 +132,7 @@ namespace ASN1Viewer {
 
     private DateTime ParseDateTime(string v) {
       try {
+        v = v.Trim(' ', '\t');
         DateTime val = DateTime.ParseExact(v, "yyyyMMddHHmmss", null);
         return val;
       } catch (Exception) {
