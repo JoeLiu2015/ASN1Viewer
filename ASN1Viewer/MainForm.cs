@@ -19,6 +19,9 @@ namespace ASN1Viewer
     }
 
     private void MainForm_Load(object sender, EventArgs e) {
+      menuTopMost.Checked = Config.Instance.TopMost;
+      this.TopMost = Config.Instance.TopMost;
+      if (Config.Instance.TopMost) this.BringToFront();
       if (Config.Instance.Language == "zh_CN") menuChinese_Click(menuChinese, EventArgs.Empty);
       else                                     menuEnglish_Click(menuChinese, EventArgs.Empty);
       UpdateRecentFiles();
@@ -89,6 +92,14 @@ namespace ASN1Viewer
       }
       ParseInputFile(file);
     }
+    private void menuTopMost_Click(object sender, EventArgs e) {
+      menuTopMost.Checked = !menuTopMost.Checked;
+      Config.Instance.TopMost = menuTopMost.Checked;
+      Config.Instance.Save();
+
+      this.TopMost = Config.Instance.TopMost;
+      if (Config.Instance.TopMost) this.BringToFront();
+    }
     private void menuTestFileItem_Click(object sender, EventArgs e) {
       ToolStripMenuItem item = sender as ToolStripMenuItem;
       string txt = item.Text;
@@ -152,6 +163,7 @@ namespace ASN1Viewer
       this.Text                 = Lang.T["PROD_NAME"];
       this.menuFile.Text        = Lang.T["MENU_FILE"];
       this.menuView.Text        = Lang.T["MENU_VIEW"];
+      this.menuTopMost.Text     = Lang.T["MENU_TOPMOST"];
       this.menuASN1Modules.Text = Lang.T["MENU_MODULES"];
       this.menuTestFiles.Text   = Lang.T["MENU_TESTFILES"];
       this.menuHelp.Text        = Lang.T["MENU_HELP"];
@@ -389,6 +401,6 @@ namespace ASN1Viewer
       }
     }
 
-    
+   
   }
 }

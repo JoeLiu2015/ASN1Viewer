@@ -14,12 +14,13 @@ namespace ASN1Viewer {
   </startup>
   <appSettings>
     <Language>{0}</Language>
-    <AutoUpdate>{1}</AutoUpdate>
-    <UpdateLocation>{2}</UpdateLocation>
-    <ASN1ViewerMT>{3}</ASN1ViewerMT>
-    <ASN1ModulesMT>{4}</ASN1ModulesMT>
-    <MaxHistoryCount>{5}</MaxHistoryCount>
-    <History>{6}</History>
+    <TopMost>{1}</TopMost>
+    <AutoUpdate>{2}</AutoUpdate>
+    <UpdateLocation>{3}</UpdateLocation>
+    <ASN1ViewerMT>{4}</ASN1ViewerMT>
+    <ASN1ModulesMT>{5}</ASN1ModulesMT>
+    <MaxHistoryCount>{6}</MaxHistoryCount>
+    <History>{7}</History>
   </appSettings>
 </configuration>
 ";
@@ -38,6 +39,7 @@ namespace ASN1Viewer {
    
     
     private string       m_Lang            = "zh_CN";
+    private bool         m_TopMost         = true;
     private bool         m_AutoUpdate      = true;
     private string       m_UpdateLocation  = "";
     private DateTime     m_ASN1ViewerMT    = DateTime.MinValue;
@@ -50,6 +52,10 @@ namespace ASN1Viewer {
     public string Language {
       get { return m_Lang; }
       set { m_Lang = value; }
+    }
+    public bool TopMost {
+      get { return m_TopMost; }
+      set { m_TopMost = value; }
     }
     public bool AutoUpdate {
       get { return m_AutoUpdate; }
@@ -90,10 +96,11 @@ namespace ASN1Viewer {
         for (int i = 0; i < settings.ChildNodes.Count; i++) {
           XmlNode node = settings.ChildNodes[i];
           if (node.Name.Equals("Language", StringComparison.OrdinalIgnoreCase))                m_Lang = ParseLang(node.InnerText);
+          else if (node.Name.Equals("TopMost", StringComparison.OrdinalIgnoreCase))            m_TopMost = ParseBool(node.InnerText, true);
           else if (node.Name.Equals("AutoUpdate", StringComparison.OrdinalIgnoreCase))         m_AutoUpdate = ParseBool(node.InnerText, true);
           else if (node.Name.Equals("UpdateLocation", StringComparison.OrdinalIgnoreCase))     m_UpdateLocation = node.InnerText;
-          else if (node.Name.Equals("ASN1ViewerMT", StringComparison.OrdinalIgnoreCase))      m_ASN1ViewerMT = ParseDateTime(node.InnerText);
-          else if (node.Name.Equals("ASN1ModulesMT", StringComparison.OrdinalIgnoreCase))     m_ASN1ModulesMT = ParseDateTime(node.InnerText);
+          else if (node.Name.Equals("ASN1ViewerMT", StringComparison.OrdinalIgnoreCase))       m_ASN1ViewerMT = ParseDateTime(node.InnerText);
+          else if (node.Name.Equals("ASN1ModulesMT", StringComparison.OrdinalIgnoreCase))      m_ASN1ModulesMT = ParseDateTime(node.InnerText);
           else if (node.Name.Equals("MaxHistoryCount", StringComparison.OrdinalIgnoreCase))    m_MaxHistoryCount = ParseInt(node.InnerText, 15);
           else if (node.Name.Equals("History", StringComparison.OrdinalIgnoreCase))            m_HistoryFiles = ParseHistory(node.InnerText);
         }
@@ -104,6 +111,7 @@ namespace ASN1Viewer {
       string cfgFile = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName + ".config";
       string file = string.Format(DEFAULT,
         m_Lang,
+        m_TopMost,
         m_AutoUpdate,
         m_UpdateLocation,
         (m_ASN1ViewerMT == DateTime.MinValue ? "" : m_ASN1ViewerMT.ToString("yyyyMMddHHmmss")),

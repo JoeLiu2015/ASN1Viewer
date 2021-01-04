@@ -60,6 +60,7 @@
       this.ctxMenuTree = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.ctxMenuCollapse = new System.Windows.Forms.ToolStripMenuItem();
       this.ctxMenuExpand = new System.Windows.Forms.ToolStripMenuItem();
+      this.menuTopMost = new System.Windows.Forms.ToolStripMenuItem();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
       this.splitContainer1.SuspendLayout();
@@ -115,7 +116,7 @@
       this.tabPageInput.Controls.Add(this.txtInput);
       this.tabPageInput.Location = new System.Drawing.Point(4, 22);
       this.tabPageInput.Name = "tabPageInput";
-      this.tabPageInput.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+      this.tabPageInput.Padding = new System.Windows.Forms.Padding(3);
       this.tabPageInput.Size = new System.Drawing.Size(613, 368);
       this.tabPageInput.TabIndex = 0;
       this.tabPageInput.Text = "Input Text";
@@ -138,7 +139,7 @@
       this.tabPageBytes.Controls.Add(this.panel1);
       this.tabPageBytes.Location = new System.Drawing.Point(4, 22);
       this.tabPageBytes.Name = "tabPageBytes";
-      this.tabPageBytes.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+      this.tabPageBytes.Padding = new System.Windows.Forms.Padding(3);
       this.tabPageBytes.Size = new System.Drawing.Size(613, 383);
       this.tabPageBytes.TabIndex = 1;
       this.tabPageBytes.Text = "ASN.1 Bytes";
@@ -221,6 +222,7 @@
       // menuView
       // 
       this.menuView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuTopMost,
             this.menuASN1Modules,
             this.menuTestFiles});
       this.menuView.Name = "menuView";
@@ -230,14 +232,14 @@
       // menuASN1Modules
       // 
       this.menuASN1Modules.Name = "menuASN1Modules";
-      this.menuASN1Modules.Size = new System.Drawing.Size(155, 22);
+      this.menuASN1Modules.Size = new System.Drawing.Size(180, 22);
       this.menuASN1Modules.Text = "&ASN.1 Modules";
       this.menuASN1Modules.Click += new System.EventHandler(this.menuASN1Modules_Click);
       // 
       // menuTestFiles
       // 
       this.menuTestFiles.Name = "menuTestFiles";
-      this.menuTestFiles.Size = new System.Drawing.Size(155, 22);
+      this.menuTestFiles.Size = new System.Drawing.Size(180, 22);
       this.menuTestFiles.Text = "Test Files";
       // 
       // menuHelp
@@ -346,6 +348,15 @@
       this.ctxMenuExpand.Text = "&Expand";
       this.ctxMenuExpand.Click += new System.EventHandler(this.ctxMenuExpand_Click);
       // 
+      // menuTopMost
+      // 
+      this.menuTopMost.Checked = true;
+      this.menuTopMost.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.menuTopMost.Name = "menuTopMost";
+      this.menuTopMost.Size = new System.Drawing.Size(180, 22);
+      this.menuTopMost.Text = "Alwasy on top";
+      this.menuTopMost.Click += new System.EventHandler(this.menuTopMost_Click);
+      // 
       // MainForm
       // 
       this.AllowDrop = true;
@@ -414,6 +425,7 @@
     private System.Windows.Forms.ToolStripMenuItem menuTestFiles;
     private System.Windows.Forms.ToolStripMenuItem menuCheckUpdate;
     private System.Windows.Forms.ToolStripStatusLabel lbStatusRight;
+    private System.Windows.Forms.ToolStripMenuItem menuTopMost;
   }
 }
 

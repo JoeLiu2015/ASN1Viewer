@@ -2,6 +2,7 @@
 PROD_NAME      : ASN.1 Viewer(v%VERSION%)
 MENU_FILE      : &File
 MENU_VIEW      : &View
+MENU_TOPMOST   : Always on top
 MENU_MODULES   : &ASN.1 Modules
 MENU_TESTFILES : &Test Files
 MENU_HELP      : &Help
