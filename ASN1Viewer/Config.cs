@@ -97,7 +97,7 @@ namespace ASN1Viewer {
           else if (node.Name.Equals("MaxHistoryCount", StringComparison.OrdinalIgnoreCase))    m_MaxHistoryCount = ParseInt(node.InnerText, 15);
           else if (node.Name.Equals("History", StringComparison.OrdinalIgnoreCase))            m_HistoryFiles = ParseHistory(node.InnerText);
         }
-      } catch (Exception ex) {
+      } catch (Exception) {
       }
     }
     public void Save() {
@@ -152,7 +152,7 @@ namespace ASN1Viewer {
         for (int i = 0; i < vals.Length; i++) {
           if (vals[i].Trim().Length > 0) ret.Add(vals[i].Trim());
         }
-      } catch (Exception ex) {
+      } catch (Exception) {
 
       }
       return ret;

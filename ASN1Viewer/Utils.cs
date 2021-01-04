@@ -209,7 +209,7 @@ namespace ASN1Viewer {
         String s = sb.ToString();
         if (s.Length == 0) return null;
         return Convert.FromBase64String(s);
-      } catch (Exception ex) {
+      } catch (Exception) {
         return null;
       }
     }

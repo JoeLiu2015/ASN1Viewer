@@ -69,7 +69,7 @@ namespace ASN1Viewer.schema {
           }
           try {
             SchemaFile sf = SchemaFile.ParseFrom(fi.FullName);
-          } catch (Exception ex) {
+          } catch (Exception) {
 
           }
         }

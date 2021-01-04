@@ -41,7 +41,7 @@ namespace ASN1Viewer {
       get {
         try {
           return l[key];
-        } catch (Exception ex) {
+        } catch (Exception) {
           return e[key];
         }
       }
