@@ -60,7 +60,7 @@ namespace ASN1Viewer
       if (!String.IsNullOrEmpty(file)) ParseInputFile(file);
     }
     private void menuAbout_Click(object sender, EventArgs e) {
-      new About().ShowDialog();
+      new About().ShowDialog(this);
     }
     private void menuChinese_Click(object sender, EventArgs e) {
       if (this.menuChinese.Checked) return;
@@ -112,8 +112,12 @@ namespace ASN1Viewer
       ParseInputFile(filename);
     }
     private void menuASN1Modules_Click(object sender, EventArgs e) {
-      if (m_SchemaDlg == null) m_SchemaDlg = new schema.SchemaDlg();
-      m_SchemaDlg.ShowDialog();
+      if (m_SchemaDlg == null) {
+        m_SchemaDlg = new schema.SchemaDlg();
+        m_SchemaDlg.Icon = this.Icon;
+      }
+      m_SchemaDlg.BringToFront();
+      m_SchemaDlg.ShowDialog(this);
     }
     private void menuCheckUpdate_Click(object sender, EventArgs e) {
       CheckUpdate(true);

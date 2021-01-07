@@ -7,6 +7,8 @@ namespace ASN1Viewer.schema {
   public partial class SchemaDlg : Form {
     public SchemaDlg() {
       InitializeComponent();
+      this.StartPosition = FormStartPosition.CenterParent;
+      this.ShowInTaskbar = false;
     }
 
     private bool m_Loaded = false;
