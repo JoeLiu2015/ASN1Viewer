@@ -152,6 +152,45 @@ namespace ASN1Viewer
     private TreeNode CreateNode(ASNNode n) {
       TreeNode t = new TreeNode(n.ToString());
       t.Tag = n;
+      // Initialize image index.
+      int tag    = n.Tag;
+      int tagNum = tag & ASNNode.NODE_TAG_NUMBER_MASK;
+      int tagClass = tag & ASNNode.NODE_CLASS_MASK;
+      if (tagClass == ASNNode.NODE_CLASS_CONTEXT     ||
+          tagClass == ASNNode.NODE_CLASS_APPLICATION ||
+          tagClass == ASNNode.NODE_CLASS_PRIVATE) {
+        t.SelectedImageIndex = t.ImageIndex = (int)ImgIndex.CONTEXT_SPECIFIC;
+      } else {
+        switch (tagNum) {
+          case ASNNode.UNIVERSAL_BOOLEAN:         { t.SelectedImageIndex = t.ImageIndex = (int)ImgIndex.BOOLEAN;           break; }
+          case ASNNode.UNIVERSAL_INTEGER:         { t.SelectedImageIndex = t.ImageIndex = (int)ImgIndex.INTEGER;           break; }
+          case ASNNode.UNIVERSAL_BITSTRING:       { t.SelectedImageIndex = t.ImageIndex = (int)ImgIndex.BIT_STRING;        break; }
+          case ASNNode.UNIVERSAL_OCTETSTRING:     { t.SelectedImageIndex = t.ImageIndex = (int)ImgIndex.OCTET_STRING;      break; }
+          case ASNNode.UNIVERSAL_NULL:            { t.SelectedImageIndex = t.ImageIndex = (int)ImgIndex.TAG_NULL;          break; }
+          case ASNNode.UNIVERSAL_OID:             { t.SelectedImageIndex = t.ImageIndex = (int)ImgIndex.OBJECT_IDENTIFIER; break; }
+          case ASNNode.UNIVERSAL_RELATIVE_OID:    { t.SelectedImageIndex = t.ImageIndex = (int)ImgIndex.RELATIVE_OID;      break; }
+          case ASNNode.UNIVERSAL_OBJ_DESCRIPTOR:  { t.SelectedImageIndex = t.ImageIndex = (int)ImgIndex.OBJECT_DESCRIPTOR; break; }
+          case ASNNode.UNIVERSAL_EXTERNAL:        { t.SelectedImageIndex = t.ImageIndex = (int)ImgIndex.EXTERNAL;          break; }
+          case ASNNode.UNIVERSAL_REAL:            { t.SelectedImageIndex = t.ImageIndex = (int)ImgIndex.REAL;              break; }
+          case ASNNode.UNIVERSAL_ENUMERATED:      { t.SelectedImageIndex = t.ImageIndex = (int)ImgIndex.ENUMERATED;        break; }
+          case ASNNode.UNIVERSAL_UTF8_STR:        { t.SelectedImageIndex = t.ImageIndex = (int)ImgIndex.UTF8_STRING;       break; }
+          case ASNNode.UNIVERSAL_SEQ_SEQOF:       { t.SelectedImageIndex = t.ImageIndex = (int)ImgIndex.SEQUENCE;          break; }
+          case ASNNode.UNIVERSAL_SET_SETOF:       { t.SelectedImageIndex = t.ImageIndex = (int)ImgIndex.SET;               break; }
+          case ASNNode.UNIVERSAL_NUMSTRING:       { t.SelectedImageIndex = t.ImageIndex = (int)ImgIndex.NUMERIC_STRING;    break; }
+          case ASNNode.UNIVERSAL_PRINTABLESTRING: { t.SelectedImageIndex = t.ImageIndex = (int)ImgIndex.PRINTABLE_STRING;  break; }
+          case ASNNode.UNIVERSAL_T61STRING:       { t.SelectedImageIndex = t.ImageIndex = (int)ImgIndex.T61_STRING;        break; }
+          case ASNNode.UNIVERSAL_VIDEOTEXSTRING:  { t.SelectedImageIndex = t.ImageIndex = (int)ImgIndex.VIDEOTEXT_STRING;  break; }
+          case ASNNode.UNIVERSAL_IA5STRING:       { t.SelectedImageIndex = t.ImageIndex = (int)ImgIndex.IA5_STRING;        break; }
+          case ASNNode.UNIVERSAL_UTCTIME:         { t.SelectedImageIndex = t.ImageIndex = (int)ImgIndex.UTC_TIME;          break; }
+          case ASNNode.UNIVERSAL_GENTIME:         { t.SelectedImageIndex = t.ImageIndex = (int)ImgIndex.GENERALIZED_TIME;  break; }
+          case ASNNode.UNIVERSAL_GRAPHIC_STR:     { t.SelectedImageIndex = t.ImageIndex = (int)ImgIndex.GRAPHIC_STRING;    break; }
+          case ASNNode.UNIVERSAL_ISO646STR:       { t.SelectedImageIndex = t.ImageIndex = (int)ImgIndex.VISIBLE_STRING;    break; }
+          case ASNNode.UNIVERSAL_GENERAL_STR:     { t.SelectedImageIndex = t.ImageIndex = (int)ImgIndex.GENERAL_STRING;    break; }
+          case ASNNode.UNIVERSAL_STRING:          { t.SelectedImageIndex = t.ImageIndex = (int)ImgIndex.UNIVERSAL_STRING;  break; }
+          case ASNNode.UNIVERSAL_BMPSTRING:       { t.SelectedImageIndex = t.ImageIndex = (int)ImgIndex.BMPSTRING;         break; }
+          default:                                { t.SelectedImageIndex = t.ImageIndex = (int)ImgIndex.CONTEXT_SPECIFIC;  break; }
+        };
+      }
       for (int i = 0; i < n.Count; i++) {
         t.Nodes.Add(CreateNode(n[i]));
       }
@@ -404,7 +443,34 @@ namespace ASN1Viewer
         }
       }
     }
-
-   
+  }
+  public enum ImgIndex {
+    BOOLEAN             = 21, //  1
+    INTEGER             =  1, //  2
+    BIT_STRING          = 23, //  2
+    OCTET_STRING        = 25, //  4
+    TAG_NULL            = 18, //  5
+    OBJECT_IDENTIFIER   = 11, //  6
+    OBJECT_DESCRIPTOR   = 11, //  7
+    EXTERNAL            =  6, //  8
+    REAL                =  1, //  9
+    ENUMERATED          =  1, // 10
+    UTF8_STRING         =  7, // 12
+    RELATIVE_OID        = 35, // 13
+    SEQUENCE            = 32, // 16
+    SET                 = 33, // 17
+    NUMERIC_STRING      =  8, // 18
+    PRINTABLE_STRING    =  7, // 19
+    T61_STRING          =  7, // 20
+    VIDEOTEXT_STRING    =  7, // 21
+    IA5_STRING          =  7, // 22
+    UTC_TIME            = 34, // 23
+    GENERALIZED_TIME    = 34, // 24
+    GRAPHIC_STRING      =  7, // 25
+    VISIBLE_STRING      =  7, // 26
+    GENERAL_STRING      =  7, // 27
+    UNIVERSAL_STRING    =  7, // 28
+    BMPSTRING           =  7, // 30
+    CONTEXT_SPECIFIC    = 24  // 31
   }
 }

@@ -26,7 +26,12 @@ namespace ASN1Viewer {
     public const int UNIVERSAL_OCTETSTRING      = 0x04;
     public const int UNIVERSAL_NULL             = 0x05;
     public const int UNIVERSAL_OID              = 0x06;
+    public const int UNIVERSAL_OBJ_DESCRIPTOR   = 0x07;
+    public const int UNIVERSAL_EXTERNAL         = 0x08;
     public const int UNIVERSAL_REAL             = 0x09;
+    public const int UNIVERSAL_ENUMERATED       = 0x0A;
+    public const int UNIVERSAL_UTF8_STR         = 0x0C;
+    public const int UNIVERSAL_RELATIVE_OID     = 0x0D;
     public const int UNIVERSAL_SEQ_SEQOF        = 0x10;
     public const int UNIVERSAL_SET_SETOF        = 0x11;
     public const int UNIVERSAL_NUMSTRING        = 0x12;
