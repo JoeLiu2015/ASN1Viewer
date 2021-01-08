@@ -61,6 +61,7 @@
       this.ctxMenuCollapse = new System.Windows.Forms.ToolStripMenuItem();
       this.ctxMenuExpand = new System.Windows.Forms.ToolStripMenuItem();
       this.menuTopMost = new System.Windows.Forms.ToolStripMenuItem();
+	  this.imageListDataType = new System.Windows.Forms.ImageList(this.components);
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
       this.splitContainer1.SuspendLayout();
@@ -356,6 +357,47 @@
       this.menuTopMost.Size = new System.Drawing.Size(180, 22);
       this.menuTopMost.Text = "Alwasy on top";
       this.menuTopMost.Click += new System.EventHandler(this.menuTopMost_Click);
+	  // 
+      // imageListDataType
+      // 
+      this.imageListDataType.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListDataType.ImageStream")));
+      this.imageListDataType.TransparentColor = System.Drawing.Color.Transparent;
+      this.imageListDataType.Images.SetKeyName(0, "");
+      this.imageListDataType.Images.SetKeyName(1, "");
+      this.imageListDataType.Images.SetKeyName(2, "");
+      this.imageListDataType.Images.SetKeyName(3, "");
+      this.imageListDataType.Images.SetKeyName(4, "");
+      this.imageListDataType.Images.SetKeyName(5, "");
+      this.imageListDataType.Images.SetKeyName(6, "");
+      this.imageListDataType.Images.SetKeyName(7, "");
+      this.imageListDataType.Images.SetKeyName(8, "");
+      this.imageListDataType.Images.SetKeyName(9, "");
+      this.imageListDataType.Images.SetKeyName(10, "");
+      this.imageListDataType.Images.SetKeyName(11, "");
+      this.imageListDataType.Images.SetKeyName(12, "");
+      this.imageListDataType.Images.SetKeyName(13, "");
+      this.imageListDataType.Images.SetKeyName(14, "");
+      this.imageListDataType.Images.SetKeyName(15, "");
+      this.imageListDataType.Images.SetKeyName(16, "");
+      this.imageListDataType.Images.SetKeyName(17, "");
+      this.imageListDataType.Images.SetKeyName(18, "");
+      this.imageListDataType.Images.SetKeyName(19, "");
+      this.imageListDataType.Images.SetKeyName(20, "");
+      this.imageListDataType.Images.SetKeyName(21, "");
+      this.imageListDataType.Images.SetKeyName(22, "");
+      this.imageListDataType.Images.SetKeyName(23, "");
+      this.imageListDataType.Images.SetKeyName(24, "");
+      this.imageListDataType.Images.SetKeyName(25, "");
+      this.imageListDataType.Images.SetKeyName(26, "");
+      this.imageListDataType.Images.SetKeyName(27, "");
+      this.imageListDataType.Images.SetKeyName(28, "");
+      this.imageListDataType.Images.SetKeyName(29, "");
+      this.imageListDataType.Images.SetKeyName(30, "");
+      this.imageListDataType.Images.SetKeyName(31, "");
+      this.imageListDataType.Images.SetKeyName(32, "");
+      this.imageListDataType.Images.SetKeyName(33, "");
+      this.imageListDataType.Images.SetKeyName(34, "");
+      this.imageListDataType.Images.SetKeyName(35, "");
       // 
       // MainForm
       // 
@@ -426,6 +468,7 @@
     private System.Windows.Forms.ToolStripMenuItem menuCheckUpdate;
     private System.Windows.Forms.ToolStripStatusLabel lbStatusRight;
     private System.Windows.Forms.ToolStripMenuItem menuTopMost;
+    private System.Windows.Forms.ImageList imageListDataType;
   }
 }
 
