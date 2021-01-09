@@ -64,7 +64,7 @@ namespace ASN1Viewer {
           string val = line.Substring(pos + 1).Trim();
           if (val.Contains("%VERSION%")) {
             Version v = Assembly.GetExecutingAssembly().GetName().Version;
-            val = val.Replace("%VERSION%", v.Major + "." + v.Major);
+            val = val.Replace("%VERSION%", v.Major + "." + v.Minor);
           }
           if (val.Contains("\\n")) {
             val = val.Replace("\\n", "\r\n");
