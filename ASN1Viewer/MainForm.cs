@@ -15,7 +15,6 @@ namespace ASN1Viewer
     {
       InitializeComponent();
       this.txtInput.Font = this.hexViewer1.Font;
-      
     }
 
     private void MainForm_Load(object sender, EventArgs e) {
@@ -26,6 +25,7 @@ namespace ASN1Viewer
       else                                     menuEnglish_Click(menuChinese, EventArgs.Empty);
       UpdateRecentFiles();
       UpdateTestFiles();
+      UpdateToolbar();
       new System.Threading.Thread(CheckUpdate).Start();
     }
     private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
@@ -44,9 +44,7 @@ namespace ASN1Viewer
     }
     private void menuOpen_Click(object sender, EventArgs e) {
       String file = "";
-      using (SaveFileDialog dlg = new SaveFileDialog()) {
-        dlg.CreatePrompt = true;
-        dlg.OverwritePrompt = false;
+      using (OpenFileDialog dlg = new OpenFileDialog()) {
         dlg.CheckFileExists = false;
         dlg.CheckPathExists = true;
         dlg.DefaultExt = "*.*";
@@ -94,6 +92,7 @@ namespace ASN1Viewer
     }
     private void menuTopMost_Click(object sender, EventArgs e) {
       menuTopMost.Checked = !menuTopMost.Checked;
+      tbBtnTopMost.Checked = menuTopMost.Checked;
       Config.Instance.TopMost = menuTopMost.Checked;
       Config.Instance.Save();
 
@@ -191,7 +190,7 @@ namespace ASN1Viewer
           default:                                { t.SelectedImageIndex = t.ImageIndex = (int)ImgIndex.CONTEXT_SPECIFIC;  break; }
         };
       }
-      for (int i = 0; i < n.Count; i++) {
+      for (int i = 0; i < n.ChildCount; i++) {
         t.Nodes.Add(CreateNode(n[i]));
       }
       return t;
@@ -229,6 +228,7 @@ namespace ASN1Viewer
 
       }
       this.UpdateHexBytesView(null, null);
+      this.UpdateToolbar();
     }
     private void UpdateRecentFiles() {
       this.menuRecent.DropDownItems.Clear();
@@ -250,6 +250,30 @@ namespace ASN1Viewer
         this.menuTestFiles.DropDownItems.Add(mi);
       }
       this.menuTestFiles.Enabled = this.menuTestFiles.DropDownItems.Count > 0;
+    }
+
+    private void UpdateToolbar() {
+      this.toolbar.ImageList = imageListToolbar;
+      this.tbBtnOpen.ImageIndex = 0;
+      this.tbBtnRecent.ImageIndex = 1;
+      this.tbBtnTopMost.ImageIndex = 2;
+      this.tbBtnLang.ImageIndex = 3;
+      this.tbBtnCheckUpdate.ImageIndex = 4;
+
+      this.tbBtnOpen.ToolTipText = this.menuOpen.Text;
+      this.tbBtnOpen.Click -= this.menuOpen_Click;
+      this.tbBtnOpen.Click += this.menuOpen_Click;
+      this.tbBtnRecent.ToolTipText = this.menuRecent.Text;
+      this.tbBtnRecent.DropDown = this.menuRecent.DropDown;
+      this.tbBtnTopMost.ToolTipText = this.menuTopMost.Text;
+      this.tbBtnTopMost.Checked = this.menuTopMost.Checked;
+      this.tbBtnTopMost.Click -= this.menuTopMost_Click;
+      this.tbBtnTopMost.Click += this.menuTopMost_Click;
+      this.tbBtnLang.ToolTipText = this.menuLanguage.Text;
+      this.tbBtnLang.DropDown = this.menuLanguage.DropDown;
+      this.tbBtnCheckUpdate.ToolTipText = this.menuCheckUpdate.Text;
+      this.tbBtnCheckUpdate.Click -= this.menuCheckUpdate_Click;
+      this.tbBtnCheckUpdate.Click += this.menuCheckUpdate_Click;
     }
 
 

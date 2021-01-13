@@ -81,13 +81,16 @@ namespace ASN1Viewer {
       }
     }
 
-    public int Count {
-      get { return m_Chidren == null ? 0 : m_Chidren.Count; }
-    }
     public ASNNode this[int idx] {
       get {
-        if (idx < 0 || idx >= Count) return null;
+        if (idx < 0 || idx >= ChildCount) return null;
         return m_Chidren[idx];
+      }
+    }
+
+    public byte[] Value {
+      get {
+        return Utils.CopyBytes(m_Data, m_ContentStart, m_ContentEnd - m_ContentStart);
       }
     }
 
@@ -111,6 +114,7 @@ namespace ASN1Viewer {
         if      (TagClass == NODE_CLASS_APPLICATION)  str += "[Application][" + TagNum + "]";
         else if (TagClass == NODE_CLASS_CONTEXT)      str += "[Context]["     + TagNum + "]";
         else if (TagClass == NODE_CLASS_PRIVATE)      str += "[Private]["     + TagNum + "]";
+        if (ChildCount == 0) str += "" + GetString(Value);
       } else {
         if      (TagNum == UNIVERSAL_BOOLEAN)         str += "BOOLEAN "         + GetValue();
         else if (TagNum == UNIVERSAL_INTEGER)         str += "INTEGER "         + GetValue();
@@ -118,10 +122,18 @@ namespace ASN1Viewer {
         else if (TagNum == UNIVERSAL_OCTETSTRING)     str += "OCTETSTRING "     + GetValue();
         else if (TagNum == UNIVERSAL_NULL)            str += "NULL";
         else if (TagNum == UNIVERSAL_OID)             str += "OID "             + GetValue();
+        else if (TagNum == UNIVERSAL_OBJ_DESCRIPTOR)  str += "OID_Desc "        + GetValue();
+        else if (TagNum == UNIVERSAL_EXTERNAL)        str += "EXTERNAL "        + GetValue();
+        else if (TagNum == UNIVERSAL_REAL)            str += "REAL "            + GetValue();
+        else if (TagNum == UNIVERSAL_ENUMERATED)      str += "ENUMERATED "      + GetValue();
+        else if (TagNum == UNIVERSAL_UTF8_STR)        str += "UTF8String "      + GetValue();
+        else if (TagNum == UNIVERSAL_RELATIVE_OID)    str += "RelativeOID "     + GetValue();
         else if (TagNum == UNIVERSAL_SEQ_SEQOF)       str += "SEQUENCE "        + GetValue();
         else if (TagNum == UNIVERSAL_SET_SETOF)       str += "SET "             + GetValue();
+        else if (TagNum == UNIVERSAL_NUMSTRING)       str += "NumString "       + GetValue();
         else if (TagNum == UNIVERSAL_PRINTABLESTRING) str += "PrintableString " + GetValue();
         else if (TagNum == UNIVERSAL_T61STRING)       str += "T61String "       + GetValue();
+        else if (TagNum == UNIVERSAL_VIDEOTEXSTRING)  str += "VideotexString "  + GetValue();
         else if (TagNum == UNIVERSAL_IA5STRING)       str += "IA5String "       + GetValue();
         else if (TagNum == UNIVERSAL_UTCTIME)         str += "UTCTime "         + GetValue();
         else if (TagNum == UNIVERSAL_GENTIME)         str += "GeneralizedTime " + GetValue();
@@ -131,8 +143,8 @@ namespace ASN1Viewer {
         else if (TagNum == UNIVERSAL_STRING)          str += "UniversalString " + GetValue();
         else if (TagNum == UNIVERSAL_BMPSTRING)       str += "BMPString "       + GetValue();
       }
-      if (Count > 0) {
-        str += " (" + Count + " elem)";
+      if (ChildCount > 0) {
+        str += " (" + ChildCount + " elem)";
       }
       if (str.Length > 0) return str;
       else
@@ -141,9 +153,8 @@ namespace ASN1Viewer {
 
     public object GetValue() {
       
-      if (Count == 0) {
-        byte[] d = new byte[m_ContentEnd - m_ContentStart];
-        Array.Copy(m_Data, m_ContentStart, d, 0, d.Length);
+      if (ChildCount == 0) {
+        byte[] d = Value;
         if (TagNum == UNIVERSAL_INTEGER) {
           ulong val = 0;
           for (int i = 0; i < d.Length; i++) {
@@ -173,12 +184,13 @@ namespace ASN1Viewer {
           String oid = sb.ToString();
           return oid + " " + GetOIDName(oid) ;
         } 
+        else if (TagNum == UNIVERSAL_UTF8_STR)        return Utils.GetUtf8String(d);
         else if (TagNum == UNIVERSAL_PRINTABLESTRING) return GetString(d);
-        else if (TagNum == UNIVERSAL_T61STRING) return GetString(d);
-        else if (TagNum == UNIVERSAL_IA5STRING) return GetString(d);
-        else if (TagNum == UNIVERSAL_UTCTIME) return ParseUTCTime(d);
-        else if (TagNum == UNIVERSAL_GENTIME) return ParseGeneralizedTime(d);
-        else if (TagNum == UNIVERSAL_BMPSTRING) return GetBMPString(d);
+        else if (TagNum == UNIVERSAL_T61STRING)       return GetString(d);
+        else if (TagNum == UNIVERSAL_IA5STRING)       return GetString(d);
+        else if (TagNum == UNIVERSAL_UTCTIME)         return ParseUTCTime(d);
+        else if (TagNum == UNIVERSAL_GENTIME)         return ParseGeneralizedTime(d);
+        else if (TagNum == UNIVERSAL_BMPSTRING)       return GetBMPString(d);
       }
       // For a constructed type, its value is empty.
       return "";
@@ -274,8 +286,8 @@ namespace ASN1Viewer {
       n.Push(root);
       while (n.Count > 0) {
         ASNNode an = n.Pop();
-        if (an.Count > 0) {
-          for (int i = an.Count - 1; i >= 0; i--) n.Push(an[i]);
+        if (an.ChildCount > 0) {
+          for (int i = an.ChildCount - 1; i >= 0; i--) n.Push(an[i]);
         } else {
           if (an.End - an.Start > 8192) {
             int skipStart = (an.Start + 16 * 4) / 16 * 16;

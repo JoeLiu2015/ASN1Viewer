@@ -7,7 +7,7 @@ using System.Windows.Forms;
 namespace ASN1Viewer
 {
   public class HexViewer : RichTextBox {
-
+    public static readonly Color HIGHLIGHT = Color.FromArgb(0xFF, 0xFF, 0xFF, 0xB3);
     public HexViewer() {
       this.ReadOnly = true;
       this.BackColor = SystemColors.Window;
@@ -66,6 +66,7 @@ namespace ASN1Viewer
       if (m_SelectionEnd > m_SelectionStart) {
         this.Select(m_SelectionStart, m_SelectionEnd - m_SelectionStart);
         this.SelectionColor = ForeColor;
+        this.SelectionBackColor = BackColor;
         m_SelectionStart = m_SelectionEnd = 0;
       }
       if (end > start) {
@@ -92,8 +93,10 @@ namespace ASN1Viewer
 
       this.Select(offset1, len1);
       this.SelectionColor = c;
+      this.SelectionBackColor = HIGHLIGHT;
       this.Select(offset2, len2);
       this.SelectionColor = c;
+      this.SelectionBackColor = HIGHLIGHT;
     }
 
     public const int LINE_LEN    = 8 /*Offset*/ + 3 /*Separators*/ + 16 * 3 /*Bytes*/ + 3 /*Separators*/ + (8 + 1 + 8) /*Text*/ + 1 /*LF*/;
