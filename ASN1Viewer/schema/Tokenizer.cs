@@ -174,6 +174,10 @@ namespace ASN1Viewer.schema {
           case "&":
             m_Segment.Add("&" + NextTok());
             break;
+          case "-":
+            if (PeekTok()[0] >= '0' && PeekTok()[0]  <= '9') m_Segment.Add("-" + NextTok());
+            else m_Segment.Add("-");
+            break;
           default:
             m_Segment.Add(tok);
             break;

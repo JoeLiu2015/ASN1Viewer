@@ -191,6 +191,7 @@ namespace ASN1Viewer {
         else if (TagNum == UNIVERSAL_UTCTIME)         return ParseUTCTime(d);
         else if (TagNum == UNIVERSAL_GENTIME)         return ParseGeneralizedTime(d);
         else if (TagNum == UNIVERSAL_BMPSTRING)       return GetBMPString(d);
+        else return GetString(d);
       }
       // For a constructed type, its value is empty.
       return "";
