@@ -149,9 +149,9 @@ FIX_CHILD:
         tok.Skip(")");
       } else if (tok.Peek() == "(" && tok.Peek(3).EndsWith("..")) {
         m_ValSize = SizeDef.Parse(tok, false);
+      } else if (tok.Peek() == "(" && tok.Peek(3).EndsWith(")")) {  // KerberosString  ::= GeneralString (IA5String)
+        tok.SKipBracket("(");
       }
-
-
     }
 
     public bool Match(IASNNode asnNode, bool setSchema) {

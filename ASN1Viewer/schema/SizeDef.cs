@@ -14,6 +14,7 @@ namespace ASN1Viewer.schema {
       if (!int.TryParse(m_Low, out m_LowInt))   m_LowInt  = vals[m_Low];
       if (!int.TryParse(m_High, out m_HighInt)) {
         if (m_High == "MAX") m_HighInt = int.MaxValue;
+        if (m_High == "4294967295") m_HighInt = int.MaxValue;
         else m_HighInt = vals[m_High];
       }
     }

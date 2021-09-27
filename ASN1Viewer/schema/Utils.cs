@@ -13,6 +13,7 @@ namespace ASN1Viewer.schema {
              typeName == "PrintableString" ||
              typeName == "NumericString" ||
              typeName == "IA5String" ||
+             typeName == "GeneralString" ||
              typeName == "UTCTime" ||
              typeName == "GeneralizedTime" ||
              typeName == "TeletexString" ||
