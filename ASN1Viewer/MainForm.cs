@@ -404,6 +404,7 @@ namespace ASN1Viewer
       CheckUpdate(false);
     }
     private void CheckUpdate(bool byUI) {
+      return; // Disable it now
       if (this.Cursor == Cursors.WaitCursor) return;
       if (byUI) Cursor.Current = Cursors.WaitCursor;
       try {
