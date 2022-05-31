@@ -131,6 +131,7 @@ namespace ASN1Viewer
     }
     private void txtInput_TextChanged(object sender, EventArgs e) {
       ParseInputText(this.txtInput.Text);
+			// Test merge
     }
     private void treeView1_AfterSelect(object sender, TreeViewEventArgs e) {
       this.tabControl1.SelectTab(this.tabPageBytes);
@@ -141,6 +142,7 @@ namespace ASN1Viewer
       this.lbStatus.Text = String.Format(Lang.T["STATUS_ASNINFO"], an.Start, an.TagNum, an.ContentEnd - an.ContentStart);
     }
     private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e) {
+			// Test merge
       if (e.Button == MouseButtons.Right && e.Node.Nodes.Count > 0) {
         this.treeView1.SelectedNode = e.Node;
         ctxMenuTree.Tag = e.Node;
