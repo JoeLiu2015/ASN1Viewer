@@ -136,7 +136,11 @@ namespace ASN1Viewer
       this.tabControl1.SelectTab(this.tabPageBytes);
       TreeNode tn = e.Node;
       ASNNode an = tn.Tag as ASNNode;
+      //Stopwatch s = new Stopwatch();
+      //s.Start();
       this.hexViewer1.SelectNode(an.Start, an.End, an.ContentStart, an.ContentEnd);
+      //s.Stop();
+      //System.Diagnostics.Debug.WriteLine("Selet Node: " + s.Elapsed.TotalSeconds + "s");
       this.lbStatus.ForeColor = SystemColors.WindowText;
       this.lbStatus.Text = String.Format(Lang.T["STATUS_ASNINFO"], an.Start, an.TagNum, an.ContentEnd - an.ContentStart);
     }
