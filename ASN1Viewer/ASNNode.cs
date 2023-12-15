@@ -93,6 +93,11 @@ namespace ASN1Viewer {
         return Utils.CopyBytes(m_Data, m_ContentStart, m_ContentEnd - m_ContentStart);
       }
     }
+    public byte[] Data {
+      get {
+        return m_Data;
+      }
+    }
 
     public bool IsSequence    { get { return IsConstructed && TagNum == UNIVERSAL_SEQ_SEQOF;           } }
     public bool IsConstructed { get { return (m_Tag & NODE_CONSTRUCTED_MASK) == NODE_CONSTRUCTED_MASK; } }

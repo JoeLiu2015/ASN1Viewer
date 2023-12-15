@@ -34,3 +34,4 @@ MSG_UPDATEFAILED : 更新失败.(错误:{0})
 MST_RESTART    : 程序已经更新到最新版本，你要现在就重启程序吗?
 BTN_YES        : 是(&Y)
 BTN_NO         : 否(&N)
+RICH_CTX_MENU_COPY : 拷贝高亮数据(&C)

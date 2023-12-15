@@ -18,10 +18,27 @@ namespace ASN1Viewer
       }
       this.WordWrap = false;
     }
+    protected override void WndProc(ref Message m)
+    { 
+      // Disable selection
+      const int WM_SETFOCUS = 0x0007;
+      const int WM_KILLFOCUS = 0x0008;
+      if (m.Msg == WM_SETFOCUS)
+        m.Msg = WM_KILLFOCUS;
+
+      base.WndProc(ref m);
+    }
+    protected override void OnMouseUp(MouseEventArgs mevent) {
+      base.OnMouseUp(mevent);
+      if (mevent.Button == MouseButtons.Right) {
+        this.ShowContextMenu(mevent.Location);
+      }
+    }
 
     private List<Block> m_Blocks = new List<Block>();
     private int m_SelectionStart = 0;
     private int m_SelectionEnd   = 0;
+    private byte[] m_SelectedBytes = null;
 
     public int  BlockCount {  get { return m_Blocks.Count;  } }
     public void ClearData() { m_Blocks.Clear(); }
@@ -62,7 +79,8 @@ namespace ASN1Viewer
       this.Text = sb.ToString();
     }
 
-    public void SelectNode(int start, int end, int contentStart, int contentEnd) {
+    public void SelectNode(int start, int end, int contentStart, int contentEnd, byte[] data) {
+      m_SelectedBytes = data;
       if (m_SelectionEnd > m_SelectionStart) {
         this.Select(m_SelectionStart, m_SelectionEnd - m_SelectionStart);
         this.SelectionColor = ForeColor;
@@ -131,6 +149,26 @@ namespace ASN1Viewer
         }
       }
       throw new Exception("BytesPos2Line: Impossible");
+    }
+
+    private void ShowContextMenu(Point location) {
+      ContextMenuStrip cm = null;
+      ToolStripMenuItem copy = null;
+      if (this.ContextMenuStrip == null) {
+        cm = new ContextMenuStrip(); //make a context menu instance
+        copy = new ToolStripMenuItem(); //make a menuitem instance
+        cm.Items.Add(copy);//add the item to the context menu
+        copy.Click += (sender, args) => {
+          Clipboard.SetText(Utils.GetHexString(m_SelectedBytes));
+        };
+      } else {
+        cm = this.ContextMenuStrip;
+        copy = cm.Items[0] as ToolStripMenuItem;
+      }
+
+      copy.Text = Lang.T["RICH_CTX_MENU_COPY"];//give the item a header
+
+      cm.Show(this, location);//show the context menu
     }
   }
 

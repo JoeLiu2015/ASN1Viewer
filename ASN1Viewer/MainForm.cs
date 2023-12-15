@@ -139,7 +139,7 @@ namespace ASN1Viewer
       ASNNode an = tn.Tag as ASNNode;
       //Stopwatch s = new Stopwatch();
       //s.Start();
-      this.hexViewer1.SelectNode(an.Start, an.End, an.ContentStart, an.ContentEnd);
+      this.hexViewer1.SelectNode(an.Start, an.End, an.ContentStart, an.ContentEnd, an.Data);
       //s.Stop();
       //System.Diagnostics.Debug.WriteLine("Selet Node: " + s.Elapsed.TotalSeconds + "s");
       this.lbStatus.ForeColor = SystemColors.WindowText;

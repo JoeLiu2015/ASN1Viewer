@@ -51,6 +51,16 @@ namespace ASN1Viewer {
     public static String Get8BitString(byte[] data) {
       return Encoding8Bit.GetString(data);
     }
+    public static string GetHexString(byte[] bytes) {
+      StringBuilder sb = new StringBuilder();
+      String hex = "0123456789ABCDEF";
+      for (int i = 0; i < bytes.Length; i++) {
+        sb.Append(hex[bytes[i] >> 4]);
+        sb.Append(hex[bytes[i] & 0x0F]);
+      }
+
+      return sb.ToString();
+    }
     public static bool BytesEqual(byte[] b1, byte[] b2) {
       if (b1 == null || b2 == null || b1.Length != b2.Length) return false;
       for (int i = 0; i < b1.Length; i++) {
