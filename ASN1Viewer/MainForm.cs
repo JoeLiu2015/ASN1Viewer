@@ -142,8 +142,7 @@ namespace ASN1Viewer
       this.hexViewer1.SelectNode(an.Start, an.End, an.ContentStart, an.ContentEnd, an.Data);
       //s.Stop();
       //System.Diagnostics.Debug.WriteLine("Selet Node: " + s.Elapsed.TotalSeconds + "s");
-      this.lbStatus.ForeColor = SystemColors.WindowText;
-      this.lbStatus.Text = String.Format(Lang.T["STATUS_ASNINFO"], an.Start, an.TagNum, an.ContentEnd - an.ContentStart);
+      this.ShowStatusText(SystemColors.WindowText, String.Format(Lang.T["STATUS_ASNINFO"], an.Start, an.TagNum, an.ContentEnd - an.ContentStart));
     }
     private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e) {
 			// Test merge
@@ -201,12 +200,7 @@ namespace ASN1Viewer
       }
       return t;
     }
-    private void Err(String msg) {
-      //MessageBox.Show(msg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1,
-      //  MessageBoxOptions.DefaultDesktopOnly, false);
-      this.lbStatus.Text = "ERROR: " + msg;
-      this.lbStatus.ForeColor = Color.Red;
-    }
+
     private void LoadLang() {
       this.Text                 = Lang.T["PROD_NAME"];
       this.menuFile.Text        = Lang.T["MENU_FILE"];
@@ -229,7 +223,9 @@ namespace ASN1Viewer
       this.tabPageBytes.Text    = Lang.T["TAB_BYTES"];
       if (this.treeView1.SelectedNode != null) {
         ASNNode an = this.treeView1.SelectedNode.Tag as ASNNode;
-        if (an != null) this.lbStatus.Text = String.Format(Lang.T["STATUS_ASNINFO"], an.Start, an.TagNum, an.ContentEnd - an.ContentStart);
+        if (an != null) {
+          this.ShowStatusText(SystemColors.WindowText, String.Format(Lang.T["STATUS_ASNINFO"], an.Start, an.TagNum, an.ContentEnd - an.ContentStart));
+        }
       } else {
 
       }
@@ -370,8 +366,7 @@ namespace ASN1Viewer
         
         this.treeView1.Nodes.Clear();
         this.treeView1.Nodes.Add(CreateNode(a));
-        this.lbStatus.Text = "Succeed.";
-        this.lbStatus.ForeColor = Color.Green;
+        this.ShowStatusText(Color.Green, "Succeed.");
         this.UpdateHexBytesView(data, a);
         return true;
       } catch (Exception ex) {
@@ -473,6 +468,14 @@ namespace ASN1Viewer
             break;
         }
       }
+    }
+
+    private void Err(String msg) {
+      this.ShowStatusText(Color.Red, "ERROR: " + msg);
+    }
+    private void ShowStatusText(Color color, string text) { 
+      this.lbStatus.ForeColor = color;
+      this.lbStatus.Text = text;
     }
   }
   public enum ImgIndex {
