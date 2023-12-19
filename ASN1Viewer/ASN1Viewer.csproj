@@ -92,6 +92,12 @@
     <Compile Include="schema\Tokenizer.cs" />
     <Compile Include="schema\TypeDef.cs" />
     <Compile Include="schema\Utils.cs" />
+    <Compile Include="TabControlEx.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TabControlEx.Designer.cs">
+      <DependentUpon>TabControlEx.cs</DependentUpon>
+    </Compile>
     <Compile Include="Updater.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="zip\BZip2\BitWriter.cs" />
@@ -165,6 +171,10 @@
     </Compile>
     <EmbeddedResource Include="schema\SchemaDlg.resx">
       <DependentUpon>SchemaDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TabControlEx.resx">
+      <DependentUpon>TabControlEx.cs</DependentUpon>
+      <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
