@@ -38,7 +38,11 @@ namespace ASN1Viewer
     private List<Block> m_Blocks = new List<Block>();
     private int m_SelectionStart = 0;
     private int m_SelectionEnd   = 0;
+
+    private int m_SelectedStart = 0;
+    private int m_SelectedEnd = 0;
     private byte[] m_SelectedBytes = null;
+
 
     public int  BlockCount {  get { return m_Blocks.Count;  } }
     public void ClearData() { m_Blocks.Clear(); }
@@ -81,6 +85,9 @@ namespace ASN1Viewer
 
     public void SelectNode(int start, int end, int contentStart, int contentEnd, byte[] data) {
       m_SelectedBytes = data;
+      m_SelectedStart = start;
+      m_SelectedEnd = end;
+
       if (m_SelectionEnd > m_SelectionStart) {
         this.Select(m_SelectionStart, m_SelectionEnd - m_SelectionStart);
         this.SelectionColor = ForeColor;
@@ -159,7 +166,7 @@ namespace ASN1Viewer
         copy = new ToolStripMenuItem(); //make a menuitem instance
         cm.Items.Add(copy);//add the item to the context menu
         copy.Click += (sender, args) => {
-          Clipboard.SetText(Utils.GetHexString(m_SelectedBytes));
+          Clipboard.SetText(Utils.GetHexString(m_SelectedBytes, m_SelectedStart, m_SelectedEnd - m_SelectedStart));
         };
       } else {
         cm = this.ContextMenuStrip;

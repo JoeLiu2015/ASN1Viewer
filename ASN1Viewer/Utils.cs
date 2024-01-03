@@ -51,12 +51,12 @@ namespace ASN1Viewer {
     public static String Get8BitString(byte[] data) {
       return Encoding8Bit.GetString(data);
     }
-    public static string GetHexString(byte[] bytes) {
+    public static string GetHexString(byte[] bytes, int offset, int len) {
       StringBuilder sb = new StringBuilder();
       String hex = "0123456789ABCDEF";
-      for (int i = 0; i < bytes.Length; i++) {
-        sb.Append(hex[bytes[i] >> 4]);
-        sb.Append(hex[bytes[i] & 0x0F]);
+      for (int i = 0; i < len; i++) {
+        sb.Append(hex[bytes[i + offset] >> 4]);
+        sb.Append(hex[bytes[i + offset] & 0x0F]);
       }
 
       return sb.ToString();
