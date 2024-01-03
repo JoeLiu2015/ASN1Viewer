@@ -7,7 +7,22 @@ using System.Windows.Forms;
 namespace ASN1Viewer
 {
   public class HexViewer : RichTextBox {
-    public static readonly Color HIGHLIGHT = Color.FromArgb(0xFF, 0xFF, 0xFF, 0xB3);
+    private const int LINE_LEN    = 8 /*Offset*/ + 3 /*Separators*/ + 16 * 3 /*Bytes*/ + 3 /*Separators*/ + (8 + 1 + 8) /*Text*/ + 1 /*LF*/;
+    private const int BYTE_OFFSET = 8 /*Offset*/ + 3 /*Separators*/;
+    private const int TXT_OFFSET  = 8 /*Offset*/ + 3 /*Separators*/ + 16 * 3 /*Bytes*/ + 3 /*Separators*/;
+    private const int EMPTY_LINE_LEN  = LINE_LEN - 1; // Get rid of LF
+    private const int SKIP_TXT_OFFSET = 25;
+    private static readonly string EMPTY_LINE = "\r\n" + new string(' ', EMPTY_LINE_LEN) + "\r\n";  
+    private static readonly Color HIGHLIGHT = Color.FromArgb(0xFF, 0xFF, 0xFF, 0xB3);
+
+    private List<Block> m_Blocks = new List<Block>();
+    private int m_SelectionStart = 0;
+    private int m_SelectionEnd   = 0;
+
+    private int m_SelectedStart = 0;
+    private int m_SelectedEnd = 0;
+    private byte[] m_SelectedBytes = null;
+
     public HexViewer() {
       this.ReadOnly = true;
       this.BackColor = SystemColors.Window;
@@ -18,47 +33,14 @@ namespace ASN1Viewer
       }
       this.WordWrap = false;
     }
-    protected override void WndProc(ref Message m)
-    { 
-      // Disable selection
-      const int WM_SETFOCUS = 0x0007;
-      const int WM_KILLFOCUS = 0x0008;
-      if (m.Msg == WM_SETFOCUS)
-        m.Msg = WM_KILLFOCUS;
-
-      base.WndProc(ref m);
-    }
-    protected override void OnMouseUp(MouseEventArgs mevent) {
-      base.OnMouseUp(mevent);
-      if (mevent.Button == MouseButtons.Right) {
-        this.ShowContextMenu(mevent.Location);
-      }
-    }
-
-    private List<Block> m_Blocks = new List<Block>();
-    private int m_SelectionStart = 0;
-    private int m_SelectionEnd   = 0;
-
-    private int m_SelectedStart = 0;
-    private int m_SelectedEnd = 0;
-    private byte[] m_SelectedBytes = null;
-
-
     public int  BlockCount {  get { return m_Blocks.Count;  } }
     public void ClearData() { m_Blocks.Clear(); }
-    public void AddData(byte[] data, int position) {
-      Block b = new Block();
-      b.Data = data;
-      b.Position = position;
-      m_Blocks.Add(b);
-    }
     public void AddData(byte[] data, int position, int len) {
       Block b = new Block();
       b.Data = Utils.CopyBytes(data, position, len);
       b.Position = position;
       m_Blocks.Add(b);
     }
-
     public void RefreshView() {
       if (m_Blocks.Count == 1) {
         this.Text = Utils.HexDump(m_Blocks[0].Data, 0);
@@ -82,7 +64,6 @@ namespace ASN1Viewer
       }
       this.Text = sb.ToString();
     }
-
     public void SelectNode(int start, int end, int contentStart, int contentEnd, byte[] data) {
       m_SelectedBytes = data;
       m_SelectedStart = start;
@@ -106,6 +87,22 @@ namespace ASN1Viewer
       }
     }
 
+    protected override void WndProc(ref Message m)
+    { 
+      // Disable selection
+      const int WM_SETFOCUS = 0x0007;
+      const int WM_KILLFOCUS = 0x0008;
+      if (m.Msg == WM_SETFOCUS)
+        m.Msg = WM_KILLFOCUS;
+
+      base.WndProc(ref m);
+    }
+    protected override void OnMouseUp(MouseEventArgs mevent) {
+      base.OnMouseUp(mevent);
+      if (mevent.Button == MouseButtons.Right) {
+        this.ShowContextMenu(mevent.Location);
+      }
+    }
    
     private void SetColor(int line, int offset, int len, Color c) {
       if (len == 0) return;
@@ -123,16 +120,7 @@ namespace ASN1Viewer
       this.SelectionColor = c;
       this.SelectionBackColor = HIGHLIGHT;
     }
-
-    public const int LINE_LEN    = 8 /*Offset*/ + 3 /*Separators*/ + 16 * 3 /*Bytes*/ + 3 /*Separators*/ + (8 + 1 + 8) /*Text*/ + 1 /*LF*/;
-    public const int BYTE_OFFSET = 8 /*Offset*/ + 3 /*Separators*/;
-    public const int TXT_OFFSET  = 8 /*Offset*/ + 3 /*Separators*/ + 16 * 3 /*Bytes*/ + 3 /*Separators*/;
-    public const int EMPTY_LINE_LEN  = LINE_LEN - 1; // Get rid of LF
-    public const int SKIP_TXT_OFFSET = 25;
-    public static readonly string EMPTY_LINE = "\r\n" + new string(' ', EMPTY_LINE_LEN) + "\r\n";  
-
-
-    public void SetColor(int pos, int len, Color c) {
+    private void SetColor(int pos, int len, Color c) {
       if (len <= 0) return;
       int startLine = BytesPos2Line(pos);
       int endLine = BytesPos2Line(pos + len - 1);
@@ -148,7 +136,6 @@ namespace ASN1Viewer
       SetColor(endLine, 0, endOffset + 1, c);
       for (int i = startLine + 1; i < endLine; i++) SetColor(i, 0, 16, c);
     }
-
     private int BytesPos2Line(int pos) {
       for (int i = 0; i < m_Blocks.Count; i++) {
         if (pos >= m_Blocks[i].Position && pos < m_Blocks[i].EndPosition) {
@@ -157,7 +144,6 @@ namespace ASN1Viewer
       }
       throw new Exception("BytesPos2Line: Impossible");
     }
-
     private void ShowContextMenu(Point location) {
       ContextMenuStrip cm = null;
       ToolStripMenuItem copy = null;
