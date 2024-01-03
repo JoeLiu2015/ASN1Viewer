@@ -175,6 +175,8 @@
     <EmbeddedResource Include="TabControlEx.resx">
       <DependentUpon>TabControlEx.cs</DependentUpon>
       <Generator>PublicResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>TabControlEx1.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
