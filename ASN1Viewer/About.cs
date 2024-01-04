@@ -13,7 +13,8 @@ namespace ASN1Viewer {
       this.Text = String.Format(Lang.T["ABOUT_TITLE"], Lang.T["PROD_NAME"]);
       this.lblProdName.Text = Lang.T["PROD_NAME"];
       this.lblCopyRight.Text = String.Format(Lang.T["ABOUT_COPYRIGHT"], DateTime.Now.Year.ToString());
-      this.lblBuild.Text = String.Format(Lang.T["ABOUT_BUILD"], AssemblyVersion, (int)(DateTime.Now - new DateTime(2020, 1, 1)).TotalDays);
+      DateTime now = DateTime.Now;
+      this.lblBuild.Text = String.Format(Lang.T["ABOUT_BUILD"], AssemblyVersion, now.Year * 10000 + now.Month * 100 + now.Day);
     }
     public string AssemblyVersion {
       get {
