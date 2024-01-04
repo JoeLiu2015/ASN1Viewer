@@ -152,7 +152,17 @@ namespace ASN1Viewer
         this.ctxMenuTree.Show(this.treeView1, e.Location);
       }
     }
-
+    private void treeView1_DrawNode(object sender, DrawTreeNodeEventArgs e) {
+      TreeView tv = e.Node.TreeView;
+      if (!tv.Focused && e.Node == tv.SelectedNode) {
+        Font treeFont = (e.Node.NodeFont == null) ? tv.Font : e.Node.NodeFont;
+        e.Graphics.FillRectangle(SystemBrushes.ControlDarkDark, e.Bounds);
+        ControlPaint.DrawFocusRectangle(e.Graphics, e.Bounds, SystemColors.HighlightText, SystemColors.Highlight);
+        TextRenderer.DrawText(e.Graphics, e.Node.Text, treeFont, e.Bounds, SystemColors.HighlightText, TextFormatFlags.GlyphOverhangPadding);
+      } else {
+        e.DrawDefault = true;
+      }
+    }
     private TreeNode CreateNode(ASNNode n) {
       TreeNode t = new TreeNode(n.ToString());
       t.Tag = n;
@@ -294,17 +304,21 @@ namespace ASN1Viewer
         Err("File \"" + file + "\" is empty.");
         return;
       }
-      byte[] data = File.ReadAllBytes(file);
-      byte[] b64Data = Utils.ParsePEM(Utils.Get8BitString(data));
-
-      byte[] asnData = data;
-      if (b64Data != null) asnData = b64Data;
-      if (ParseASN1(asnData)) {
+      string data = File.ReadAllText(file);
+      byte[] bytes = Utils.ParseHexBytes(data);
+      if (bytes == null) {
+        bytes = Utils.ParsePEM(data);
+      }
+      if (bytes == null) {
+        data = null;
+        bytes = File.ReadAllBytes(file);
+      }
+      if (ParseASN1(bytes)) {
         this.txtInput.TextChanged -= this.txtInput_TextChanged;
-        if (b64Data != null) {
-          this.txtInput.Text = Utils.FixCRLF(File.ReadAllText(file));
+        if (data != null) {
+          this.txtInput.Text = Utils.FixCRLF(data);
         } else {
-          this.txtInput.Text = Utils.HexDump(data, 0);
+          this.txtInput.Text = Utils.HexDump(bytes, 0);
         }
         this.txtInput.TextChanged += this.txtInput_TextChanged;
 
@@ -478,17 +492,7 @@ namespace ASN1Viewer
       this.lbStatus.Text = text;
     }
 
-    private void treeView1_DrawNode(object sender, DrawTreeNodeEventArgs e) {
-      TreeView tv = e.Node.TreeView;
-      if (!tv.Focused && e.Node == tv.SelectedNode) {
-        Font treeFont = (e.Node.NodeFont == null) ? tv.Font : e.Node.NodeFont;
-        e.Graphics.FillRectangle(SystemBrushes.ControlDarkDark, e.Bounds);
-        ControlPaint.DrawFocusRectangle(e.Graphics, e.Bounds, SystemColors.HighlightText, SystemColors.Highlight);
-        TextRenderer.DrawText(e.Graphics, e.Node.Text, treeFont, e.Bounds, SystemColors.HighlightText, TextFormatFlags.GlyphOverhangPadding);
-      } else {
-        e.DrawDefault = true;
-      }
-    }
+    
   }
   public enum ImgIndex {
     BOOLEAN             = 21, //  1
