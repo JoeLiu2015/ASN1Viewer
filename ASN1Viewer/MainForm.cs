@@ -477,6 +477,18 @@ namespace ASN1Viewer
       this.lbStatus.ForeColor = color;
       this.lbStatus.Text = text;
     }
+
+    private void treeView1_DrawNode(object sender, DrawTreeNodeEventArgs e) {
+      TreeView tv = e.Node.TreeView;
+      if (!tv.Focused && e.Node == tv.SelectedNode) {
+        Font treeFont = (e.Node.NodeFont == null) ? tv.Font : e.Node.NodeFont;
+        e.Graphics.FillRectangle(SystemBrushes.ControlDarkDark, e.Bounds);
+        ControlPaint.DrawFocusRectangle(e.Graphics, e.Bounds, SystemColors.HighlightText, SystemColors.Highlight);
+        TextRenderer.DrawText(e.Graphics, e.Node.Text, treeFont, e.Bounds, SystemColors.HighlightText, TextFormatFlags.GlyphOverhangPadding);
+      } else {
+        e.DrawDefault = true;
+      }
+    }
   }
   public enum ImgIndex {
     BOOLEAN             = 21, //  1
