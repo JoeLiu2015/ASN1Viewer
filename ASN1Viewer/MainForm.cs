@@ -15,6 +15,9 @@ namespace ASN1Viewer
     {
       InitializeComponent();
       this.txtInput.Font = this.hexViewer1.Font;
+      this.txtInput.AllowDrop = true;
+      this.txtInput.DragDrop += MainForm_DragDrop;
+      this.txtInput.DragEnter += MainForm_DragEnter;
     }
 
     private void MainForm_Load(object sender, EventArgs e) {
