@@ -379,7 +379,11 @@ namespace ASN1Viewer {
       int retElementStart = 0;
       int retElementEnd = 0;
       if (!MeasureElement(lpData, start, end, ref retType, ref retContentStart, ref retContentEnd, ref retElementStart, ref retElementEnd)) return false;
-      return retElementStart == start && retElementEnd == end && retType != 0;
+      if (!(retElementStart == start && retElementEnd == end && retType != 0)) return false;
+      if ((retType & NODE_CONSTRUCTED_MASK) == NODE_CONSTRUCTED_MASK) {
+        return IsValidASN(lpData, retContentStart, retContentEnd);
+      }
+      return true;
     }
     private static bool MeasureElement(byte[] data, int startPos, int endPos, ref int retType, ref int retContentStart, ref int retContentEnd, ref int retElementStart, ref int retElementEnd) {
       int pos = startPos;
