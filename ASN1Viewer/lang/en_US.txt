@@ -18,7 +18,7 @@ MENU_COLLAPSE  : &Collapse
 MENU_EXPAND    : &Expand
 TAB_INPUT      : Input Text
 TAB_BYTES      : ASN.1 Bytes
-STATUS_ASNINFO : Tag[{1}], Offset[{0}], Length[{2}]
+STATUS_ASNINFO : Tag[{1}], Offset[{0}], Length[{2}], AllChild[{3}] 
 ABOUT_TITLE    : About {0}
 ABOUT_COPYRIGHT: Copyright © 2020-{0} ASN.1 Viewer Ltd
 ABOUT_BUILD    : Version {0}  Build {1}

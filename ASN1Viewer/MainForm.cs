@@ -140,12 +140,8 @@ namespace ASN1Viewer
       this.tabControl1.SelectTab(this.tabPageBytes);
       TreeNode tn = e.Node;
       ASNNode an = tn.Tag as ASNNode;
-      //Stopwatch s = new Stopwatch();
-      //s.Start();
       this.hexViewer1.SelectNode(an.Start, an.End, an.ContentStart, an.ContentEnd, an.Data);
-      //s.Stop();
-      //System.Diagnostics.Debug.WriteLine("Selet Node: " + s.Elapsed.TotalSeconds + "s");
-      this.ShowStatusText(SystemColors.WindowText, String.Format(Lang.T["STATUS_ASNINFO"], an.Start, an.TagNum, an.ContentEnd - an.ContentStart));
+      this.ShowNodeInfo(tn);
     }
     private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e) {
 			// Test merge
@@ -235,12 +231,7 @@ namespace ASN1Viewer
       this.tabPageInput.Text    = Lang.T["TAB_INPUT"];
       this.tabPageBytes.Text    = Lang.T["TAB_BYTES"];
       if (this.treeView1.SelectedNode != null) {
-        ASNNode an = this.treeView1.SelectedNode.Tag as ASNNode;
-        if (an != null) {
-          this.ShowStatusText(SystemColors.WindowText, String.Format(Lang.T["STATUS_ASNINFO"], an.Start, an.TagNum, an.ContentEnd - an.ContentStart));
-        }
-      } else {
-
+        this.ShowNodeInfo(this.treeView1.SelectedNode);
       }
       this.UpdateHexBytesView(null, null);
       this.UpdateToolbar();
@@ -495,7 +486,20 @@ namespace ASN1Viewer
       this.lbStatus.Text = text;
     }
 
-    
+    private void ShowNodeInfo(TreeNode tn) {
+      ASNNode an = tn.Tag as ASNNode;
+      this.hexViewer1.SelectNode(an.Start, an.End, an.ContentStart, an.ContentEnd, an.Data);
+      this.ShowStatusText(SystemColors.WindowText, String.Format(Lang.T["STATUS_ASNINFO"], an.Start, an.TagNum, an.ContentEnd - an.ContentStart, GetAllChildCount(tn)));
+    }
+
+    private static int GetAllChildCount(TreeNode tn) {
+      int count = tn.Nodes.Count;
+      int total = count;
+      for (int i = 0; i < count; i++) {
+        total += GetAllChildCount(tn.Nodes[i]);
+      }
+      return total;
+    }
   }
   public enum ImgIndex {
     BOOLEAN             = 21, //  1

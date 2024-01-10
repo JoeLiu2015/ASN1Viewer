@@ -210,11 +210,11 @@ namespace ASN1Viewer {
       int    end      = m_ContentEnd;
 
       if (!hasChild && m_Tag == UNIVERSAL_OCTETSTRING) {
-        hasChild = IsValidASN(data, start, end);
+        hasChild = IsSingleValidASN(data, start, end);
       }
       if (!hasChild && m_Tag == UNIVERSAL_BITSTRING) {
         start++; // Skip padding length byte
-        hasChild = IsValidASN(data, start, end);
+        hasChild = IsSingleValidASN(data, start, end);
       }
       if (!hasChild) return;
       if (start >= end) return;
@@ -372,7 +372,7 @@ namespace ASN1Viewer {
 
     }
 
-    private static bool IsValidASN(byte[] lpData, int start, int end) {
+    private static bool IsSingleValidASN(byte[] lpData, int start, int end) {
       int retType = 0;
       int retContentStart = 0;
       int retContentEnd = 0;
@@ -381,10 +381,29 @@ namespace ASN1Viewer {
       if (!MeasureElement(lpData, start, end, ref retType, ref retContentStart, ref retContentEnd, ref retElementStart, ref retElementEnd)) return false;
       if (!(retElementStart == start && retElementEnd == end && retType != 0)) return false;
       if ((retType & NODE_CONSTRUCTED_MASK) == NODE_CONSTRUCTED_MASK) {
-        return IsValidASN(lpData, retContentStart, retContentEnd);
+        return IsMultipleValidASN(lpData, retContentStart, retContentEnd);
       }
       return true;
     }
+
+    private static bool IsMultipleValidASN(byte[] lpData, int start, int end) {
+      while (start < end) {
+        int retType = 0;
+        int retContentStart = 0;
+        int retContentEnd = 0;
+        int retElementStart = 0;
+        int retElementEnd = 0;
+        if (!MeasureElement(lpData, start, end, ref retType, ref retContentStart, ref retContentEnd,
+              ref retElementStart, ref retElementEnd))
+          return false;
+        if (retElementEnd == end) return true;
+        if (retElementEnd > end) return false;
+        start = retElementEnd;
+      }
+
+      return false;
+    }
+
     private static bool MeasureElement(byte[] data, int startPos, int endPos, ref int retType, ref int retContentStart, ref int retContentEnd, ref int retElementStart, ref int retElementEnd) {
       int pos = startPos;
       int len = 0;
