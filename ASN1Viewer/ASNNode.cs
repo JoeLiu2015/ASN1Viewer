@@ -324,22 +324,30 @@ namespace ASN1Viewer {
     private static String ParseUTCTime(byte[] data) {
       //"YYMMDDhhmm[ss]Z" or "YYMMDDhhmm[ss](+|-)hhmm"
       String val = Encoding.ASCII.GetString(data);
+      String tail = "";
+      if (val.EndsWith("Z")) {
+        tail = "Z";
+        val = val.Substring(0, val.Length - 1);
+      }
       String year = val.Substring(0, 2);
       String mon = val.Substring(2, 2);
       String day = val.Substring(4, 2);
       String hour = val.Substring(6, 2);
       String min = val.Substring(8, 2);
       String second = "";
+      int pos = 10;
+      while (pos < val.Length && char.IsDigit(val, pos)) pos++;
+      if (pos > 10) second = val.Substring(10, pos-10);
+      
       String timezone = "";
-      if (val.EndsWith("Z") && val.Length == 13) second = val.Substring(10, 2);
       if (val.Contains("+") || val.Contains("-")) {
-        int pos = val.IndexOfAny(new char[]{'+', '-'});
-        if (pos >= 12) second = val.Substring(10, 2);
+        pos = val.IndexOfAny(new char[]{'+', '-'});
         timezone = val.Substring(pos);
-        if (timezone.Length == 5) timezone = timezone.Substring(0, 3) + ":" + timezone.Substring(3);
+        while (timezone.Length < 5) timezone += "0";
+        timezone = timezone.Substring(0, 3) + ":" + timezone.Substring(3);
       }
       year = (int.Parse(year) < 70) ? "20" + year : "19" + year;
-      return String.Format("{0}-{1}-{2} {3}:{4}{5}{6}", year, mon, day, hour, min, second.Length > 0 ? ":" + second : "",
+      return String.Format("{0}-{1}-{2} {3}:{4}{5}{6}" + tail, year, mon, day, hour, min, second.Length > 0 ? ":" + second : "",
                            timezone);
 
     }
