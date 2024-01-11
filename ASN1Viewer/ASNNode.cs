@@ -348,26 +348,37 @@ namespace ASN1Viewer {
       // 2. Universal time (UTC time) only. ``YYYYMMDDHH[MM[SS[.fff]]]Z''.
       // 3. Difference between local and UTC times. ``YYYYMMDDHH[MM[SS[.fff]]]+-HHMM''.
       String val = Encoding.ASCII.GetString(data);
+      String tail = "";
+      if (val.EndsWith("Z")) {
+        tail = "Z";
+        val = val.Substring(0, val.Length - 1);
+      }
+
       String year = val.Substring(0, 4);
-      String mon = val.Substring(6, 2);
-      String day = val.Substring(8, 2);
-      String hour = val.Substring(10, 2);
+      String mon = val.Substring(4, 2);
+      String day = val.Substring(6, 2);
+      String hour = val.Substring(8, 2);
       String min = "", second = "";
       String ms = "";
       String timezone = "";
-      if (val.Length >= 14 && char.IsDigit(val[12])) {
-        min = val.Substring(12, 2);
-        if (val.Length >= 16 && char.IsDigit(val[14])) {
-          second = val.Substring(14, 2);
-          if (val.Length >= 20 && val[16] == '.') ms = val.Substring(16, 4);
+      if (val.Length >= 12 && char.IsDigit(val[10])) {
+        min = val.Substring(10, 2);
+        if (val.Length >= 14 && char.IsDigit(val[12])) {
+          second = val.Substring(12, 2);
+          if (val.Length >= 15 && val[14] == '.') {
+            int pos = 15;
+            while (pos < val.Length && char.IsDigit(val, pos)) pos++;
+            ms = val.Substring(14, pos - 14);
+          }
         }
       }
       if (val.Contains("+") || val.Contains("-")) {
         int pos = val.IndexOfAny(new char[] { '+', '-' });
         timezone = val.Substring(pos);
-        if (timezone.Length == 5) timezone = timezone.Substring(0, 3) + ":" + timezone.Substring(3);
+        while (timezone.Length < 5) timezone += "0";
+        timezone = timezone.Substring(0, 3) + ":" + timezone.Substring(3);
       }
-      return String.Format("{0}-{1}-{2} {3}{4}{5}{6}{7}", year, mon, day, hour, min.Length > 0 ? ":" + min : "", second.Length > 0 ? ":" + second : "",
+      return String.Format("{0}-{1}-{2} {3}{4}{5}{6}{7}" + tail, year, mon, day, hour, min.Length > 0 ? ":" + min : "", second.Length > 0 ? ":" + second : "",
         ms.Length > 0 ? ms : "", timezone);
 
     }
