@@ -397,6 +397,7 @@ namespace ASN1Viewer {
       int retContentEnd = 0;
       int retElementStart = 0;
       int retElementEnd = 0;
+      if (start >= end) return false;
       if (!MeasureElement(lpData, start, end, ref retType, ref retContentStart, ref retContentEnd, ref retElementStart, ref retElementEnd)) return false;
       if (!(retElementStart == start && retElementEnd == end && retType != 0)) return false;
       if ((retType & NODE_CONSTRUCTED_MASK) == NODE_CONSTRUCTED_MASK) {

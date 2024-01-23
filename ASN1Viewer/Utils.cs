@@ -199,29 +199,59 @@ namespace ASN1Viewer {
         B64MAP['+'] = true;
         B64MAP['/'] = true;
       }
-      if (text.Contains("-----BEGIN")) {
-        int start = text.IndexOf("-----", 5);
-        int end = text.LastIndexOf("-----");
-        if (end > 0) end = text.LastIndexOf("-----", end);
-        if (start > 0 && end > 0) {
-          text = text.Substring(start + 5, end - start - 5);
+
+      List<String> lines = new List<string>();
+      if (text.Contains("-----BEGIN") && text.Contains("-----END")) {
+       String[] strlines = text.Replace("\r", "").Split('\n');
+       lines.AddRange(strlines);
+      } else {
+        // pure base64 text without BEGIN/END identifier
+        lines.Add("-----BEGIN FACK DATA-----");
+        lines.Add(text);
+        lines.Add("-----END FACK DATA-----");
+      }
+
+      while (lines.Count > 0) {
+        int start = -1, end = -1;
+        text = null;
+        for (int i = 0; i < lines.Count; i++) {
+          if (lines[i].Contains("-----BEGIN")) {
+            start = i + 1;
+          } else if (lines[i].Contains("-----END")) {
+            end = i - 1;
+          }
+
+          if (start >= 0 && end >= start) {
+            text = string.Join("\n", lines.GetRange(start, end - start + 1).ToArray());
+            lines.RemoveRange(0, end+ 2);
+            break;
+          }
         }
+        if (text == null) { continue;}
+DO_PARSE:
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < text.Length; i++) {
+          char ch = text[i];
+          if (ch >= 256) {
+            sb.Length = 0;
+            break;
+          }
+          if (ch == '\r' || ch == '\n' || ch == ' ' || ch == '\t') continue;
+          if (!B64MAP[ch] && ch != '=') {
+            sb.Length = 0;
+            break;
+          }
+          sb.Append(ch);
+        }
+        if (sb.Length == 0) continue;
+        try {
+          String s = sb.ToString();
+          if (s.Length == 0) return null;
+          return Convert.FromBase64String(s);
+        } catch (Exception) { }
       }
-      StringBuilder sb = new StringBuilder();
-      for (int i = 0; i < text.Length; i++) {
-        char ch = text[i];
-        if (ch >= 256) return null;
-        if (ch == '\r' || ch == '\n' || ch == ' ' || ch == '\t') continue;
-        if (!B64MAP[ch] && ch != '=') return null;
-        sb.Append(ch);
-      }
-      try {
-        String s = sb.ToString();
-        if (s.Length == 0) return null;
-        return Convert.FromBase64String(s);
-      } catch (Exception) {
-        return null;
-      }
+
+      return null;
     }
   }
 }

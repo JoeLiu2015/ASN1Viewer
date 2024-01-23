@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Threading;
+using System.Windows.Forms;
 using System.Xml;
 
 namespace ASN1Viewer {
@@ -119,7 +121,25 @@ namespace ASN1Viewer {
         m_MaxHistoryCount,
         string.Join(";", m_HistoryFiles.ToArray())
         );
-      File.WriteAllText(cfgFile, file);
+
+      // Multiple instance may be closed at the same time, so they start to write the same config
+      // file at the same time.
+      Exception error = null;
+      DateTime timeMarker = DateTime.Now.AddSeconds(5);
+      while (DateTime.Now < timeMarker) {
+        try {
+          File.WriteAllText(cfgFile, file);
+          error = null;
+          break;
+        } catch (Exception ex) {
+          error = ex;
+          Thread.Sleep(100);
+        }
+      }
+
+      if (error != null) {
+        MessageBox.Show("Faile to write file '" + cfgFile + "': " + error.Message);
+      }
     }
     private bool ParseBool(string v, bool defValue) {
       try {
