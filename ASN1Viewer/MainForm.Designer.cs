@@ -155,7 +155,9 @@
       this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
       this.splitContainer1.Size = new System.Drawing.Size(853, 369);
       this.splitContainer1.SplitterDistance = 228;
+      this.splitContainer1.SplitterWidth = 3;
       this.splitContainer1.TabIndex = 1;
+      this.splitContainer1.TabStop = false;
       // 
       // tabControl1
       // 
@@ -165,7 +167,7 @@
       this.tabControl1.Location = new System.Drawing.Point(0, 0);
       this.tabControl1.Name = "tabControl1";
       this.tabControl1.SelectedIndex = 0;
-      this.tabControl1.Size = new System.Drawing.Size(621, 369);
+      this.tabControl1.Size = new System.Drawing.Size(622, 369);
       this.tabControl1.TabIndex = 0;
       // 
       // tabPageInput
@@ -174,7 +176,7 @@
       this.tabPageInput.Location = new System.Drawing.Point(4, 22);
       this.tabPageInput.Name = "tabPageInput";
       this.tabPageInput.Padding = new System.Windows.Forms.Padding(3);
-      this.tabPageInput.Size = new System.Drawing.Size(613, 343);
+      this.tabPageInput.Size = new System.Drawing.Size(614, 343);
       this.tabPageInput.TabIndex = 0;
       this.tabPageInput.Text = "Input Text";
       this.tabPageInput.UseVisualStyleBackColor = true;
@@ -185,7 +187,7 @@
       this.txtInput.Location = new System.Drawing.Point(3, 3);
       this.txtInput.Name = "txtInput";
       this.txtInput.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-      this.txtInput.Size = new System.Drawing.Size(607, 337);
+      this.txtInput.Size = new System.Drawing.Size(608, 337);
       this.txtInput.TabIndex = 0;
       this.txtInput.Text = "";
       this.txtInput.WordWrap = false;
