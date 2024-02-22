@@ -62,14 +62,15 @@
       this.ctxMenuCollapse = new System.Windows.Forms.ToolStripMenuItem();
       this.ctxMenuExpand = new System.Windows.Forms.ToolStripMenuItem();
       this.toolbar = new System.Windows.Forms.ToolStrip();
-      this.imageListToolbar = new System.Windows.Forms.ImageList(this.components);
       this.tbBtnOpen = new System.Windows.Forms.ToolStripButton();
       this.tbBtnRecent = new System.Windows.Forms.ToolStripDropDownButton();
       this.tbBtnTopMost = new System.Windows.Forms.ToolStripButton();
       this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-      this.tbBtnCheckUpdate = new System.Windows.Forms.ToolStripButton();
       this.tbBtnLang = new System.Windows.Forms.ToolStripDropDownButton();
+      this.tbBtnCheckUpdate = new System.Windows.Forms.ToolStripButton();
+      this.imageListToolbar = new System.Windows.Forms.ImageList(this.components);
       this.hexViewer1 = new ASN1Viewer.HexViewer();
+      this.panel2 = new System.Windows.Forms.Panel();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
       this.splitContainer1.SuspendLayout();
@@ -81,6 +82,7 @@
       this.statusStrip1.SuspendLayout();
       this.ctxMenuTree.SuspendLayout();
       this.toolbar.SuspendLayout();
+      this.panel2.SuspendLayout();
       this.SuspendLayout();
       // 
       // treeView1
@@ -152,7 +154,7 @@
       // 
       // splitContainer1.Panel2
       // 
-      this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
+      this.splitContainer1.Panel2.Controls.Add(this.panel2);
       this.splitContainer1.Size = new System.Drawing.Size(853, 369);
       this.splitContainer1.SplitterDistance = 228;
       this.splitContainer1.SplitterWidth = 3;
@@ -167,27 +169,29 @@
       this.tabControl1.Location = new System.Drawing.Point(0, 0);
       this.tabControl1.Name = "tabControl1";
       this.tabControl1.SelectedIndex = 0;
-      this.tabControl1.Size = new System.Drawing.Size(622, 369);
+      this.tabControl1.Size = new System.Drawing.Size(620, 367);
       this.tabControl1.TabIndex = 0;
       // 
       // tabPageInput
       // 
+      this.tabPageInput.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
       this.tabPageInput.Controls.Add(this.txtInput);
       this.tabPageInput.Location = new System.Drawing.Point(4, 22);
       this.tabPageInput.Name = "tabPageInput";
       this.tabPageInput.Padding = new System.Windows.Forms.Padding(3);
-      this.tabPageInput.Size = new System.Drawing.Size(614, 343);
+      this.tabPageInput.Size = new System.Drawing.Size(612, 341);
       this.tabPageInput.TabIndex = 0;
       this.tabPageInput.Text = "Input Text";
       this.tabPageInput.UseVisualStyleBackColor = true;
       // 
       // txtInput
       // 
+      this.txtInput.BorderStyle = System.Windows.Forms.BorderStyle.None;
       this.txtInput.Dock = System.Windows.Forms.DockStyle.Fill;
       this.txtInput.Location = new System.Drawing.Point(3, 3);
       this.txtInput.Name = "txtInput";
       this.txtInput.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-      this.txtInput.Size = new System.Drawing.Size(608, 337);
+      this.txtInput.Size = new System.Drawing.Size(604, 333);
       this.txtInput.TabIndex = 0;
       this.txtInput.Text = "";
       this.txtInput.WordWrap = false;
@@ -195,11 +199,12 @@
       // 
       // tabPageBytes
       // 
+      this.tabPageBytes.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
       this.tabPageBytes.Controls.Add(this.panel1);
       this.tabPageBytes.Location = new System.Drawing.Point(4, 22);
       this.tabPageBytes.Name = "tabPageBytes";
       this.tabPageBytes.Padding = new System.Windows.Forms.Padding(3);
-      this.tabPageBytes.Size = new System.Drawing.Size(613, 343);
+      this.tabPageBytes.Size = new System.Drawing.Size(612, 341);
       this.tabPageBytes.TabIndex = 1;
       this.tabPageBytes.Text = "ASN.1 Bytes";
       this.tabPageBytes.UseVisualStyleBackColor = true;
@@ -210,7 +215,7 @@
       this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
       this.panel1.Location = new System.Drawing.Point(3, 3);
       this.panel1.Name = "panel1";
-      this.panel1.Size = new System.Drawing.Size(607, 337);
+      this.panel1.Size = new System.Drawing.Size(604, 333);
       this.panel1.TabIndex = 0;
       // 
       // menuMainStrip
@@ -416,16 +421,6 @@
       this.toolbar.TabIndex = 4;
       this.toolbar.Text = "toolStrip1";
       // 
-      // imageListToolbar
-      // 
-      this.imageListToolbar.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListToolbar.ImageStream")));
-      this.imageListToolbar.TransparentColor = System.Drawing.Color.Transparent;
-      this.imageListToolbar.Images.SetKeyName(0, "openFile.png");
-      this.imageListToolbar.Images.SetKeyName(1, "recentFiles.png");
-      this.imageListToolbar.Images.SetKeyName(2, "topMost.png");
-      this.imageListToolbar.Images.SetKeyName(3, "lang.png");
-      this.imageListToolbar.Images.SetKeyName(4, "checkUpdate.png");
-      // 
       // tbBtnOpen
       // 
       this.tbBtnOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -441,7 +436,7 @@
       this.tbBtnRecent.Image = ((System.Drawing.Image)(resources.GetObject("tbBtnRecent.Image")));
       this.tbBtnRecent.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.tbBtnRecent.Name = "tbBtnRecent";
-      this.tbBtnRecent.Size = new System.Drawing.Size(32, 22);
+      this.tbBtnRecent.Size = new System.Drawing.Size(29, 22);
       this.tbBtnRecent.Text = "toolStripSplitButton1";
       // 
       // tbBtnTopMost
@@ -458,15 +453,6 @@
       this.toolStripSeparator1.Name = "toolStripSeparator1";
       this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
       // 
-      // tbBtnCheckUpdate
-      // 
-      this.tbBtnCheckUpdate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.tbBtnCheckUpdate.Image = ((System.Drawing.Image)(resources.GetObject("tbBtnCheckUpdate.Image")));
-      this.tbBtnCheckUpdate.ImageTransparentColor = System.Drawing.Color.Magenta;
-      this.tbBtnCheckUpdate.Name = "tbBtnCheckUpdate";
-      this.tbBtnCheckUpdate.Size = new System.Drawing.Size(23, 22);
-      this.tbBtnCheckUpdate.Text = "toolStripButton3";
-      // 
       // tbBtnLang
       // 
       this.tbBtnLang.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -476,9 +462,29 @@
       this.tbBtnLang.Size = new System.Drawing.Size(29, 22);
       this.tbBtnLang.Text = "toolStripDropDownButton1";
       // 
+      // tbBtnCheckUpdate
+      // 
+      this.tbBtnCheckUpdate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.tbBtnCheckUpdate.Image = ((System.Drawing.Image)(resources.GetObject("tbBtnCheckUpdate.Image")));
+      this.tbBtnCheckUpdate.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.tbBtnCheckUpdate.Name = "tbBtnCheckUpdate";
+      this.tbBtnCheckUpdate.Size = new System.Drawing.Size(23, 22);
+      this.tbBtnCheckUpdate.Text = "toolStripButton3";
+      // 
+      // imageListToolbar
+      // 
+      this.imageListToolbar.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListToolbar.ImageStream")));
+      this.imageListToolbar.TransparentColor = System.Drawing.Color.Transparent;
+      this.imageListToolbar.Images.SetKeyName(0, "openFile.png");
+      this.imageListToolbar.Images.SetKeyName(1, "recentFiles.png");
+      this.imageListToolbar.Images.SetKeyName(2, "topMost.png");
+      this.imageListToolbar.Images.SetKeyName(3, "lang.png");
+      this.imageListToolbar.Images.SetKeyName(4, "checkUpdate.png");
+      // 
       // hexViewer1
       // 
       this.hexViewer1.BackColor = System.Drawing.SystemColors.Window;
+      this.hexViewer1.BorderStyle = System.Windows.Forms.BorderStyle.None;
       this.hexViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
       this.hexViewer1.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.hexViewer1.ForeColor = System.Drawing.Color.Gray;
@@ -486,10 +492,20 @@
       this.hexViewer1.Name = "hexViewer1";
       this.hexViewer1.ReadOnly = true;
       this.hexViewer1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-      this.hexViewer1.Size = new System.Drawing.Size(607, 337);
+      this.hexViewer1.Size = new System.Drawing.Size(604, 333);
       this.hexViewer1.TabIndex = 0;
       this.hexViewer1.Text = "";
       this.hexViewer1.WordWrap = false;
+      // 
+      // panel2
+      // 
+      this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+      this.panel2.Controls.Add(this.tabControl1);
+      this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.panel2.Location = new System.Drawing.Point(0, 0);
+      this.panel2.Name = "panel2";
+      this.panel2.Size = new System.Drawing.Size(622, 369);
+      this.panel2.TabIndex = 1;
       // 
       // MainForm
       // 
@@ -525,6 +541,7 @@
       this.ctxMenuTree.ResumeLayout(false);
       this.toolbar.ResumeLayout(false);
       this.toolbar.PerformLayout();
+      this.panel2.ResumeLayout(false);
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -572,6 +589,7 @@
     private System.Windows.Forms.ToolStripButton tbBtnCheckUpdate;
     private System.Windows.Forms.ImageList imageListToolbar;
     private System.Windows.Forms.ToolStripDropDownButton tbBtnLang;
+    private System.Windows.Forms.Panel panel2;
   }
 }
 
