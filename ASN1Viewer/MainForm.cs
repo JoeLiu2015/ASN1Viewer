@@ -372,7 +372,7 @@ namespace ASN1Viewer
         
         this.treeView1.Nodes.Clear();
         this.treeView1.Nodes.Add(CreateNode(a));
-        this.ShowStatusText(Color.Green, "Succeed.");
+        this.ShowStatusText(Color.Green, Lang.T["STATUS_SUCCEED"]);
         this.UpdateHexBytesView(data, a);
         return true;
       } catch (Exception ex) {

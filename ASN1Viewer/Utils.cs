@@ -202,7 +202,15 @@ namespace ASN1Viewer {
 
       List<String> lines = new List<string>();
       if (text.Contains("-----BEGIN") && text.Contains("-----END")) {
-       String[] strlines = text.Replace("\r", "").Split('\n');
+        text = text.Replace("\r", "");
+        // Add LF for one-line certificate
+        if (text.Contains("-----BEGIN CERTIFICATE-----") && !text.Contains("-----BEGIN CERTIFICATE-----\n")) {
+          text = text.Replace("-----BEGIN CERTIFICATE-----", "-----BEGIN CERTIFICATE-----\n");
+        }
+        if (text.Contains("-----END CERTIFICATE-----") && !text.Contains("\n-----END CERTIFICATE-----")) {
+          text = text.Replace("-----END CERTIFICATE-----", "\n-----END CERTIFICATE-----");
+        }
+        String[] strlines = text.Split('\n');
        lines.AddRange(strlines);
       } else {
         // pure base64 text without BEGIN/END identifier
@@ -225,6 +233,8 @@ namespace ASN1Viewer {
             text = string.Join("\n", lines.GetRange(start, end - start + 1).ToArray());
             lines.RemoveRange(0, end+ 2);
             break;
+          } else if (i == lines.Count - 1) {
+            return null; // No BEGIN .... END found.
           }
         }
         if (text == null) { continue;}
