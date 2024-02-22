@@ -34,5 +34,4 @@ MSG_UPDATEFAILED : Update failed.(Error:{0})
 MST_RESTART    : The program already updated. Do you want to restart it immediately?
 BTN_YES        : &Yes
 BTN_NO         : &No
-
 RICH_CTX_MENU_COPY : &Copy Highlight Bytes

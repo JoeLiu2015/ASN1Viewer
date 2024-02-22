@@ -64,7 +64,6 @@ namespace ASN1Viewer
       new About().ShowDialog(this);
     }
     private void menuChinese_Click(object sender, EventArgs e) {
-      if (this.menuChinese.Checked) return;
       this.menuChinese.Checked = true;
       this.menuEnglish.Checked = false;
       Lang.Select("zh_CN");
@@ -72,7 +71,6 @@ namespace ASN1Viewer
       LoadLang();
     }
     private void menuEnglish_Click(object sender, EventArgs e) {
-      if (this.menuEnglish.Checked) return;
       this.menuChinese.Checked = false;
       this.menuEnglish.Checked = true;
       Lang.Select("en_US");
