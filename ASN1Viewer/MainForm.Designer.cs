@@ -61,6 +61,8 @@
       this.ctxMenuTree = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.ctxMenuCollapse = new System.Windows.Forms.ToolStripMenuItem();
       this.ctxMenuExpand = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
+      this.ctxMenuEdit = new System.Windows.Forms.ToolStripMenuItem();
       this.toolbar = new System.Windows.Forms.ToolStrip();
       this.tbBtnOpen = new System.Windows.Forms.ToolStripButton();
       this.tbBtnRecent = new System.Windows.Forms.ToolStripDropDownButton();
@@ -388,23 +390,37 @@
       this.ctxMenuTree.ImageScalingSize = new System.Drawing.Size(32, 32);
       this.ctxMenuTree.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ctxMenuCollapse,
-            this.ctxMenuExpand});
+            this.ctxMenuExpand,
+            this.toolStripMenuItem3,
+            this.ctxMenuEdit});
       this.ctxMenuTree.Name = "ctxMenuTree";
-      this.ctxMenuTree.Size = new System.Drawing.Size(120, 48);
+      this.ctxMenuTree.Size = new System.Drawing.Size(181, 98);
       // 
       // ctxMenuCollapse
       // 
       this.ctxMenuCollapse.Name = "ctxMenuCollapse";
-      this.ctxMenuCollapse.Size = new System.Drawing.Size(119, 22);
+      this.ctxMenuCollapse.Size = new System.Drawing.Size(180, 22);
       this.ctxMenuCollapse.Text = "&Collapse";
       this.ctxMenuCollapse.Click += new System.EventHandler(this.ctxMenuCollapse_Click);
       // 
       // ctxMenuExpand
       // 
       this.ctxMenuExpand.Name = "ctxMenuExpand";
-      this.ctxMenuExpand.Size = new System.Drawing.Size(119, 22);
+      this.ctxMenuExpand.Size = new System.Drawing.Size(180, 22);
       this.ctxMenuExpand.Text = "&Expand";
       this.ctxMenuExpand.Click += new System.EventHandler(this.ctxMenuExpand_Click);
+      // 
+      // toolStripMenuItem3
+      // 
+      this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+      this.toolStripMenuItem3.Size = new System.Drawing.Size(177, 6);
+      // 
+      // ctxMenuEdit
+      // 
+      this.ctxMenuEdit.Name = "ctxMenuEdit";
+      this.ctxMenuEdit.Size = new System.Drawing.Size(180, 22);
+      this.ctxMenuEdit.Text = "E&dit";
+      this.ctxMenuEdit.Click += new System.EventHandler(this.ctxMenuEdit_Click);
       // 
       // toolbar
       // 
@@ -590,6 +606,8 @@
     private System.Windows.Forms.ImageList imageListToolbar;
     private System.Windows.Forms.ToolStripDropDownButton tbBtnLang;
     private System.Windows.Forms.Panel panel2;
+    private System.Windows.Forms.ToolStripMenuItem ctxMenuEdit;
+    private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
   }
 }
 

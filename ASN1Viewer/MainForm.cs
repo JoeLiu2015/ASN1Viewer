@@ -130,6 +130,10 @@ namespace ASN1Viewer
       TreeNode n = ctxMenuTree.Tag as TreeNode;
       n.ExpandAll();
     }
+    private void ctxMenuEdit_Click(object sender, EventArgs e) {
+      TreeNode n = ctxMenuTree.Tag as TreeNode;
+      
+    }
     private void txtInput_TextChanged(object sender, EventArgs e) {
       ParseInputText(this.txtInput.Text);
 			// Test merge
@@ -145,6 +149,16 @@ namespace ASN1Viewer
 			// Test merge
       if (e.Button == MouseButtons.Right && e.Node.Nodes.Count > 0) {
         this.treeView1.SelectedNode = e.Node;
+        ctxMenuTree.Tag = e.Node;
+        ctxMenuCollapse.Enabled = true;
+        ctxMenuExpand.Enabled = true;
+        ctxMenuEdit.Enabled = false;
+        this.ctxMenuTree.Show(this.treeView1, e.Location);
+      } else if (e.Button == MouseButtons.Right && e.Node.Nodes.Count == 0) {
+        this.treeView1.SelectedNode = e.Node;
+        ctxMenuCollapse.Enabled = false;
+        ctxMenuExpand.Enabled = false;
+        ctxMenuEdit.Enabled = true;
         ctxMenuTree.Tag = e.Node;
         this.ctxMenuTree.Show(this.treeView1, e.Location);
       }
@@ -226,6 +240,7 @@ namespace ASN1Viewer
       this.menuCheckUpdate.Text = Lang.T["MENU_CHECKVER"];
       this.ctxMenuCollapse.Text = Lang.T["MENU_COLLAPSE"];
       this.ctxMenuExpand.Text   = Lang.T["MENU_EXPAND"];
+      this.ctxMenuEdit.Text     = Lang.T["MENU_EDIT"];
       this.tabPageInput.Text    = Lang.T["TAB_INPUT"];
       this.tabPageBytes.Text    = Lang.T["TAB_BYTES"];
       if (this.treeView1.SelectedNode != null) {
