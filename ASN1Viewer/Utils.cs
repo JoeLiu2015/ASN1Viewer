@@ -97,6 +97,26 @@ namespace ASN1Viewer {
       }
       return sb.ToString();
     }
+
+    public static byte[] HexDecode(String s) {
+      if (s.Length == 0) return new byte[0];
+      MemoryStream ms = new MemoryStream();
+      for (int i = 0; i < s.Length; i++) {
+        char c = s[i];
+        if (c == ' ' || c == '\t' || c == '\r' || c == '\n') continue;
+        if (('0' <= c && c <= '9') || ('a' <= c && c <= 'f') || ('A' <= c && c <= 'F')) {
+          if (i + 1 < s.Length && (('0' <= s[i+1] && s[i+1] <= '9') || ('a' <= s[i+1] && s[i+1] <= 'f') || ('A' <= s[i+1] && s[i+1] <= 'F'))) {
+            ms.WriteByte(HexToByte(c, s[i+1]));
+            i++;
+          } else {
+            return null;
+          }
+        } else {
+          return null;
+        }
+      }
+      return ms.ToArray();
+    }
     public static void IntToBytes(long uinteger, byte[] bytes, int offset, int length) {
       for (int i = offset + length - 1; i >= offset; i--, uinteger >>= 8) {
         bytes[i] = (byte)(uinteger & 0x0ff);
@@ -117,6 +137,41 @@ namespace ASN1Viewer {
       char[] d = new char[] { '0', '1', '2', '3', '4', '5', '6', '7',
         '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
       return "" + d[(c & 0xFF) >> 4] + d[c & 0x0F];
+    }
+
+    public static byte HexToByte(char c, char s) {
+      int ret = 0;
+      if (c >= '0' && c <= '9') {
+        ret = c - '0';
+      } else if (c >= 'a' && c <= 'f') {
+        ret = c - 'a' + 10;
+      } else if (c >= 'A' && c <= 'F') {
+        ret = c - 'A' + 10;
+      } else {
+        throw new Exception("out of range");
+      }
+
+      ret = ret * 16;
+      if (s >= '0' && s <= '9') {
+        ret += s - '0';
+      } else if (s >= 'a' && s <= 'f') {
+        ret += s - 'a' + 10;
+      } else if (s >= 'A' && s <= 'F') {
+        ret += s - 'A' + 10;
+      } else {
+        throw new Exception("out of range");
+      }
+      return (byte)ret;
+    }
+
+    public static byte[] Reverse(byte[] data) {
+      for (int i = 0; i < data.Length / 2; i++) {
+        byte b = data[i];
+        data[i] = data[data.Length - 1 - i];
+        data[data.Length - 1 - i] = b;
+      }
+
+      return data;
     }
     public static String HexDump(byte[] val, int position) {
       if (val == null || val.Length == 0) return "";

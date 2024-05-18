@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using ASN1Viewer.ui;
 
 namespace ASN1Viewer
 {
@@ -11,6 +12,8 @@ namespace ASN1Viewer
   {
     private const long SIZE_100MB = 1024 * 1024 * 100L;
     private schema.SchemaDlg m_SchemaDlg = null;
+    private ui.EditASN1Node m_EditNodeDlg = null;
+
     public MainForm()
     {
       InitializeComponent();
@@ -132,7 +135,24 @@ namespace ASN1Viewer
     }
     private void ctxMenuEdit_Click(object sender, EventArgs e) {
       TreeNode n = ctxMenuTree.Tag as TreeNode;
-      
+
+      if (this.m_EditNodeDlg == null || this.m_EditNodeDlg.IsDisposed) {
+        this.m_EditNodeDlg = new EditASN1Node();
+        this.m_EditNodeDlg.OnNodeChanged = (o, ee) => {
+          TreeNode t = o as TreeNode;
+          ASNNode root = (t.Tag as ASNNode).Root;
+          t.Text = (t.Tag as ASNNode).ToString();
+          this.UpdateHexBytesView(root.Data, root);
+          this.treeView1_AfterSelect(treeView1, new TreeViewEventArgs(t));
+          m_EditNodeDlg.Text = m_EditNodeDlg.Title + "(" + t.Text + ")";
+        };
+        m_EditNodeDlg.Node = n;
+        m_EditNodeDlg.Show(this);
+      } else {
+        m_EditNodeDlg.Node = n;
+      }
+
+      m_EditNodeDlg.Text = m_EditNodeDlg.Title + "(" + n.Text + ")";
     }
     private void txtInput_TextChanged(object sender, EventArgs e) {
       ParseInputText(this.txtInput.Text);

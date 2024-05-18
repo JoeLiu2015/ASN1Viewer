@@ -27,6 +27,7 @@ ABOUT_BUILD    : Version {0}  Build {1}
 MSG_NOFILE     : File "{0}" is not found.
 TXT_SKIP       : Skip {0} bytes ({1} lines)
 TXT_TEXT       : Text
+TXT_EDITHEX    : Edit Hex Bytes
 MODULES_TITLE  : ASN.1 Modules Viewer
 MSG_NOMODULES  : Folder "{0}" is not found.
 MSG_ERROR      : ERROR
@@ -36,4 +37,6 @@ MSG_UPDATEFAILED : Update failed.(Error:{0})
 MST_RESTART    : The program already updated. Do you want to restart it immediately?
 BTN_YES        : &Yes
 BTN_NO         : &No
+BTN_OK         : &OK
+BTN_CANCEL     : &Cancel
 RICH_CTX_MENU_COPY : &Copy Highlight Bytes

@@ -53,20 +53,60 @@ namespace ASN1Viewer {
     private int    m_ContentStart = 0x00;
     private int    m_ContentEnd   = 0x00;
     private byte[] m_Data         = null;
+    private ASNNode m_Parent      = null;
+    private byte[] m_ModifiedContent = null;
 
     private List<ASNNode> m_Chidren    = null;
     private schema.ISchemaNode m_SchemaNode = null;
 
-    private ASNNode(byte tag, int elementStart, int elementEnd, int contentStart, int contentEnd, byte[] data) {
+    private ASNNode(byte tag, int elementStart, int elementEnd, int contentStart, int contentEnd, byte[] data, ASNNode parent) {
       m_Tag = tag;
       m_ElementStart = elementStart;
       m_ElementEnd = elementEnd;
       m_ContentStart = contentStart;
       m_ContentEnd = contentEnd;
       m_Data = data;
+      m_Parent = parent;
       //System.Diagnostics.Debug.WriteLine("[" + elementStart + ", " + elementEnd + "] [" + contentStart + ", " + contentEnd + "]");
     }
 
+    public bool SetContent(byte[] val) {
+      m_ModifiedContent = null;
+      if (!IsDataEqual(val)) {
+        if (val.Length == m_ContentEnd - m_ContentStart) {
+          Array.Copy(val, 0, m_Data, m_ContentStart, val.Length);
+        } else {
+          m_ModifiedContent = val;
+        }
+        FlushModifiedContent();
+        return true;
+      }
+
+      return false;
+    }
+
+    public void FlushModifiedContent() {
+      ASNNode root = this.Root;
+      if (!root.HasModified()) return;
+
+      List<byte> buff = new List<byte>();
+      root.Write(buff);
+      root.SetData(buff.ToArray());
+    }
+
+    public ASNNode Parent {
+      get { return m_Parent;  }
+    }
+
+    public ASNNode Root {
+      get {
+        ASNNode root = this;
+        while (root.Parent != null) {
+          root = root.Parent;
+        }
+        return root;
+      }
+    }
     public int ChildCount {
       get { return m_Chidren == null ? 0 : m_Chidren.Count; }
     }
@@ -98,7 +138,7 @@ namespace ASN1Viewer {
         return m_Data;
       }
     }
-
+    public bool IsIndefinite  { get { return m_ContentEnd + 2 == m_ElementEnd; } }
     public bool IsSequence    { get { return IsConstructed && TagNum == UNIVERSAL_SEQ_SEQOF;           } }
     public bool IsConstructed { get { return (m_Tag & NODE_CONSTRUCTED_MASK) == NODE_CONSTRUCTED_MASK; } }
     public int TagClass       { get { return m_Tag & NODE_CLASS_MASK;      } }
@@ -235,7 +275,7 @@ namespace ASN1Viewer {
       };
 
       m_Chidren = new List<ASNNode>();
-      m_Chidren.Add(new ASNNode((byte)retType, retElementStart, retElementEnd, retContentStart, retContentEnd, data));
+      m_Chidren.Add(new ASNNode((byte)retType, retElementStart, retElementEnd, retContentStart, retContentEnd, data, this));
       start = retElementEnd;
 
       while (start < end) {
@@ -248,7 +288,7 @@ namespace ASN1Viewer {
           throw new Exception("Failed to parse child.(next)");
         };
 
-        m_Chidren.Add(new ASNNode((byte)retType, retElementStart, retElementEnd, retContentStart, retContentEnd, data));
+        m_Chidren.Add(new ASNNode((byte)retType, retElementStart, retElementEnd, retContentStart, retContentEnd, data, this));
         start = retElementEnd;
       }
       if (start != end) throw new Exception("Invalid ASN data.");
@@ -258,6 +298,97 @@ namespace ASN1Viewer {
       }
     }
 
+    private bool IsDataEqual(byte[] data) {
+      if (data.Length != m_ContentEnd - m_ContentStart) return false;
+      for (int i = 0; i < data.Length; i++) {
+        if (data[i] != m_Data[m_ContentStart + i]) return false;
+      }
+
+      return true;
+    }
+
+    private bool HasModified() {
+      if (this.m_ModifiedContent != null) return true;
+      for (int i = 0; m_Chidren != null && i < m_Chidren.Count; i++) {
+        if (m_Chidren[i].HasModified()) return true;
+      }
+      return false;
+    }
+
+    private void Write(List<byte> buff) {
+      int eStart = 0;
+      int eEnd = 0;
+      int cStart = 0;
+      int cEnd = 0;
+
+      eStart = buff.Count;
+      buff.Add(m_Tag);
+      if (IsIndefinite) {
+        buff.Add(0x80);
+
+        cStart = buff.Count;
+        if (m_Chidren == null || m_Chidren.Count == 0) {
+          if (m_ModifiedContent != null) {
+            buff.AddRange(m_ModifiedContent);
+            m_ModifiedContent = null;
+          } else {
+            for (int i = m_ContentStart; i < m_ContentEnd; i++) buff.Add(m_Data[i]);
+          }
+        } else {
+          for (int i = 0; i < m_Chidren.Count; i++) {
+            m_Chidren[i].Write(buff);
+          }
+        }
+        cEnd = buff.Count;
+
+        buff.Add(0x00);
+        buff.Add(0x00);
+      } else {
+        int pos = buff.Count;
+        if (m_Chidren == null || m_Chidren.Count == 0) {
+          if (m_ModifiedContent != null) {
+            buff.AddRange(m_ModifiedContent);
+            m_ModifiedContent = null;
+          } else {
+            for (int i = m_ContentStart; i < m_ContentEnd; i++) buff.Add(m_Data[i]);
+          }
+        } else {
+          for (int i = 0; i < m_Chidren.Count; i++) {
+            m_Chidren[i].Write(buff);
+          }
+        }
+
+        byte[] lenBytes = EncodeLen(buff.Count - pos);
+        buff.InsertRange(pos, lenBytes);
+        for (int i = 0; m_Chidren != null && i < m_Chidren.Count; i++) {
+          m_Chidren[i].AddOffset(lenBytes.Length);
+        }
+
+        cStart = pos + lenBytes.Length;
+        cEnd = buff.Count;
+      }
+      eEnd = buff.Count;
+
+      m_ElementStart = eStart;
+      m_ElementEnd = eEnd;
+      m_ContentStart = cStart;
+      m_ContentEnd = cEnd;
+    }
+
+    private void SetData(byte[] data) {
+      m_Data = data;
+      for (int i = 0;m_Chidren != null && i < m_Chidren.Count; i++) m_Chidren[i].SetData(data);
+    }
+
+    private void AddOffset(int offset) {
+      m_ElementStart += offset;
+      m_ElementEnd += offset;
+      m_ContentStart += offset;
+      m_ContentEnd += offset;
+      for (int i = 0; m_Chidren != null && i < m_Chidren.Count; i++) {
+        m_Chidren[i].AddOffset(offset);
+      }
+    }
     //=====================================
     // Static members
     //=====================================
@@ -282,7 +413,7 @@ namespace ASN1Viewer {
         }
       }
 
-      ASNNode node = new ASNNode((byte)retType, retElementStart, retElementEnd, retContentStart, retContentEnd, asn);
+      ASNNode node = new ASNNode((byte)retType, retElementStart, retElementEnd, retContentStart, retContentEnd, asn, null);
       node.ParseChild();
       return node;
     }
@@ -493,5 +624,18 @@ namespace ASN1Viewer {
         }
       }
     }
+
+    private static byte[] EncodeLen(int len) {
+      if (len <= 0x7F) return new byte[] { (byte)len };
+      List<byte> buff = new List<byte>();
+      while (len > 0) {
+        buff.Add((byte)(len & 0xFF));
+        len >>= 8;
+      }
+      buff.Add((byte)(0x80 | (buff.Count & 0x7F)));
+      buff.Reverse();
+      return buff.ToArray();
+    }
+ 
   }
 }

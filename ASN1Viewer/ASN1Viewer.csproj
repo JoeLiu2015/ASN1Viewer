@@ -98,6 +98,12 @@
     <Compile Include="TabControlEx.Designer.cs">
       <DependentUpon>TabControlEx.cs</DependentUpon>
     </Compile>
+    <Compile Include="ui\EditASN1Node.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\EditASN1Node.Designer.cs">
+      <DependentUpon>EditASN1Node.cs</DependentUpon>
+    </Compile>
     <Compile Include="Updater.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="zip\BZip2\BitWriter.cs" />
@@ -177,6 +183,9 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>TabControlEx1.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\EditASN1Node.resx">
+      <DependentUpon>EditASN1Node.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

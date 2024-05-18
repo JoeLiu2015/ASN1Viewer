@@ -27,6 +27,7 @@ ABOUT_BUILD    : 版本 {0}  内部版本号 {1}
 MSG_NOFILE     : 文件 “{0}” 不存在.
 TXT_SKIP       : 跳过 {0} 字节 ({1} 行)
 TXT_TEXT       : 文本
+TXT_EDITHEX    : 编辑字节(Hex编码)
 MODULES_TITLE  : ASN.1 模块查看器
 MSG_NOMODULES  : 目录 "{0}" 不存在.
 MSG_ERROR      : 错误
@@ -36,4 +37,6 @@ MSG_UPDATEFAILED : 更新失败.(错误:{0})
 MST_RESTART    : 程序已经更新到最新版本，你要现在就重启程序吗?
 BTN_YES        : 是(&Y)
 BTN_NO         : 否(&N)
+BTN_OK         : 确定(&O)
+BTN_CANCEL     : 取消(&C)
 RICH_CTX_MENU_COPY : 拷贝高亮数据(&C)
