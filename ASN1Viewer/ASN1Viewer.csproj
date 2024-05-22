@@ -38,7 +38,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>ASN1Viewer.ico</ApplicationIcon>
+    <ApplicationIcon>app.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -180,7 +180,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ASN1Viewer.ico" />
+    <Content Include="app.ico" />
     <Content Include="files\Asn1Modules\Known_ASN1_Types.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
