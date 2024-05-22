@@ -1,5 +1,5 @@
 ﻿
-namespace ASN1Viewer {
+namespace ASN1Viewer.ui {
   partial class MsgBox {
     /// <summary>
     /// Required designer variable.

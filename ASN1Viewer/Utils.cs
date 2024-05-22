@@ -294,7 +294,7 @@ namespace ASN1Viewer {
           }
         }
         if (text == null) { continue;}
-DO_PARSE:
+
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < text.Length; i++) {
           char ch = text[i];

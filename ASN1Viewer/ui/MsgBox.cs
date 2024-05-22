@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace ASN1Viewer {
+namespace ASN1Viewer.ui {
   public partial class MsgBox : Form {
     public MsgBox() {
       InitializeComponent();
