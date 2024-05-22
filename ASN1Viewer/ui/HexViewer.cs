@@ -4,8 +4,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace ASN1Viewer
-{
+namespace ASN1Viewer.ui {
   public class HexViewer : RichTextBox {
     private const int LINE_LEN    = 8 /*Offset*/ + 3 /*Separators*/ + 16 * 3 /*Bytes*/ + 3 /*Separators*/ + (8 + 1 + 8) /*Text*/ + 1 /*LF*/;
     private const int BYTE_OFFSET = 8 /*Offset*/ + 3 /*Separators*/;

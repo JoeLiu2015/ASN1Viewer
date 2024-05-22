@@ -1,4 +1,6 @@
-﻿namespace ASN1Viewer
+﻿using ASN1Viewer.ui;
+
+namespace ASN1Viewer
 {
   partial class MainForm
   {
@@ -71,7 +73,7 @@
       this.tbBtnLang = new System.Windows.Forms.ToolStripDropDownButton();
       this.tbBtnCheckUpdate = new System.Windows.Forms.ToolStripButton();
       this.imageListToolbar = new System.Windows.Forms.ImageList(this.components);
-      this.hexViewer1 = new ASN1Viewer.HexViewer();
+      this.hexViewer1 = new ASN1Viewer.ui.HexViewer();
       this.panel2 = new System.Windows.Forms.Panel();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
