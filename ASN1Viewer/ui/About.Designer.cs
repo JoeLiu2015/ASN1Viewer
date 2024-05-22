@@ -1,4 +1,4 @@
-﻿namespace ASN1Viewer {
+﻿namespace ASN1Viewer.ui {
   partial class About {
     /// <summary>
     /// Required designer variable.

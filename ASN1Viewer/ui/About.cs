@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace ASN1Viewer {
+namespace ASN1Viewer.ui {
   partial class About : Form {
     public About() {
       InitializeComponent();

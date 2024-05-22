@@ -52,12 +52,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="About.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="About.Designer.cs">
-      <DependentUpon>About.cs</DependentUpon>
-    </Compile>
     <Compile Include="ASNNode.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Lang.cs" />
@@ -86,11 +80,11 @@
     <Compile Include="schema\Tokenizer.cs" />
     <Compile Include="schema\TypeDef.cs" />
     <Compile Include="schema\Utils.cs" />
-    <Compile Include="TabControlEx.cs">
-      <SubType>UserControl</SubType>
+    <Compile Include="ui\About.cs">
+      <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TabControlEx.Designer.cs">
-      <DependentUpon>TabControlEx.cs</DependentUpon>
+    <Compile Include="ui\About.Designer.cs">
+      <DependentUpon>About.cs</DependentUpon>
     </Compile>
     <Compile Include="ui\EditASN1Node.cs">
       <SubType>Form</SubType>
@@ -159,9 +153,6 @@
     <Compile Include="zip\Zlib\ZlibCodec.cs" />
     <Compile Include="zip\Zlib\ZlibConstants.cs" />
     <Compile Include="zip\Zlib\ZlibStream.cs" />
-    <EmbeddedResource Include="About.resx">
-      <DependentUpon>About.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -178,11 +169,8 @@
     <EmbeddedResource Include="schema\SchemaDlg.resx">
       <DependentUpon>SchemaDlg.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TabControlEx.resx">
-      <DependentUpon>TabControlEx.cs</DependentUpon>
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <SubType>Designer</SubType>
-      <LastGenOutput>TabControlEx1.Designer.cs</LastGenOutput>
+    <EmbeddedResource Include="ui\About.resx">
+      <DependentUpon>About.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ui\EditASN1Node.resx">
       <DependentUpon>EditASN1Node.cs</DependentUpon>
