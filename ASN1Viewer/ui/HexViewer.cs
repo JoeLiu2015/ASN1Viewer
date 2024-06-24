@@ -63,7 +63,7 @@ namespace ASN1Viewer.ui {
       }
       this.Text = sb.ToString();
     }
-    public void SelectNode(int start, int end, int contentStart, int contentEnd, byte[] data) {
+    public void SelectNode(int tagLen, int start, int end, int contentStart, int contentEnd, byte[] data) {
       m_SelectedBytes = data;
       m_SelectedStart = start;
       m_SelectedEnd = end;
@@ -75,8 +75,8 @@ namespace ASN1Viewer.ui {
         m_SelectionStart = m_SelectionEnd = 0;
       }
       if (end > start) {
-        SetColor(start, 1, Color.Red);
-        SetColor(start + 1, contentStart - start - 1, Color.Blue);
+        SetColor(start, tagLen, Color.Red);
+        SetColor(start + tagLen, contentStart - start - tagLen, Color.Blue);
         SetColor(contentEnd, end - contentEnd, Color.Blue);
         SetColor(contentStart, contentEnd - contentStart, Color.Green);
         m_SelectionStart = BytesPos2Line(start) * LINE_LEN;

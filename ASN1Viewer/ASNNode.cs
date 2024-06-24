@@ -142,7 +142,34 @@ namespace ASN1Viewer {
     public bool IsSequence    { get { return IsConstructed && TagNum == UNIVERSAL_SEQ_SEQOF;           } }
     public bool IsConstructed { get { return (m_Tag & NODE_CONSTRUCTED_MASK) == NODE_CONSTRUCTED_MASK; } }
     public int TagClass       { get { return m_Tag & NODE_CLASS_MASK;      } }
-    public int TagNum         { get { return m_Tag & NODE_TAG_NUMBER_MASK; } }
+
+    public int TagNum {
+      get {
+        int tagNum = m_Tag & 0xFF & NODE_TAG_NUMBER_MASK;
+        if (tagNum < NODE_TAG_NUMBER_MASK) return tagNum;
+
+        int bytesCount = TagLen - 1;
+        tagNum = 0;
+        for (int i = 0; i < bytesCount; i++) {
+          int v = m_Data[m_ElementStart + 1 + i] & 0xFF;
+          tagNum = tagNum * 128 + (v & 0x7F);
+        }
+        return tagNum;
+      }
+    }
+
+    public int TagLen {
+      get {
+        int tagNum = m_Tag & 0xFF & NODE_TAG_NUMBER_MASK;
+        if (tagNum < NODE_TAG_NUMBER_MASK) return 1;
+
+        int len = 2;
+        int pos = m_ElementStart + 1;
+        while (m_Data[pos++] >= 0x80) len++;
+
+        return len;
+      }
+    }
     public int Tag            { get { return m_Tag;                        } }
     public int Start          { get { return m_ElementStart;               } }
     public int End            { get { return m_ElementEnd;                 } }
@@ -562,7 +589,9 @@ namespace ASN1Viewer {
       retElementStart = pos;
 
       retType = data[pos++] & 0xFF;  // skip type byte
-
+      if ((retType & NODE_TAG_NUMBER_MASK) == NODE_TAG_NUMBER_MASK) {
+        while ((data[pos++] & 0xFF) >= 0x80) { }
+      }
       int lengthByte = data[pos++] & 0xFF;
       if (retType == 0x00 && lengthByte == 0x00) {
         retContentStart = pos;

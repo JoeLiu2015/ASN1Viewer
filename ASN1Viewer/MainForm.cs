@@ -162,7 +162,7 @@ namespace ASN1Viewer
       this.tabControl1.SelectTab(this.tabPageBytes);
       TreeNode tn = e.Node;
       ASNNode an = tn.Tag as ASNNode;
-      this.hexViewer1.SelectNode(an.Start, an.End, an.ContentStart, an.ContentEnd, an.Data);
+      this.hexViewer1.SelectNode(an.TagLen, an.Start, an.End, an.ContentStart, an.ContentEnd, an.Data);
       this.ShowNodeInfo(tn);
     }
     private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e) {
@@ -521,7 +521,7 @@ namespace ASN1Viewer
 
     private void ShowNodeInfo(TreeNode tn) {
       ASNNode an = tn.Tag as ASNNode;
-      this.hexViewer1.SelectNode(an.Start, an.End, an.ContentStart, an.ContentEnd, an.Data);
+      this.hexViewer1.SelectNode(an.TagLen, an.Start, an.End, an.ContentStart, an.ContentEnd, an.Data);
       this.ShowStatusText(SystemColors.WindowText, String.Format(Lang.T["STATUS_ASNINFO"], an.Start, an.TagNum, an.ContentEnd - an.ContentStart, GetAllChildCount(tn)));
     }
 
