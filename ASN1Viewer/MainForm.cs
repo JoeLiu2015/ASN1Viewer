@@ -14,6 +14,16 @@ namespace ASN1Viewer
     private schema.SchemaDlg m_SchemaDlg = null;
     private ui.EditASN1Node m_EditNodeDlg = null;
 
+    public static Font PREFERED_FONT {
+      get {
+        Font f = new Font("YouYuan", 9.75F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
+        if (f.Name != "YouYuan") {
+          f = new Font("Consolas", 9.75F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
+        }
+        return f;
+      }
+    }
+
     public MainForm()
     {
       InitializeComponent();
@@ -21,6 +31,8 @@ namespace ASN1Viewer
       this.txtInput.AllowDrop = true;
       this.txtInput.DragDrop += MainForm_DragDrop;
       this.txtInput.DragEnter += MainForm_DragEnter;
+      this.txtInput.Font = PREFERED_FONT;
+      this.hexViewer1.Font = PREFERED_FONT;
     }
 
     private void MainForm_Load(object sender, EventArgs e) {
@@ -36,6 +48,7 @@ namespace ASN1Viewer
     }
     private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
       Config.Instance.Save();
+      this.treeView1.Nodes.Clear();
     }
     private void MainForm_DragDrop(object sender, DragEventArgs e) {
       string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
@@ -418,16 +431,7 @@ namespace ASN1Viewer
     }
 
     private void UpdateHexBytesView(byte[] data, ASNNode a) {
-      if (a == null) {
-        if (hexViewer1.BlockCount > 1) this.hexViewer1.RefreshView();
-      } else {
-        this.hexViewer1.ClearData();
-        List<int> ranges = ASNNode.GetDisplayBytes(a);
-        for (int i = 0; i < ranges.Count / 2; i++) {
-          this.hexViewer1.AddData(data, ranges[i * 2], ranges[i * 2 + 1]);
-        }
-        this.hexViewer1.RefreshView();
-      }
+      this.hexViewer1.Data = data;
     }
     private void UpdateFormTitle(string fileOrText) {
       if (File.Exists(fileOrText)) {

@@ -508,12 +508,9 @@ namespace ASN1Viewer
       this.hexViewer1.ForeColor = System.Drawing.Color.Gray;
       this.hexViewer1.Location = new System.Drawing.Point(0, 0);
       this.hexViewer1.Name = "hexViewer1";
-      this.hexViewer1.ReadOnly = true;
-      this.hexViewer1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
       this.hexViewer1.Size = new System.Drawing.Size(604, 333);
       this.hexViewer1.TabIndex = 0;
       this.hexViewer1.Text = "";
-      this.hexViewer1.WordWrap = false;
       // 
       // panel2
       // 

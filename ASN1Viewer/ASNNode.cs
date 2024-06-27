@@ -444,29 +444,6 @@ namespace ASN1Viewer {
       node.ParseChild();
       return node;
     }
-    public static List<int> GetDisplayBytes(ASNNode root) {
-      int start = 0;
-      Stack<ASNNode> n = new Stack<ASNNode>();
-      List<int> ret = new List<int>();
-      n.Push(root);
-      while (n.Count > 0) {
-        ASNNode an = n.Pop();
-        if (an.ChildCount > 0) {
-          for (int i = an.ChildCount - 1; i >= 0; i--) n.Push(an[i]);
-        } else {
-          if (an.End - an.Start > 8192) {
-            int skipStart = (an.Start + 16 * 4) / 16 * 16;
-            int skipEnd = (an.End - 16 * 4) / 16 * 16;
-            ret.Add(start);
-            ret.Add(skipStart - start); // length
-            start = skipEnd;
-          }
-        }
-      }
-      ret.Add(start);
-      ret.Add(root.End - start);
-      return ret;
-    }
 
     private static String GetString(byte[] d) {
       if (Utils.IsPrintable(d)) return Utils.GetUtf8String(d);
