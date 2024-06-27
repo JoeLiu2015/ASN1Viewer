@@ -14,15 +14,6 @@ namespace ASN1Viewer
     private schema.SchemaDlg m_SchemaDlg = null;
     private ui.EditASN1Node m_EditNodeDlg = null;
 
-    public static Font PREFERED_FONT {
-      get {
-        Font f = new Font("YouYuan", 9.75F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
-        if (f.Name != "YouYuan") {
-          f = new Font("Consolas", 9.75F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
-        }
-        return f;
-      }
-    }
 
     public MainForm()
     {
@@ -31,8 +22,6 @@ namespace ASN1Viewer
       this.txtInput.AllowDrop = true;
       this.txtInput.DragDrop += MainForm_DragDrop;
       this.txtInput.DragEnter += MainForm_DragEnter;
-      this.txtInput.Font = PREFERED_FONT;
-      this.hexViewer1.Font = PREFERED_FONT;
     }
 
     private void MainForm_Load(object sender, EventArgs e) {
