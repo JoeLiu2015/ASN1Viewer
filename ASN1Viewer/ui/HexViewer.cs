@@ -22,10 +22,7 @@ namespace ASN1Viewer.ui {
     private int _scrollVmax;
     private int _scrollVpos;
     private VScrollBar _vScrollBar;
-    private Timer _thumbTrackTimer = new Timer();
-    private int _thumbTrackPosition;
-    
-    private int _lastThumbtrack;
+
     
     private int _startByte;
     private int _endByte;
@@ -63,14 +60,6 @@ namespace ASN1Viewer.ui {
 
       _stringFormat = new StringFormat(StringFormat.GenericTypographic);
       _stringFormat.FormatFlags = StringFormatFlags.MeasureTrailingSpaces;
-
-      _thumbTrackTimer.Interval = 50;
-      _thumbTrackTimer.Tick += new EventHandler(PerformScrollThumbTrack);
-    }
-
-    protected override void Dispose(bool disposing) {
-      base.Dispose(disposing);
-      if (_thumbTrackTimer.Enabled) _thumbTrackTimer.Enabled = false;
     }
 
     #endregion
@@ -99,40 +88,17 @@ namespace ASN1Viewer.ui {
           PerformScrollLines(-_linesCountInScreen);
           break;
         case ScrollEventType.ThumbPosition:
-          int lPos = FromScrollPos(e.NewValue);
-          PerformScrollThumpPosition(lPos);
           break;
         case ScrollEventType.ThumbTrack:
-          // to avoid performance problems use a refresh delay implemented with a timer
-          if (_thumbTrackTimer.Enabled) // stop old timer
-            _thumbTrackTimer.Enabled = false;
-
-          // perform scroll immediately only if last refresh is very old
-          int currentThumbTrack = System.Environment.TickCount;
-          if (currentThumbTrack - _lastThumbtrack > THUMPTRACKDELAY) {
-            PerformScrollThumbTrack(null, null);
-            _lastThumbtrack = currentThumbTrack;
-            break;
-          }
-
-          // start thumbtrack timer 
-          _thumbTrackPosition = FromScrollPos(e.NewValue);
-          _thumbTrackTimer.Enabled = true;
+          if (e.NewValue + _vScrollBar.LargeChange > _scrollVmax) e.NewValue = _scrollVmax;
+          PerformScrollToLine(e.NewValue);
           break;
         
         default:
           break;
       }
-
-      e.NewValue = ToScrollPos(_scrollVpos);
     }
 
-
-    void PerformScrollThumbTrack(object sender, EventArgs e) {
-      _thumbTrackTimer.Enabled = false;
-      PerformScrollThumpPosition(_thumbTrackPosition);
-      _lastThumbtrack = Environment.TickCount;
-    }
 
     void UpdateScrollSize() {
       System.Diagnostics.Debug.WriteLine("UpdateScrollSize()", "HexViewer");
@@ -140,17 +106,12 @@ namespace ASN1Viewer.ui {
       // calc scroll bar info
       if (_data != null && _data.Length > 0 ) {
         int totalLines = (_data.Length + BYTES_COUNT_PER_LINE - 1) / BYTES_COUNT_PER_LINE;
-        int scrollmax = totalLines - _linesCountInScreen;
+        int screenLines = (int)Math.Floor(_recHex.Height / _charSize.Height);
+        int scrollmax = totalLines - screenLines;
         scrollmax = Math.Max(0, scrollmax);
 
-        int scrollpos = (int)(_startByte / BYTES_COUNT_PER_LINE);
+        int scrollpos = _startByte / BYTES_COUNT_PER_LINE;
 
-        if (scrollmax < _scrollVmax) {
-          /* Data size has been decreased. */
-          if (_scrollVpos == _scrollVmax)
-            /* Scroll one line up if we at bottom. */
-            PerformScrollLines(-1);
-        }
 
         if (scrollmax == _scrollVmax && scrollpos == _scrollVpos)
           return;
@@ -169,56 +130,20 @@ namespace ASN1Viewer.ui {
     void UpdateVScroll() {
       System.Diagnostics.Debug.WriteLine("UpdateVScroll()", "HexViewer");
 
-      int max = ToScrollMax(_scrollVmax);
-
-      if (max > 0) {
-        _vScrollBar.Minimum = 0;
-        _vScrollBar.Maximum = max;
-        _vScrollBar.Value = ToScrollPos(_scrollVpos);
-        _vScrollBar.Visible = true;
-      } else {
-        _vScrollBar.Visible = false;
-      }
+      _vScrollBar.Minimum = 0;
+      _vScrollBar.Maximum = _scrollVmax;
+      _vScrollBar.Value = _scrollVpos;
     }
 
-    int ToScrollPos(int value) {
-      int max = 65535;
 
-      if (_scrollVmax < max)
-        return (int)value;
-      else {
-        double valperc = (double)value / (double)_scrollVmax * (double)100;
-        int res = (int)Math.Floor((double)max / (double)100 * valperc);
-        res = (int)Math.Max(0, res);
-        res = (int)Math.Min(_scrollVmax, res);
-        return res;
-      }
-    }
 
-    int FromScrollPos(int value) {
-      int max = 65535;
-      if (_scrollVmax < max) {
-        return value;
-      } else {
-        double valperc = (double)value / (double)max * (double)100;
-        int res = (int)Math.Floor((double)_scrollVmax / (double)100 * valperc);
-        return res;
-      }
-    }
-
-    int ToScrollMax(int value) {
-      int max = 65535;
-      if (value > max)
-        return max;
-      else
-        return value;
-    }
 
     void PerformScrollToLine(int pos) {
       if (pos < 0 || pos > _scrollVmax || pos == _scrollVpos)
         return;
 
       _scrollVpos = pos;
+      System.Diagnostics.Debug.WriteLine("PerformScrollToLine: " + pos, "HexViewer");
 
       UpdateVScroll();
       UpdateVisibilityBytes();
@@ -239,13 +164,6 @@ namespace ASN1Viewer.ui {
     }
 
     void PerformScrollThumpPosition(int pos) {
-      // Bug fix: Scroll to end, do not scroll to end
-      int difference = (_scrollVmax > 65535) ? 10 : 9;
-
-      if (ToScrollPos(pos) == ToScrollMax(_scrollVmax) - difference)
-        pos = _scrollVmax;
-      // End Bug fix
-
 
       PerformScrollToLine(pos);
     }
@@ -603,9 +521,9 @@ namespace ASN1Viewer.ui {
     public void SelectNode(int tagLen, int start, int end, int contentStart, int contentEnd, byte[] data) {
       _tagLen = tagLen;
       _start = start;
-      _end = end;
+      _end = end - 1;
       _contentStart = contentStart;
-      _contentEnd = contentEnd;
+      _contentEnd = contentEnd - 1;
       ScrollByteIntoView(start);
       Invalidate();
     }
