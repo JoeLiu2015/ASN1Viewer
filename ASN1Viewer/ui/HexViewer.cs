@@ -6,9 +6,9 @@ using System.Windows.Forms.VisualStyles;
 
 namespace ASN1Viewer.ui {
   internal class HexViewer : Control {
-    private const int THUMPTRACKDELAY      = 50;
     private const int BYTES_COUNT_PER_LINE = 16;
     private readonly static Color GRAY_COLOR = Color.Gray; 
+
     #region Fields
 
     private Rectangle _recContent;
@@ -67,7 +67,6 @@ namespace ASN1Viewer.ui {
     #region Scroll methods
 
     void _vScrollBar_Scroll(object sender, ScrollEventArgs e) {
-      System.Diagnostics.Debug.WriteLine("Scroll: " + e.Type, "HexViewer");
       switch (e.Type) {
         case ScrollEventType.First:
           break;
@@ -76,16 +75,16 @@ namespace ASN1Viewer.ui {
         case ScrollEventType.EndScroll:
           break;
         case ScrollEventType.SmallIncrement:
-          PerformScrollLines(1);
+          PerformScrollToLine(1 + _scrollVpos);
           break;
         case ScrollEventType.SmallDecrement:
-          PerformScrollLines(-1);
+          PerformScrollToLine(-1 + _scrollVpos);
           break;
         case ScrollEventType.LargeIncrement:
-          PerformScrollLines(_linesCountInScreen);
+          PerformScrollToLine(_linesCountInScreen+ _scrollVpos);
           break;
         case ScrollEventType.LargeDecrement:
-          PerformScrollLines(-_linesCountInScreen);
+          PerformScrollToLine(-_linesCountInScreen + _scrollVpos);
           break;
         case ScrollEventType.ThumbPosition:
           break;
@@ -101,8 +100,6 @@ namespace ASN1Viewer.ui {
 
 
     void UpdateScrollSize() {
-      System.Diagnostics.Debug.WriteLine("UpdateScrollSize()", "HexViewer");
-
       // calc scroll bar info
       if (_data != null && _data.Length > 0 ) {
         int totalLines = (_data.Length + BYTES_COUNT_PER_LINE - 1) / BYTES_COUNT_PER_LINE;
@@ -128,8 +125,6 @@ namespace ASN1Viewer.ui {
     }
 
     void UpdateVScroll() {
-      System.Diagnostics.Debug.WriteLine("UpdateVScroll()", "HexViewer");
-
       _vScrollBar.Minimum = 0;
       _vScrollBar.Maximum = _scrollVmax;
       _vScrollBar.Value = _scrollVpos;
@@ -139,49 +134,16 @@ namespace ASN1Viewer.ui {
 
 
     void PerformScrollToLine(int pos) {
-      if (pos < 0 || pos > _scrollVmax || pos == _scrollVpos)
+      pos = Math.Max(0, pos);
+      pos = Math.Min(_scrollVmax, pos);
+      if (pos == _scrollVpos)
         return;
 
       _scrollVpos = pos;
-      System.Diagnostics.Debug.WriteLine("PerformScrollToLine: " + pos, "HexViewer");
-
       UpdateVScroll();
       UpdateVisibilityBytes();
       Invalidate();
     }
-
-    void PerformScrollLines(int lines) {
-      int pos;
-      if (lines > 0) {
-        pos = Math.Min(_scrollVmax, _scrollVpos + lines);
-      } else if (lines < 0) {
-        pos = Math.Max(0, _scrollVpos + lines);
-      } else {
-        return;
-      }
-
-      PerformScrollToLine(pos);
-    }
-
-    void PerformScrollThumpPosition(int pos) {
-
-      PerformScrollToLine(pos);
-    }
-
-    private void ScrollByteIntoView(int index) {
-      System.Diagnostics.Debug.WriteLine("ScrollByteIntoView(int index)", "HexViewer");
-
-
-      if (index < _startByte) {
-        int line = index / BYTES_COUNT_PER_LINE;
-        PerformScrollThumpPosition(line);
-      } else if (index > _endByte) {
-        int line = index / BYTES_COUNT_PER_LINE;
-        line -= _linesCountInScreen - 1;
-        PerformScrollThumpPosition(line);
-      }
-    }
-
     #endregion
 
     #region Paint methods
@@ -234,8 +196,6 @@ namespace ASN1Viewer.ui {
       base.OnPaint(e);
       if (_data == null)
         return;
-
-      System.Diagnostics.Debug.WriteLine("OnPaint " + DateTime.Now.ToString(), "HexViewer");
 
       // draw only in the content rectangle, so exclude the border and the scrollbar.
       Region r = new Region(ClientRectangle);
@@ -524,7 +484,7 @@ namespace ASN1Viewer.ui {
       _end = end - 1;
       _contentStart = contentStart;
       _contentEnd = contentEnd - 1;
-      ScrollByteIntoView(start);
+      PerformScrollToLine(start/BYTES_COUNT_PER_LINE);
       Invalidate();
     }
     string ConvertByteToHex(byte b) {
@@ -543,7 +503,7 @@ namespace ASN1Viewer.ui {
     }
     protected override void OnMouseWheel(MouseEventArgs e) {
       int linesToScroll = -(e.Delta * SystemInformation.MouseWheelScrollLines / 120);
-      this.PerformScrollLines(linesToScroll);
+      this.PerformScrollToLine(linesToScroll + _scrollVpos);
       base.OnMouseWheel(e);
     }
     protected override void OnResize(EventArgs e) {
