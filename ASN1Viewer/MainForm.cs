@@ -268,7 +268,6 @@ namespace ASN1Viewer
       if (this.treeView1.SelectedNode != null) {
         this.ShowNodeInfo(this.treeView1.SelectedNode);
       }
-      this.UpdateHexBytesView(null, null);
       this.UpdateToolbar();
     }
     private void UpdateRecentFiles() {
