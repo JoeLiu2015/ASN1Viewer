@@ -227,6 +227,13 @@ namespace ASN1Viewer {
       
       if (ChildCount == 0) {
         byte[] d = Value;
+        
+        if (TagNum == UNIVERSAL_BOOLEAN && d.Length == 0) {
+          // Fix a bug that parse a Kerberos bytes "01 00", it is not a real ASN.1 bool value, but it appear in a big ASN.1 structure,
+          // We don't want it fail here
+          return " - NO VALUE";
+        }
+
         if (TagNum == UNIVERSAL_INTEGER) {
           ulong val = 0;
           for (int i = 0; i < d.Length; i++) {
