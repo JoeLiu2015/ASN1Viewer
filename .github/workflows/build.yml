@@ -1,4 +1,4 @@
-name: Build C# .NET Framework 2.0 Windows Desktop Application
+name: Build
 
 on:
   push:
