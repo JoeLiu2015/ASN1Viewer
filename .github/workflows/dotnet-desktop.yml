@@ -1,0 +1,23 @@
+name: Build C# .NET Framework 2.0 Windows Desktop Application
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1.0.3
+
+    - name: Build solution
+      run: msbuild ASN1Viewer.sln /p:Configuration=Release
