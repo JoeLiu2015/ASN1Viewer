@@ -53,9 +53,12 @@ namespace ASN1Viewer.schema {
           if (fi.Name == "oids.txt") {
             string[] lines = File.ReadAllLines(fi.FullName);
             for (int j = 0; j < lines.Length; j++) {
+              string s = lines[j].Trim();
+              if (s.Length == 0 || s.StartsWith("#")) continue;
+              int pos = s.IndexOf(" ");
               string[] parts = lines[j].Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-              if (parts.Length == 2) {
-                OID_NAMES.Add(parts[0], parts[1]);
+              if (pos > 0) {
+                OID_NAMES.Add(s.Substring(0, pos), s.Substring(pos).TrimStart());
               }
             }
             continue;
