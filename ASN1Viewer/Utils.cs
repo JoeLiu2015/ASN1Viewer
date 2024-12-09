@@ -218,6 +218,21 @@ namespace ASN1Viewer {
       return sb.ToString();
     }
     public static byte[] ParseHexBytes(string text) {
+      if (text.StartsWith("00000000| ")) {
+        string[] lines = text.Split('\n');
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < lines.Length; i++) {
+          if (lines[i].Length > 61 && lines[i][8] == '|' && lines[i][61] == '|') {
+            sb.Append(lines[i].Substring(9, 52));
+          } else {
+            goto PARSE;
+          }
+        }
+        text = sb.ToString();
+      }
+
+
+      PARSE:
       if (DIGITS == null) {
         DIGITS = new byte[128];
         for (int i = (int)'0'; i <= (int)'9'; i++) DIGITS[i] = (byte)(i - (int)'0');

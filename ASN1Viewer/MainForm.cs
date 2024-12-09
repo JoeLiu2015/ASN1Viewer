@@ -14,6 +14,8 @@ namespace ASN1Viewer
     private schema.SchemaDlg m_SchemaDlg = null;
     private ui.EditASN1Node m_EditNodeDlg = null;
 
+    private static readonly string TEST_FILES =
+      Path.Combine(new FileInfo(Application.ExecutablePath).DirectoryName, "files\\TestFiles");
 
     public MainForm()
     {
@@ -109,7 +111,7 @@ namespace ASN1Viewer
       ToolStripMenuItem item = sender as ToolStripMenuItem;
       string txt = item.Text;
       int pos = txt.IndexOf(' ');
-      string filename = new FileInfo(".\\files\\TestFiles\\" + txt.Substring(pos+1).Trim()).FullName;
+      string filename = new FileInfo(Path.Combine(TEST_FILES, txt.Substring(pos+1).Trim())).FullName;
       if (!File.Exists(filename)) {
         MessageBox.Show(this, String.Format(Lang.T["MSG_NOFILE"], filename), Lang.T["PROD_NAME"], MessageBoxButtons.OK, MessageBoxIcon.Error);
         return;
@@ -282,7 +284,7 @@ namespace ASN1Viewer
     }
     private void UpdateTestFiles() {
       this.menuTestFiles.DropDownItems.Clear();
-      string[] files = Directory.GetFiles(".\\files\\TestFiles");
+      string[] files = Directory.GetFiles(TEST_FILES);
       for (int i = 0; i < files.Length; i++) {
         ToolStripMenuItem mi = new ToolStripMenuItem();
         mi.Text = (i + 1) + " " + new FileInfo(files[i]).Name;

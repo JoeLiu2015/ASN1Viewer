@@ -443,7 +443,7 @@ namespace ASN1Viewer {
       };
       if (retElementEnd < asn.Length) {
         for (int i = retElementEnd; i < asn.Length; i++) {
-          if (asn[i] != 0) throw new Exception("Invalid ASN.1 data. No zero bytes unparsed.");
+          if (asn[i] != 0 && asn[i] != ' ' && asn[i] != '\r' && asn[i] != '\n') throw new Exception("Invalid ASN.1 data. No zero bytes unparsed.");
         }
       }
 
