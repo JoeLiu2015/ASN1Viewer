@@ -241,6 +241,7 @@ namespace ASN1Viewer {
           }
           return val.ToString();
         } else if (TagNum == UNIVERSAL_BITSTRING) {
+          if (d.Length == 0) return "(0 bits)";
           int paddingCount = d[0];
           int bitCount = (d.Length - 1)*8 - paddingCount;
           return String.Format("({0} bits){1}", bitCount, Utils.HexEncode(d, 1, d.Length - 1));
