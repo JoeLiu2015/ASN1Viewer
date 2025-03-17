@@ -133,6 +133,11 @@ namespace ASN1Viewer {
         return Utils.CopyBytes(m_Data, m_ContentStart, m_ContentEnd - m_ContentStart);
       }
     }
+    public byte[] Bytes {
+      get {
+        return Utils.CopyBytes(m_Data, m_ElementStart, m_ContentEnd - m_ElementStart);
+      }
+    }
     public byte[] Data {
       get {
         return m_Data;

@@ -75,6 +75,9 @@ namespace ASN1Viewer
       this.imageListToolbar = new System.Windows.Forms.ImageList(this.components);
       this.hexViewer1 = new ASN1Viewer.ui.HexViewer();
       this.panel2 = new System.Windows.Forms.Panel();
+      this.ctxMenuCopyHexBytes = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
+      this.ctxMenuParseContent = new System.Windows.Forms.ToolStripMenuItem();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
       this.splitContainer1.SuspendLayout();
@@ -394,9 +397,12 @@ namespace ASN1Viewer
             this.ctxMenuCollapse,
             this.ctxMenuExpand,
             this.toolStripMenuItem3,
-            this.ctxMenuEdit});
+            this.ctxMenuEdit,
+            this.ctxMenuCopyHexBytes,
+            this.toolStripMenuItem4,
+            this.ctxMenuParseContent});
       this.ctxMenuTree.Name = "ctxMenuTree";
-      this.ctxMenuTree.Size = new System.Drawing.Size(181, 98);
+      this.ctxMenuTree.Size = new System.Drawing.Size(181, 148);
       // 
       // ctxMenuCollapse
       // 
@@ -522,6 +528,25 @@ namespace ASN1Viewer
       this.panel2.Size = new System.Drawing.Size(622, 369);
       this.panel2.TabIndex = 1;
       // 
+      // ctxMenuCopyHexBytes
+      // 
+      this.ctxMenuCopyHexBytes.Name = "copyHexBytesToolStripMenuItem";
+      this.ctxMenuCopyHexBytes.Size = new System.Drawing.Size(180, 22);
+      this.ctxMenuCopyHexBytes.Text = "Copy Hex Bytes";
+      this.ctxMenuCopyHexBytes.Click += new System.EventHandler(this.ctxMenuCopyHexBytes_Click);
+      // 
+      // toolStripMenuItem4
+      // 
+      this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+      this.toolStripMenuItem4.Size = new System.Drawing.Size(177, 6);
+      // 
+      // ctxMenuParseContent
+      // 
+      this.ctxMenuParseContent.Name = "forceParseToolStripMenuItem";
+      this.ctxMenuParseContent.Size = new System.Drawing.Size(180, 22);
+      this.ctxMenuParseContent.Text = "Parse Content";
+      this.ctxMenuParseContent.Click += new System.EventHandler(this.ctxMenuParseContent_Click);
+      // 
       // MainForm
       // 
       this.AllowDrop = true;
@@ -607,6 +632,9 @@ namespace ASN1Viewer
     private System.Windows.Forms.Panel panel2;
     private System.Windows.Forms.ToolStripMenuItem ctxMenuEdit;
     private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
+    private System.Windows.Forms.ToolStripMenuItem ctxMenuCopyHexBytes;
+    private System.Windows.Forms.ToolStripSeparator toolStripMenuItem4;
+    private System.Windows.Forms.ToolStripMenuItem ctxMenuParseContent;
   }
 }
 

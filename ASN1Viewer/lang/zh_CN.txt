@@ -17,6 +17,8 @@ MENU_CHECKVER  : 检查版本更新(&C)...
 MENU_COLLAPSE  : 收起(&C)
 MENU_EXPAND    : 展开(&E)
 MENU_EDIT      : 编辑(&d)
+MENU_COPYHEX   : 拷贝Hex
+MENU_PARSE     : 解析内容
 TAB_INPUT      : 输入文本
 TAB_BYTES      : 二进制字节
 STATUS_ASNINFO : 类型[{1}], 位置[{0}], 数据长度[{2}], 所有子节点[{3}]

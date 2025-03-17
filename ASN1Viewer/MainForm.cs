@@ -158,6 +158,18 @@ namespace ASN1Viewer
 
       m_EditNodeDlg.Text = m_EditNodeDlg.Title + "(" + n.Text + ")";
     }
+    private void ctxMenuCopyHexBytes_Click(object sender, EventArgs e) {
+      TreeNode n = ctxMenuTree.Tag as TreeNode;
+      ASNNode an = (ASNNode)n.Tag;
+      byte[] v = an.Bytes;
+      Clipboard.SetText(Utils.GetHexString(v, 0, v.Length));
+      MessageBox.Show(Utils.GetHexString(v, 0, v.Length));
+    }
+    private void ctxMenuParseContent_Click(object sender, EventArgs e) {
+      TreeNode n = ctxMenuTree.Tag as TreeNode;
+
+
+    }
     private void txtInput_TextChanged(object sender, EventArgs e) {
       ParseInputText(this.txtInput.Text);
 			// Test merge
@@ -177,12 +189,14 @@ namespace ASN1Viewer
         ctxMenuCollapse.Enabled = true;
         ctxMenuExpand.Enabled = true;
         ctxMenuEdit.Enabled = false;
+        ctxMenuParseContent.Enabled = false;
         this.ctxMenuTree.Show(this.treeView1, e.Location);
       } else if (e.Button == MouseButtons.Right && e.Node.Nodes.Count == 0) {
         this.treeView1.SelectedNode = e.Node;
         ctxMenuCollapse.Enabled = false;
         ctxMenuExpand.Enabled = false;
         ctxMenuEdit.Enabled = true;
+        ctxMenuParseContent.Enabled = true;
         ctxMenuTree.Tag = e.Node;
         this.ctxMenuTree.Show(this.treeView1, e.Location);
       }
@@ -265,6 +279,8 @@ namespace ASN1Viewer
       this.ctxMenuCollapse.Text = Lang.T["MENU_COLLAPSE"];
       this.ctxMenuExpand.Text   = Lang.T["MENU_EXPAND"];
       this.ctxMenuEdit.Text     = Lang.T["MENU_EDIT"];
+      this.ctxMenuCopyHexBytes.Text = Lang.T["MENU_COPYHEX"];
+      this.ctxMenuParseContent.Text = Lang.T["MENU_PARSE"];
       this.tabPageInput.Text    = Lang.T["TAB_INPUT"];
       this.tabPageBytes.Text    = Lang.T["TAB_BYTES"];
       if (this.treeView1.SelectedNode != null) {

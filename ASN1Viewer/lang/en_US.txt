@@ -17,6 +17,8 @@ MENU_CHECKVER  : &Check Update...
 MENU_COLLAPSE  : &Collapse
 MENU_EXPAND    : &Expand
 MENU_EDIT      : E&dit
+MENU_COPYHEX   : Copy HexBytes
+MENU_PARSE     : Parse Content
 TAB_INPUT      : Input Text
 TAB_BYTES      : ASN.1 Bytes
 STATUS_ASNINFO : Tag[{1}], Offset[{0}], Length[{2}], AllChild[{3}] 
