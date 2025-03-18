@@ -434,12 +434,15 @@ namespace ASN1Viewer {
     //=====================================
 
     public static ASNNode Parse(byte[] asn) {
+      return Parse(asn, 0, asn.Length, true);
+    }
+    public static ASNNode Parse(byte[] asn, int offset, int len, bool checkTail) {
       int retType = 0;
       int retContentStart = 0;
       int retContentEnd = 0;
       int retElementStart = 0;
       int retElementEnd = 0;
-      if (!MeasureElement(asn, 0, asn.Length, 
+      if (!MeasureElement(asn, offset, offset + len, 
         ref retType, 
         ref retContentStart, 
         ref retContentEnd, 
@@ -447,7 +450,7 @@ namespace ASN1Viewer {
         ref retElementEnd)) {
         throw new Exception("Invalid ASN.1 data.");
       };
-      if (retElementEnd < asn.Length) {
+      if (retElementEnd < asn.Length && checkTail) {
         for (int i = retElementEnd; i < asn.Length; i++) {
           if (asn[i] != 0 && asn[i] != ' ' && asn[i] != '\r' && asn[i] != '\n') throw new Exception("Invalid ASN.1 data. No zero bytes unparsed.");
         }

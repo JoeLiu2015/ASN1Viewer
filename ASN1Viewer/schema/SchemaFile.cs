@@ -46,8 +46,9 @@ namespace ASN1Viewer.schema {
       SCHEMA_FILES.Clear();
       KNOWN_TYPES.Clear();
       OID_NAMES.Clear();
-      if (Directory.Exists(".\\files\\Asn1Modules")) {
-        string[] files = Directory.GetFiles(".\\files\\Asn1Modules");
+      string modulesPath = ASN1Viewer.Utils.GetFullPath("files\\Asn1Modules");
+      if (Directory.Exists(modulesPath)) {
+        string[] files = Directory.GetFiles(modulesPath);
         for (int i = 0; i < files.Length; i++) {
           FileInfo fi = new FileInfo(files[i]);
           if (fi.Name == "oids.txt") {

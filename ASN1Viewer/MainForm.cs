@@ -14,9 +14,7 @@ namespace ASN1Viewer
     private schema.SchemaDlg m_SchemaDlg = null;
     private ui.EditASN1Node m_EditNodeDlg = null;
 
-    private static readonly string TEST_FILES =
-      Path.Combine(new FileInfo(Application.ExecutablePath).DirectoryName, "files\\TestFiles");
-
+    private static readonly string TEST_FILES = Utils.GetFullPath("files\\TestFiles");
     public MainForm()
     {
       InitializeComponent();
@@ -163,12 +161,15 @@ namespace ASN1Viewer
       ASNNode an = (ASNNode)n.Tag;
       byte[] v = an.Bytes;
       Clipboard.SetText(Utils.GetHexString(v, 0, v.Length));
-      MessageBox.Show(Utils.GetHexString(v, 0, v.Length));
     }
     private void ctxMenuParseContent_Click(object sender, EventArgs e) {
       TreeNode n = ctxMenuTree.Tag as TreeNode;
-
-
+      ASNNode an = (ASNNode)n.Tag;
+      try {
+        ASNNode internalNode = ASNNode.Parse(an.Data, an.ContentStart, an.ContentEnd - an.ContentStart, false);
+        n.Nodes.Add(CreateNode(internalNode));
+      } catch {
+      }
     }
     private void txtInput_TextChanged(object sender, EventArgs e) {
       ParseInputText(this.txtInput.Text);

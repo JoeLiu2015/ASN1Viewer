@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Reflection;
+using System.Windows.Forms;
 
 namespace ASN1Viewer {
   public class Utils {
@@ -355,6 +356,10 @@ namespace ASN1Viewer {
       }
 
       return DateTime.MinValue;
+    }
+
+    public static String GetFullPath(String path) {
+      return Path.Combine(new FileInfo(Application.ExecutablePath).DirectoryName, path);
     }
   }
 }
