@@ -462,8 +462,18 @@ namespace ASN1Viewer {
     }
 
     private static String GetString(byte[] d) {
-      if (Utils.IsPrintable(d)) return Utils.GetUtf8String(d);
-      return "(" + d.Length + " bytes)" + Utils.HexEncode(d, 0, d.Length);
+      if (d.Length <= 256 && Utils.IsPrintable(d)) return Utils.GetUtf8String(d);
+
+      string bytes = "(" + d.Length + " bytes)";
+      string tail = "";
+      if (d.Length > 256) {
+        d = Utils.CopyBytes(d, 0, 256);
+        tail = "...";
+      }
+
+      if (Utils.IsPrintable(d))  return bytes + Utils.GetUtf8String(d) + tail;
+      if (Utils.IsUTF8String(d)) return bytes + Utils.GetUtf8String(d) + tail;
+      return bytes + Utils.HexEncode(d, 0, d.Length) + tail;
     }
     private static String GetBMPString(byte[] d) {
       if (d.Length % 2 == 0) return System.Text.Encoding.GetEncoding("UTF-16BE").GetString(d);

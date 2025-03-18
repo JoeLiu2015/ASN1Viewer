@@ -71,16 +71,12 @@ namespace ASN1Viewer {
       return true;
     }
     public static bool IsUTF8String(byte[] data) {
-      bool isASCII = true;
-      for (int i = 0; i < data.Length; i++) {
-        if ((data[i] & 0xFF) >= 0x80) {
-          isASCII = false;
-          break;
-        }
+      try {
+        byte[] d = GetUtf8Bytes(GetUtf8String(data, 0, data.Length));
+        return BytesEqual(d, data);
+      } catch {
+        return false;
       }
-      if (isASCII) return true;
-      byte[] d = GetUtf8Bytes(GetUtf8String(data, 0, data.Length));
-      return BytesEqual(d, data);
     }
     public static bool IsPrintable(byte[] d) {
       for (int i = 0; i < d.Length; i++) {
