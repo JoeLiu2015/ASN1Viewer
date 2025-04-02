@@ -172,8 +172,11 @@ namespace ASN1Viewer
       }
     }
     private void txtInput_TextChanged(object sender, EventArgs e) {
+      if (txtInput.Tag != null) {
+        txtInput.Tag = null; // The text changed event is fired by loading file.
+        return;
+      }
       ParseInputText(this.txtInput.Text);
-			// Test merge
     }
     private void treeView1_AfterSelect(object sender, TreeViewEventArgs e) {
       this.tabControl1.SelectTab(this.tabPageBytes);
@@ -361,13 +364,12 @@ namespace ASN1Viewer
         bytes = File.ReadAllBytes(file);
       }
       if (ParseASN1(bytes)) {
-        this.txtInput.TextChanged -= this.txtInput_TextChanged;
+        this.txtInput.Tag = file;
         if (data != null) {
           this.txtInput.Text = Utils.FixCRLF(data);
         } else {
           this.txtInput.Text = Utils.HexDump(bytes, 0);
         }
-        this.txtInput.TextChanged += this.txtInput_TextChanged;
 
         // Update recent files
         string normalizePath = Path.GetFullPath(new Uri(file).LocalPath)
