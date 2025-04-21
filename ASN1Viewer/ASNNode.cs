@@ -434,7 +434,7 @@ namespace ASN1Viewer {
     //=====================================
 
     public static ASNNode Parse(byte[] asn) {
-      return Parse(asn, 0, asn.Length, true);
+      return Parse(asn, 0, asn.Length, false);
     }
     public static ASNNode Parse(byte[] asn, int offset, int len, bool checkTail) {
       int retType = 0;
