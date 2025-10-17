@@ -4,6 +4,7 @@ RSAPublicKey
 RSAPrivateKey
 DSAPublicKey
 DSAPrivateKey
+ECPrivateKey
 EncryptedPrivateKeyInfo
 PrivateKeyInfo
 PublicKeyInfo

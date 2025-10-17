@@ -181,6 +181,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app.ico" />
+    <Content Include="files\Asn1Modules\ECPrivateKey_RFC5915_PKCS-1.txt" />
     <Content Include="files\Asn1Modules\Known_ASN1_Types.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -242,6 +243,7 @@
     <None Include="files\TestFiles\PKCS1_DSA_PUB.pub">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="files\TestFiles\PKCS1_EC_PRIVATE.pem" />
     <None Include="files\TestFiles\PKCS1_RSA_PRIVATE.pem">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

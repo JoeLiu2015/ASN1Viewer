@@ -156,6 +156,10 @@ namespace ASN1Viewer
 
       m_EditNodeDlg.Text = m_EditNodeDlg.Title + "(" + n.Text + ")";
     }
+    private void ctxMenuCopyText_Click(object sender, EventArgs e) {
+      TreeNode n = ctxMenuTree.Tag as TreeNode;
+      Clipboard.SetText(n.Text);
+    }
     private void ctxMenuCopyHexBytes_Click(object sender, EventArgs e) {
       TreeNode n = ctxMenuTree.Tag as TreeNode;
       ASNNode an = (ASNNode)n.Tag;
@@ -283,6 +287,7 @@ namespace ASN1Viewer
       this.ctxMenuCollapse.Text = Lang.T["MENU_COLLAPSE"];
       this.ctxMenuExpand.Text   = Lang.T["MENU_EXPAND"];
       this.ctxMenuEdit.Text     = Lang.T["MENU_EDIT"];
+      this.ctxMenuCopyText.Text = Lang.T["MENU_COPYTEXT"];
       this.ctxMenuCopyHexBytes.Text = Lang.T["MENU_COPYHEX"];
       this.ctxMenuParseContent.Text = Lang.T["MENU_PARSE"];
       this.tabPageInput.Text    = Lang.T["TAB_INPUT"];

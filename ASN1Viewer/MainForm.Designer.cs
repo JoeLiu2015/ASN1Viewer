@@ -35,11 +35,13 @@ namespace ASN1Viewer
       this.treeView1 = new System.Windows.Forms.TreeView();
       this.imageListDataType = new System.Windows.Forms.ImageList(this.components);
       this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+      this.panel2 = new System.Windows.Forms.Panel();
       this.tabControl1 = new System.Windows.Forms.TabControl();
       this.tabPageInput = new System.Windows.Forms.TabPage();
       this.txtInput = new System.Windows.Forms.RichTextBox();
       this.tabPageBytes = new System.Windows.Forms.TabPage();
       this.panel1 = new System.Windows.Forms.Panel();
+      this.hexViewer1 = new ASN1Viewer.ui.HexViewer();
       this.menuMainStrip = new System.Windows.Forms.MenuStrip();
       this.menuFile = new System.Windows.Forms.ToolStripMenuItem();
       this.menuOpen = new System.Windows.Forms.ToolStripMenuItem();
@@ -65,6 +67,9 @@ namespace ASN1Viewer
       this.ctxMenuExpand = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
       this.ctxMenuEdit = new System.Windows.Forms.ToolStripMenuItem();
+      this.ctxMenuCopyHexBytes = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
+      this.ctxMenuParseContent = new System.Windows.Forms.ToolStripMenuItem();
       this.toolbar = new System.Windows.Forms.ToolStrip();
       this.tbBtnOpen = new System.Windows.Forms.ToolStripButton();
       this.tbBtnRecent = new System.Windows.Forms.ToolStripDropDownButton();
@@ -73,14 +78,11 @@ namespace ASN1Viewer
       this.tbBtnLang = new System.Windows.Forms.ToolStripDropDownButton();
       this.tbBtnCheckUpdate = new System.Windows.Forms.ToolStripButton();
       this.imageListToolbar = new System.Windows.Forms.ImageList(this.components);
-      this.hexViewer1 = new ASN1Viewer.ui.HexViewer();
-      this.panel2 = new System.Windows.Forms.Panel();
-      this.ctxMenuCopyHexBytes = new System.Windows.Forms.ToolStripMenuItem();
-      this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
-      this.ctxMenuParseContent = new System.Windows.Forms.ToolStripMenuItem();
+      this.ctxMenuCopyText = new System.Windows.Forms.ToolStripMenuItem();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
       this.splitContainer1.SuspendLayout();
+      this.panel2.SuspendLayout();
       this.tabControl1.SuspendLayout();
       this.tabPageInput.SuspendLayout();
       this.tabPageBytes.SuspendLayout();
@@ -89,7 +91,6 @@ namespace ASN1Viewer
       this.statusStrip1.SuspendLayout();
       this.ctxMenuTree.SuspendLayout();
       this.toolbar.SuspendLayout();
-      this.panel2.SuspendLayout();
       this.SuspendLayout();
       // 
       // treeView1
@@ -168,6 +169,16 @@ namespace ASN1Viewer
       this.splitContainer1.TabIndex = 1;
       this.splitContainer1.TabStop = false;
       // 
+      // panel2
+      // 
+      this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+      this.panel2.Controls.Add(this.tabControl1);
+      this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.panel2.Location = new System.Drawing.Point(0, 0);
+      this.panel2.Name = "panel2";
+      this.panel2.Size = new System.Drawing.Size(622, 369);
+      this.panel2.TabIndex = 1;
+      // 
       // tabControl1
       // 
       this.tabControl1.Controls.Add(this.tabPageInput);
@@ -224,6 +235,18 @@ namespace ASN1Viewer
       this.panel1.Name = "panel1";
       this.panel1.Size = new System.Drawing.Size(604, 333);
       this.panel1.TabIndex = 0;
+      // 
+      // hexViewer1
+      // 
+      this.hexViewer1.BackColor = System.Drawing.SystemColors.Window;
+      this.hexViewer1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+      this.hexViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.hexViewer1.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.hexViewer1.ForeColor = System.Drawing.Color.Gray;
+      this.hexViewer1.Location = new System.Drawing.Point(0, 0);
+      this.hexViewer1.Name = "hexViewer1";
+      this.hexViewer1.Size = new System.Drawing.Size(604, 333);
+      this.hexViewer1.TabIndex = 0;
       // 
       // menuMainStrip
       // 
@@ -398,11 +421,12 @@ namespace ASN1Viewer
             this.ctxMenuExpand,
             this.toolStripMenuItem3,
             this.ctxMenuEdit,
+            this.ctxMenuCopyText,
             this.ctxMenuCopyHexBytes,
             this.toolStripMenuItem4,
             this.ctxMenuParseContent});
       this.ctxMenuTree.Name = "ctxMenuTree";
-      this.ctxMenuTree.Size = new System.Drawing.Size(181, 148);
+      this.ctxMenuTree.Size = new System.Drawing.Size(181, 170);
       // 
       // ctxMenuCollapse
       // 
@@ -429,6 +453,25 @@ namespace ASN1Viewer
       this.ctxMenuEdit.Size = new System.Drawing.Size(180, 22);
       this.ctxMenuEdit.Text = "E&dit";
       this.ctxMenuEdit.Click += new System.EventHandler(this.ctxMenuEdit_Click);
+      // 
+      // ctxMenuCopyHexBytes
+      // 
+      this.ctxMenuCopyHexBytes.Name = "ctxMenuCopyHexBytes";
+      this.ctxMenuCopyHexBytes.Size = new System.Drawing.Size(180, 22);
+      this.ctxMenuCopyHexBytes.Text = "Copy Hex Bytes";
+      this.ctxMenuCopyHexBytes.Click += new System.EventHandler(this.ctxMenuCopyHexBytes_Click);
+      // 
+      // toolStripMenuItem4
+      // 
+      this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+      this.toolStripMenuItem4.Size = new System.Drawing.Size(177, 6);
+      // 
+      // ctxMenuParseContent
+      // 
+      this.ctxMenuParseContent.Name = "ctxMenuParseContent";
+      this.ctxMenuParseContent.Size = new System.Drawing.Size(180, 22);
+      this.ctxMenuParseContent.Text = "Parse Content";
+      this.ctxMenuParseContent.Click += new System.EventHandler(this.ctxMenuParseContent_Click);
       // 
       // toolbar
       // 
@@ -505,47 +548,12 @@ namespace ASN1Viewer
       this.imageListToolbar.Images.SetKeyName(3, "lang.png");
       this.imageListToolbar.Images.SetKeyName(4, "checkUpdate.png");
       // 
-      // hexViewer1
+      // ctxMenuCopyText
       // 
-      this.hexViewer1.BackColor = System.Drawing.SystemColors.Window;
-      this.hexViewer1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-      this.hexViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.hexViewer1.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.hexViewer1.ForeColor = System.Drawing.Color.Gray;
-      this.hexViewer1.Location = new System.Drawing.Point(0, 0);
-      this.hexViewer1.Name = "hexViewer1";
-      this.hexViewer1.Size = new System.Drawing.Size(604, 333);
-      this.hexViewer1.TabIndex = 0;
-      this.hexViewer1.Text = "";
-      // 
-      // panel2
-      // 
-      this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-      this.panel2.Controls.Add(this.tabControl1);
-      this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.panel2.Location = new System.Drawing.Point(0, 0);
-      this.panel2.Name = "panel2";
-      this.panel2.Size = new System.Drawing.Size(622, 369);
-      this.panel2.TabIndex = 1;
-      // 
-      // ctxMenuCopyHexBytes
-      // 
-      this.ctxMenuCopyHexBytes.Name = "copyHexBytesToolStripMenuItem";
-      this.ctxMenuCopyHexBytes.Size = new System.Drawing.Size(180, 22);
-      this.ctxMenuCopyHexBytes.Text = "Copy Hex Bytes";
-      this.ctxMenuCopyHexBytes.Click += new System.EventHandler(this.ctxMenuCopyHexBytes_Click);
-      // 
-      // toolStripMenuItem4
-      // 
-      this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-      this.toolStripMenuItem4.Size = new System.Drawing.Size(177, 6);
-      // 
-      // ctxMenuParseContent
-      // 
-      this.ctxMenuParseContent.Name = "forceParseToolStripMenuItem";
-      this.ctxMenuParseContent.Size = new System.Drawing.Size(180, 22);
-      this.ctxMenuParseContent.Text = "Parse Content";
-      this.ctxMenuParseContent.Click += new System.EventHandler(this.ctxMenuParseContent_Click);
+      this.ctxMenuCopyText.Name = "ctxMenuCopyText";
+      this.ctxMenuCopyText.Size = new System.Drawing.Size(180, 22);
+      this.ctxMenuCopyText.Text = "Copy Text";
+      this.ctxMenuCopyText.Click += new System.EventHandler(this.ctxMenuCopyText_Click);
       // 
       // MainForm
       // 
@@ -570,6 +578,7 @@ namespace ASN1Viewer
       this.splitContainer1.Panel1.ResumeLayout(false);
       this.splitContainer1.Panel2.ResumeLayout(false);
       this.splitContainer1.ResumeLayout(false);
+      this.panel2.ResumeLayout(false);
       this.tabControl1.ResumeLayout(false);
       this.tabPageInput.ResumeLayout(false);
       this.tabPageBytes.ResumeLayout(false);
@@ -581,7 +590,6 @@ namespace ASN1Viewer
       this.ctxMenuTree.ResumeLayout(false);
       this.toolbar.ResumeLayout(false);
       this.toolbar.PerformLayout();
-      this.panel2.ResumeLayout(false);
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -635,6 +643,7 @@ namespace ASN1Viewer
     private System.Windows.Forms.ToolStripMenuItem ctxMenuCopyHexBytes;
     private System.Windows.Forms.ToolStripSeparator toolStripMenuItem4;
     private System.Windows.Forms.ToolStripMenuItem ctxMenuParseContent;
+    private System.Windows.Forms.ToolStripMenuItem ctxMenuCopyText;
   }
 }
 

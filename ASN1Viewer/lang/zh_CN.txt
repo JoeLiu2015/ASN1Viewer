@@ -17,6 +17,7 @@ MENU_CHECKVER  : 检查版本更新(&C)...
 MENU_COLLAPSE  : 收起(&C)
 MENU_EXPAND    : 展开(&E)
 MENU_EDIT      : 编辑(&d)
+MENU_COPYTEXT  : 拷贝文本
 MENU_COPYHEX   : 拷贝Hex
 MENU_PARSE     : 解析内容
 TAB_INPUT      : 输入文本
