@@ -30,10 +30,6 @@
       <Project>{95B6C2FD-FC08-4C8C-9541-3B116C042DF9}</Project>
       <Name>ASN1Viewer.Core</Name>
     </ProjectReference>
-    <Content Include="..\ASN1Viewer\files\Asn1Modules\*.txt">
-      <Link>files\Asn1Modules\%(Filename)%(Extension)</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="..\ASN1Viewer\files\TestFiles\*">
       <Link>fixtures\samples\%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

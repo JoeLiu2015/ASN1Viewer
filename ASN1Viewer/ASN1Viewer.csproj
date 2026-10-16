@@ -170,43 +170,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app.ico" />
-    <Content Include="files\Asn1Modules\ECPrivateKey_RFC5915_PKCS-1.txt" />
-    <Content Include="files\Asn1Modules\Known_ASN1_Types.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="files\Asn1Modules\NIST-SHA2.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="files\Asn1Modules\oids.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="files\Asn1Modules\PKCS12_RFC7292_PKCS-12.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="files\Asn1Modules\PKCS1_RFC8017_PKCS-1.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="files\Asn1Modules\PKCS8_RFC5958_PKCS-8.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="files\Asn1Modules\RFC3281_PKIXAttributeCertificate.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="files\Asn1Modules\RFC5280_PKIX1Explicit88.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="files\Asn1Modules\RFC5280_PKIX1Implicit88.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="files\Asn1Modules\RFC5652_AttributeCertificateVersion1.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="files\Asn1Modules\RFC5652_CryptographicMessageSyntax2004.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="files\Asn1Modules\UsefulDefinitions.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="files\TestFiles\PKCS7_CompressedData.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

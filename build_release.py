@@ -65,8 +65,10 @@ def main():
         Path("ASN1Viewer.exe.config"): ROOT / "ASN1Viewer/app.config",
         Path("LICENSE"): ROOT / "LICENSE",
     }
-    for directory in ("Asn1Modules", "TestFiles"):
-        source = ROOT / "ASN1Viewer/files" / directory
+    for directory, source in (
+        ("Asn1Modules", ROOT / "ASN1Viewer.Core/files/Asn1Modules"),
+        ("TestFiles", ROOT / "ASN1Viewer/files/TestFiles"),
+    ):
         resources = sorted(path for path in source.rglob("*") if path.is_file())
         if not resources:
             raise FileNotFoundError("Missing release resources: " + str(source))

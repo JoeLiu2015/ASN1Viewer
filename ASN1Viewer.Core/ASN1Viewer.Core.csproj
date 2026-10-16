@@ -39,5 +39,10 @@
     <Compile Include="schema\Utils.cs" />
     <Compile Include="ASNParser.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="files\Asn1Modules\*.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
