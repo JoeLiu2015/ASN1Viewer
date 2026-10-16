@@ -72,6 +72,7 @@ namespace ASN1Viewer
       this.ctxMenuParseContent = new System.Windows.Forms.ToolStripMenuItem();
       this.toolbar = new System.Windows.Forms.ToolStrip();
       this.tbBtnOpen = new System.Windows.Forms.ToolStripButton();
+      this.tbBtnTestFiles = new System.Windows.Forms.ToolStripDropDownButton();
       this.tbBtnRecent = new System.Windows.Forms.ToolStripDropDownButton();
       this.tbBtnTopMost = new System.Windows.Forms.ToolStripButton();
       this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -476,6 +477,7 @@ namespace ASN1Viewer
       // 
       this.toolbar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tbBtnOpen,
+            this.tbBtnTestFiles,
             this.tbBtnRecent,
             this.tbBtnTopMost,
             this.toolStripSeparator1,
@@ -496,6 +498,16 @@ namespace ASN1Viewer
       this.tbBtnOpen.Name = "tbBtnOpen";
       this.tbBtnOpen.Size = new System.Drawing.Size(23, 22);
       this.tbBtnOpen.Text = "toolStripButton1";
+      // 
+      // tbBtnTestFiles
+      // 
+      this.tbBtnTestFiles.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.tbBtnTestFiles.Image = ((System.Drawing.Image)(resources.GetObject("tbBtnTestFiles.Image")));
+      this.tbBtnTestFiles.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+      this.tbBtnTestFiles.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.tbBtnTestFiles.Name = "tbBtnTestFiles";
+      this.tbBtnTestFiles.Size = new System.Drawing.Size(29, 22);
+      this.tbBtnTestFiles.Text = "Test Files";
       // 
       // tbBtnRecent
       // 
@@ -625,6 +637,7 @@ namespace ASN1Viewer
     private System.Windows.Forms.ImageList imageListDataType;
     private System.Windows.Forms.ToolStrip toolbar;
     private System.Windows.Forms.ToolStripButton tbBtnOpen;
+    private System.Windows.Forms.ToolStripDropDownButton tbBtnTestFiles;
     private System.Windows.Forms.ToolStripDropDownButton tbBtnRecent;
     private System.Windows.Forms.ToolStripButton tbBtnTopMost;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;

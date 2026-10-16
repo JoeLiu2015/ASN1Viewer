@@ -317,12 +317,16 @@ namespace ASN1Viewer
         this.menuTestFiles.DropDownItems.Add(mi);
       }
       this.menuTestFiles.Enabled = this.menuTestFiles.DropDownItems.Count > 0;
+      this.tbBtnTestFiles.Enabled = this.menuTestFiles.Enabled;
     }
 
     private void UpdateToolbar() {
       this.tbBtnOpen.ToolTipText = this.menuOpen.Text;
       this.tbBtnOpen.Click -= this.menuOpen_Click;
       this.tbBtnOpen.Click += this.menuOpen_Click;
+      this.tbBtnTestFiles.Text = this.menuTestFiles.Text;
+      this.tbBtnTestFiles.ToolTipText = this.menuTestFiles.Text;
+      this.tbBtnTestFiles.DropDown = this.menuTestFiles.DropDown;
       this.tbBtnRecent.ToolTipText = this.menuRecent.Text;
       this.tbBtnRecent.DropDown = this.menuRecent.DropDown;
       this.tbBtnTopMost.ToolTipText = this.menuTopMost.Text;

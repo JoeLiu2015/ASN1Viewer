@@ -296,6 +296,9 @@
   <data name="tbBtnOpen.Image" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>files\Icons\toolbar_openFile.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="tbBtnTestFiles.Image" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>files\Icons\toolbar_testFiles.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="tbBtnRecent.Image" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>files\Icons\toolbar_recentFiles.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
