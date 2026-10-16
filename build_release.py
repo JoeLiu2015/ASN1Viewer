@@ -12,31 +12,31 @@ import sys
 ROOT = Path(__file__).resolve().parent
 
 
-def find_msbuild(explicit):
-    if explicit:
-        candidate = shutil.which(explicit)
-        if candidate:
-            return candidate
-        raise FileNotFoundError("MSBuild not found: " + explicit)
-    candidate = shutil.which("MSBuild.exe")
-    if candidate:
-        return candidate
-    vswhere = Path(os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)")) / (
-        "Microsoft Visual Studio/Installer/vswhere.exe"
-    )
-    if vswhere.is_file():
-        result = subprocess.run(
-            [str(vswhere), "-latest", "-products", "*", "-requires",
-             "Microsoft.Component.MSBuild", "-find", r"MSBuild\**\Bin\MSBuild.exe"],
-            check=True, stdout=subprocess.PIPE, encoding="utf-8",
+def find_msbuild(explicit=None):
+    candidate = shutil.which(explicit or "MSBuild.exe")
+    if explicit and not candidate:
+        raise FileNotFoundError("Specified MSBuild not found: " + explicit)
+    if not candidate:
+        vswhere = Path(os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)")) / (
+            "Microsoft Visual Studio/Installer/vswhere.exe"
         )
-        for line in result.stdout.splitlines():
-            if Path(line).is_file():
-                return line
-    raise FileNotFoundError(
-        "MSBuild not found. Use a Visual Studio Developer Command Prompt "
-        "or pass --msbuild PATH."
-    )
+        if vswhere.is_file():
+            result = subprocess.run(
+                [str(vswhere), "-products", "*", "-requires",
+                 "Microsoft.Component.MSBuild", "-find", r"MSBuild\**\Bin\MSBuild.exe"],
+                check=True, stdout=subprocess.PIPE, encoding="utf-8",
+            )
+            candidate = next((line for line in result.stdout.splitlines()
+                              if Path(line).is_file()), None)
+    if not candidate:
+        raise FileNotFoundError(
+            "MSBuild not found. Install Visual Studio Build Tools "
+            "or add MSBuild.exe's directory to PATH."
+        )
+    candidate = str(Path(candidate).resolve())
+    print("MSBuild ({}): {}".format(
+        "specified" if explicit else "auto-selected", candidate), flush=True)
+    return candidate
 
 
 def run(command):
@@ -47,7 +47,7 @@ def run(command):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("destination", type=Path, help="New directory for the complete release")
-    parser.add_argument("--msbuild", help="Optional path to MSBuild.exe")
+    parser.add_argument("--msbuild", help="Use this MSBuild.exe instead of automatic discovery")
     args = parser.parse_args()
     destination = args.destination.expanduser().resolve()
     if destination.exists():
