@@ -320,13 +320,6 @@ namespace ASN1Viewer
     }
 
     private void UpdateToolbar() {
-      this.toolbar.ImageList = imageListToolbar;
-      this.tbBtnOpen.ImageIndex = 0;
-      this.tbBtnRecent.ImageIndex = 1;
-      this.tbBtnTopMost.ImageIndex = 2;
-      this.tbBtnLang.ImageIndex = 3;
-      this.tbBtnCheckUpdate.ImageIndex = 4;
-
       this.tbBtnOpen.ToolTipText = this.menuOpen.Text;
       this.tbBtnOpen.Click -= this.menuOpen_Click;
       this.tbBtnOpen.Click += this.menuOpen_Click;

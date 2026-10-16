@@ -77,7 +77,6 @@ namespace ASN1Viewer
       this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
       this.tbBtnLang = new System.Windows.Forms.ToolStripDropDownButton();
       this.tbBtnCheckUpdate = new System.Windows.Forms.ToolStripButton();
-      this.imageListToolbar = new System.Windows.Forms.ImageList(this.components);
       this.ctxMenuCopyText = new System.Windows.Forms.ToolStripMenuItem();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
@@ -492,6 +491,7 @@ namespace ASN1Viewer
       // 
       this.tbBtnOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.tbBtnOpen.Image = ((System.Drawing.Image)(resources.GetObject("tbBtnOpen.Image")));
+      this.tbBtnOpen.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
       this.tbBtnOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.tbBtnOpen.Name = "tbBtnOpen";
       this.tbBtnOpen.Size = new System.Drawing.Size(23, 22);
@@ -501,6 +501,7 @@ namespace ASN1Viewer
       // 
       this.tbBtnRecent.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.tbBtnRecent.Image = ((System.Drawing.Image)(resources.GetObject("tbBtnRecent.Image")));
+      this.tbBtnRecent.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
       this.tbBtnRecent.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.tbBtnRecent.Name = "tbBtnRecent";
       this.tbBtnRecent.Size = new System.Drawing.Size(29, 22);
@@ -510,6 +511,7 @@ namespace ASN1Viewer
       // 
       this.tbBtnTopMost.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.tbBtnTopMost.Image = ((System.Drawing.Image)(resources.GetObject("tbBtnTopMost.Image")));
+      this.tbBtnTopMost.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
       this.tbBtnTopMost.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.tbBtnTopMost.Name = "tbBtnTopMost";
       this.tbBtnTopMost.Size = new System.Drawing.Size(23, 22);
@@ -524,6 +526,7 @@ namespace ASN1Viewer
       // 
       this.tbBtnLang.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.tbBtnLang.Image = ((System.Drawing.Image)(resources.GetObject("tbBtnLang.Image")));
+      this.tbBtnLang.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
       this.tbBtnLang.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.tbBtnLang.Name = "tbBtnLang";
       this.tbBtnLang.Size = new System.Drawing.Size(29, 22);
@@ -533,20 +536,11 @@ namespace ASN1Viewer
       // 
       this.tbBtnCheckUpdate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.tbBtnCheckUpdate.Image = ((System.Drawing.Image)(resources.GetObject("tbBtnCheckUpdate.Image")));
+      this.tbBtnCheckUpdate.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
       this.tbBtnCheckUpdate.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.tbBtnCheckUpdate.Name = "tbBtnCheckUpdate";
       this.tbBtnCheckUpdate.Size = new System.Drawing.Size(23, 22);
       this.tbBtnCheckUpdate.Text = "toolStripButton3";
-      // 
-      // imageListToolbar
-      // 
-      this.imageListToolbar.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListToolbar.ImageStream")));
-      this.imageListToolbar.TransparentColor = System.Drawing.Color.Transparent;
-      this.imageListToolbar.Images.SetKeyName(0, "openFile.png");
-      this.imageListToolbar.Images.SetKeyName(1, "recentFiles.png");
-      this.imageListToolbar.Images.SetKeyName(2, "topMost.png");
-      this.imageListToolbar.Images.SetKeyName(3, "lang.png");
-      this.imageListToolbar.Images.SetKeyName(4, "checkUpdate.png");
       // 
       // ctxMenuCopyText
       // 
@@ -635,7 +629,6 @@ namespace ASN1Viewer
     private System.Windows.Forms.ToolStripButton tbBtnTopMost;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     private System.Windows.Forms.ToolStripButton tbBtnCheckUpdate;
-    private System.Windows.Forms.ImageList imageListToolbar;
     private System.Windows.Forms.ToolStripDropDownButton tbBtnLang;
     private System.Windows.Forms.Panel panel2;
     private System.Windows.Forms.ToolStripMenuItem ctxMenuEdit;
