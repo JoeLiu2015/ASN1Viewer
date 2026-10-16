@@ -21,3 +21,6 @@ jobs:
 
     - name: Build solution
       run: msbuild ASN1Viewer.sln /p:Configuration=Release
+
+    - name: Run behavior baseline tests
+      run: .\ASN1Viewer.Tests\bin\Release\ASN1Viewer.Tests.exe

@@ -1,0 +1,23 @@
+# fixture|decoded bytes|root tag|root children|total nodes|root end
+samples/PKCS1_DSA_PRIVATE.pem|858|48|6|7|858
+samples/PKCS1_DSA_PUB.pub|820|48|4|5|820
+samples/PKCS1_EC_PRIVATE.pem|121|48|4|7|121
+samples/PKCS1_RSA_PRIVATE.pem|1192|48|9|10|1192
+samples/PKCS1_RSA_PUB.pub|270|48|2|3|270
+samples/PKCS12.pfx|3000|48|3|54|1562
+samples/PKCS7_Certs.p7b|3051|48|2|276|3051
+samples/PKCS7_CompressedData.txt|1040|48|2|11|1040
+samples/PKCS7_EncryptedData.txt|476|48|2|37|476
+samples/PKCS7_SignedData.txt|263888|48|2|214|263888
+samples/PKCS8_DSA_PRIVATE.pem|617|48|3|10|617
+samples/PKCS8_DSA_PUB.pub|842|48|2|9|842
+samples/PKCS8_EC_PRIVATE.pem|138|48|3|11|138
+samples/PKCS8_EC_PUB.pub|91|48|2|5|91
+samples/PKCS8_RSA_PRIVATE.pem|1218|48|3|16|1218
+samples/PKCS8_RSA_PUB.pub|294|48|2|8|294
+samples/Test_MultiBytesTag.crt|794|48|3|107|794
+samples/X509_CRL.crl|1041407|48|3|164093|1041407
+samples/X509.cer|405|48|3|33|405
+regressions/test_BoolNoValue.txt|757|96|3|40|757
+regressions/test_IsASNValid.txt|2622|48|2|295|2622
+regressions/test_MultiBytesTag.txt|794|48|3|107|794
