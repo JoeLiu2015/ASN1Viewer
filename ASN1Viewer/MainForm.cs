@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
@@ -14,10 +13,11 @@ namespace ASN1Viewer
     private schema.SchemaDlg m_SchemaDlg = null;
     private ui.EditASN1Node m_EditNodeDlg = null;
 
-    private static readonly string TEST_FILES = Utils.GetFullPath("files\\TestFiles");
+    private static readonly string TEST_FILES = DesktopUtils.GetFullPath("files\\TestFiles");
     public MainForm()
     {
       InitializeComponent();
+      schema.SchemaFile.ReloadSchemas(DesktopUtils.GetFullPath("files\\Asn1Modules"));
       this.txtInput.Font = this.hexViewer1.Font;
       this.txtInput.AllowDrop = true;
       this.txtInput.DragDrop += MainForm_DragDrop;
@@ -360,10 +360,7 @@ namespace ASN1Viewer
         return;
       }
       string data = File.ReadAllText(file);
-      byte[] bytes = Utils.ParseHexBytes(data);
-      if (bytes == null) {
-        bytes = Utils.ParsePEM(data);
-      }
+      byte[] bytes = ASNParser.DecodeText(data);
       if (bytes == null) {
         data = null;
         bytes = File.ReadAllBytes(file);
@@ -393,11 +390,7 @@ namespace ASN1Viewer
     private void ParseInputText(string text) {
       if (text.Length == 0) return;
 
-      byte[] data = Utils.ParseHexBytes(text);
-      
-      if (data == null) {
-        data = Utils.ParsePEM(text);
-      }
+      byte[] data = ASNParser.DecodeText(text);
 
       if (data == null) {
         Err("The input text is invalid ASN.1 data.");
@@ -410,28 +403,8 @@ namespace ASN1Viewer
     }
     private bool ParseASN1(byte[] data) {
       try {
-        ASNNode a = ASNNode.Parse(data);
-        Dictionary<string, schema.SchemaFile> schemas = schema.SchemaFile.Schemas;
+        ASNNode a = ASNParser.Parse(data);
 
-        // Match schema
-        Dictionary<string, schema.TypeDef> matched = new Dictionary<string, schema.TypeDef>();
-        foreach (KeyValuePair<string, schema.SchemaFile> kv in schemas) {
-          Dictionary<string, schema.TypeDef> types = kv.Value.Types;
-          foreach (KeyValuePair<string, schema.TypeDef> nt in types) {
-            //if (nt.Key == "PFX") {
-            //  int debug = 1;
-            //}
-            if (!matched.ContainsKey(nt.Key) && nt.Value.Match(a, false)) matched.Add(nt.Key, nt.Value);
-          }
-        }
-        List<string> knownTypes = schema.SchemaFile.KNOWN_TYPES;
-        for (int i = 0; i < knownTypes.Count; i++) {
-          if (matched.ContainsKey(knownTypes[i])) {
-            matched[knownTypes[i]].Match(a, true);
-            break;
-          }
-        }
-        
         this.treeView1.Nodes.Clear();
         this.treeView1.Nodes.Add(CreateNode(a));
         this.ShowStatusText(Color.Green, Lang.T["STATUS_SUCCEED"]);
@@ -495,7 +468,7 @@ namespace ASN1Viewer
             return;
           }
         } else {
-          schema.SchemaFile.ReloadSchemas();
+          schema.SchemaFile.ReloadSchemas(DesktopUtils.GetFullPath("files\\Asn1Modules"));
         }
       } catch (Exception ex) {
         ShowUpdateResult("Failed", ex.Message);

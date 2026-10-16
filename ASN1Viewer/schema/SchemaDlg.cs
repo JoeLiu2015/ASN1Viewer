@@ -27,7 +27,7 @@ namespace ASN1Viewer.schema {
       Dictionary<string, SchemaFile> files = SchemaFile.Schemas;
       foreach (KeyValuePair<string, SchemaFile> kv in files) {
         try {
-          this.treeView1.Nodes.Add(kv.Value.ExportToTreeNode());
+          this.treeView1.Nodes.Add(SchemaTreeBuilder.Create(kv.Value));
         } catch (Exception ex) {
           MessageBox.Show("Failed to load ASN1 module '" + kv.Key + "'.", "Error", MessageBoxButtons.OK,
             MessageBoxIcon.Error);

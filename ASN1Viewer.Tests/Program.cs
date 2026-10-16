@@ -21,6 +21,8 @@ namespace ASN1Viewer.Tests {
       Run("edit growing and shrinking content", TestEditResize);
       Run("edit across long-form length boundary", TestEditLongLength);
       Run("schema matching and field annotations", TestSchemas);
+      Run("automatic schema selection", TestAutomaticSchemas);
+      Run("Core has no desktop dependency", TestCoreDependencies);
       Run("fixture inventory", TestFixtureInventory);
       foreach (string line in File.ReadAllLines(Path.Combine(BasePath, "samples.tsv"))) {
         if (line.Length == 0 || line.StartsWith("#")) continue;
@@ -170,7 +172,7 @@ namespace ASN1Viewer.Tests {
     }
 
     private static void TestSchemas() {
-      SchemaFile.ReloadSchemas();
+      SchemaFile.ReloadSchemas(Path.Combine(BasePath, "files/Asn1Modules"));
       Check(SchemaFile.Schemas.Count > 0, "Schemas must be deployed beside the test executable");
       Check(SchemaFile.KNOWN_TYPES.Contains("Certificate"), "Known types loaded");
       Equal("(rsaEncryption)", SchemaFile.GetOIDName("1.2.840.113549.1.1.1"), "OID lookup");
@@ -195,6 +197,42 @@ namespace ASN1Viewer.Tests {
         Check(root.ToString().StartsWith(cases[i, 1] + " "), "Root schema label");
         Check(root[0].ToString().StartsWith(cases[i, 2] + " "), "Child field label");
         Check(!type.Match(ASNNode.Parse(Hex("05 00")), false), "Schema must reject NULL");
+      }
+    }
+
+    private static void TestAutomaticSchemas() {
+      string[,] cases = {
+        { "X509.cer", "Certificate" },
+        { "PKCS12.pfx", "PFX" },
+        { "PKCS1_RSA_PRIVATE.pem", "RSAPrivateKey" },
+        { "PKCS1_RSA_PUB.pub", "RSAPublicKey" },
+        { "PKCS7_Certs.p7b", "ContentInfo" }
+      };
+      for (int i = 0; i < cases.GetLength(0); i++) {
+        byte[] data = ReadFixture("samples/" + cases[i, 0]);
+        ASNNode root = ASNParser.Parse(data);
+        Check(root.ToString().StartsWith(cases[i, 1] + " "), "Automatic selection: " + cases[i, 0]);
+        ASNNode textRoot = ASNParser.ParseText(Convert.ToBase64String(data));
+        Equal(root.ToString(), textRoot.ToString(), "Text and byte entry points agree");
+        Bytes(data, textRoot.Data);
+      }
+      Equal("NULL", ASNParser.ParseText("05 00").ToString(), "Unmatched input remains usable");
+      Check(ASNParser.DecodeText("invalid!") == null, "Invalid input detection");
+      bool rejected = false;
+      try { ASNParser.ParseText("invalid!"); }
+      catch (FormatException) { rejected = true; }
+      Check(rejected, "Text entry point reports invalid encoding");
+    }
+
+    private static void TestCoreDependencies() {
+      Equal("ASN1Viewer.Core", typeof(ASNNode).Assembly.GetName().Name, "Parser assembly");
+      Equal(typeof(ASNNode).Assembly, typeof(SchemaFile).Assembly, "Schema assembly");
+      foreach (System.Reflection.AssemblyName reference in typeof(ASNNode).Assembly.GetReferencedAssemblies()) {
+        Check(reference.Name != "System.Windows.Forms" && reference.Name != "System.Drawing"
+          && reference.Name != "ASN1Viewer", "Core must not reference desktop code: " + reference.Name);
+      }
+      foreach (System.Reflection.AssemblyName reference in typeof(Program).Assembly.GetReferencedAssemblies()) {
+        Check(reference.Name != "ASN1Viewer", "Tests must exercise Core without the desktop executable");
       }
     }
 

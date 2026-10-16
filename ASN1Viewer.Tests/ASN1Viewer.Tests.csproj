@@ -26,9 +26,9 @@
     <Reference Include="System" />
     <Compile Include="Program.cs" />
     <None Include="app.config" />
-    <ProjectReference Include="..\ASN1Viewer\ASN1Viewer.csproj">
-      <Project>{A0F170C2-1C58-48B1-B876-2D7A47EEE850}</Project>
-      <Name>ASN1Viewer</Name>
+    <ProjectReference Include="..\ASN1Viewer.Core\ASN1Viewer.Core.csproj">
+      <Project>{95B6C2FD-FC08-4C8C-9541-3B116C042DF9}</Project>
+      <Name>ASN1Viewer.Core</Name>
     </ProjectReference>
     <Content Include="..\ASN1Viewer\files\Asn1Modules\*.txt">
       <Link>files\Asn1Modules\%(Filename)%(Extension)</Link>

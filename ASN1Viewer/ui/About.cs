@@ -10,7 +10,7 @@ namespace ASN1Viewer.ui {
     }
 
     private void About_Load(object sender, EventArgs e) {
-      DateTime buildTime = Utils.GetAssembyBuildTime();
+      DateTime buildTime = DesktopUtils.GetAssembyBuildTime();
       this.Text = String.Format(Lang.T["ABOUT_TITLE"], Lang.T["PROD_NAME"]);
       this.lblProdName.Text = Lang.T["PROD_NAME"];
       this.lblCopyRight.Text = String.Format(Lang.T["ABOUT_COPYRIGHT"], DateTime.Now.Year.ToString());
