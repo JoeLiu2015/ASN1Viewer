@@ -1,0 +1,40 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Build, test, and package
+        run: python build_release.py bin/release/ASN1Viewer
+
+      - name: Create ZIP
+        run: Compress-Archive -Path bin/release/ASN1Viewer -DestinationPath bin/release/ASN1Viewer-windows.zip
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: gh release create "$env:RELEASE_TAG" bin/release/ASN1Viewer-windows.zip --verify-tag --title "ASN1Viewer $env:RELEASE_TAG" --generate-notes
