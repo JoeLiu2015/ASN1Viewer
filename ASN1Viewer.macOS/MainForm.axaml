@@ -1,0 +1,96 @@
+<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:ASN1Viewer.macOS" xmlns:ui="using:ASN1Viewer.macOS.ui" x:Class="ASN1Viewer.macOS.MainForm"
+        Title="ASN.1 Viewer" Width="1200" Height="700" MinWidth="760" MinHeight="400"
+        Icon="avares://ASN1Viewer.macOS/files/Icons/AppIcon.png"
+        Background="#F0F0F0" Foreground="Black" FontFamily="Arial" FontSize="13"
+        RequestedThemeVariant="Light">
+  <Window.Styles>
+    <Style Selector="MenuItem"><Setter Property="Padding" Value="8,4" /><Setter Property="FontSize" Value="13" /></Style>
+    <Style Selector="Button.tool">
+      <Setter Property="Width" Value="25" /><Setter Property="Height" Value="24" />
+      <Setter Property="MinHeight" Value="0" /><Setter Property="Padding" Value="3" />
+      <Setter Property="CornerRadius" Value="0" /><Setter Property="Background" Value="Transparent" />
+    </Style>
+    <Style Selector="TreeViewItem" x:CompileBindings="False">
+      <Setter Property="IsExpanded" Value="{Binding Expanded, Mode=TwoWay}" />
+      <Setter Property="MinHeight" Value="20" /><Setter Property="Padding" Value="0" />
+      <Setter Property="Template">
+        <ControlTemplate>
+          <StackPanel>
+            <Grid ColumnDefinitions="16,*" MinHeight="20">
+              <ToggleButton x:Name="PART_ExpandCollapseChevron" Width="12" Height="12" MinHeight="0" Padding="0"
+                            IsVisible="{TemplateBinding ItemsSource, Converter={x:Static local:TreeConverters.HasChildren}}"
+                            IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+                <ToggleButton.Template>
+                  <ControlTemplate>
+                    <Border BorderBrush="#909090" BorderThickness="1" Background="#FAFAFA">
+                      <TextBlock x:Name="Sign" Text="+" FontSize="11" LineHeight="10" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                  </ControlTemplate>
+                </ToggleButton.Template>
+                <ToggleButton.Styles>
+                  <Style Selector="ToggleButton:checked /template/ TextBlock#Sign"><Setter Property="Text" Value="−" /></Style>
+                </ToggleButton.Styles>
+              </ToggleButton>
+              <Border x:Name="Row" Grid.Column="1" HorizontalAlignment="Left" Padding="1,0">
+                <ContentPresenter x:Name="PART_HeaderPresenter" Content="{TemplateBinding Header}" ContentTemplate="{TemplateBinding HeaderTemplate}" />
+              </Border>
+            </Grid>
+            <ItemsPresenter x:Name="PART_ItemsPresenter" IsVisible="{TemplateBinding IsExpanded}" Margin="18,0,0,0" />
+          </StackPanel>
+        </ControlTemplate>
+      </Setter>
+    </Style>
+    <Style Selector="TreeViewItem:selected /template/ Border#Row"><Setter Property="Background" Value="#0078D7" /></Style>
+    <Style Selector="TreeViewItem:selected"><Setter Property="Foreground" Value="White" /></Style>
+    <Style Selector="TabItem">
+      <Setter Property="FontSize" Value="13" /><Setter Property="Padding" Value="7,3" /><Setter Property="MinHeight" Value="25" />
+      <Setter Property="Template">
+        <ControlTemplate>
+          <Border x:Name="TabBorder" BorderBrush="#A0A0A0" BorderThickness="1" Background="#E8E8E8" Padding="{TemplateBinding Padding}">
+            <ContentPresenter Content="{TemplateBinding Header}" />
+          </Border>
+        </ControlTemplate>
+      </Setter>
+    </Style>
+    <Style Selector="TabItem:selected /template/ Border#TabBorder"><Setter Property="Background" Value="White" /><Setter Property="BorderThickness" Value="1,1,1,0" /></Style>
+  </Window.Styles>
+  <Grid RowDefinitions="25,26,*,25">
+    <Menu x:Name="MainMenu" Background="#F0F0F0" />
+    <StackPanel x:Name="Toolbar" Grid.Row="1" Orientation="Horizontal" Margin="4,0" />
+    <Grid Grid.Row="2" ColumnDefinitions="350,4,*" Margin="2,0">
+      <Border BorderBrush="#888888" BorderThickness="1" Background="White">
+        <TreeView x:Name="Tree" Background="White" Padding="2" SelectionChanged="SelectionChanged"
+                  ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
+          <TreeView.ItemTemplate>
+            <TreeDataTemplate DataType="local:NodeItem" ItemsSource="{Binding Children}">
+              <StackPanel Orientation="Horizontal" Spacing="3" Height="20">
+                <Image Source="{Binding Icon}" Width="16" Height="16" VerticalAlignment="Center" />
+                <TextBlock x:CompileBindings="False" Text="{Binding Label}" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TreeViewItem}}" VerticalAlignment="Center" />
+              </StackPanel>
+            </TreeDataTemplate>
+          </TreeView.ItemTemplate>
+        </TreeView>
+      </Border>
+      <GridSplitter Grid.Column="1" ResizeDirection="Columns" HorizontalAlignment="Stretch" Background="#F0F0F0" />
+      <Border Grid.Column="2" BorderBrush="#888888" BorderThickness="1" Padding="2">
+        <TabControl x:Name="Tabs" SelectedIndex="0">
+          <TabItem x:Name="InputTab" Header="Input Text">
+            <TextBox x:Name="Input" AcceptsReturn="True" TextChanged="InputChanged" FontFamily="Menlo,Consolas,monospace"
+                     FontSize="13" Padding="4" Background="White" BorderThickness="1" BorderBrush="#A0A0A0"
+                     TextWrapping="NoWrap" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+          </TabItem>
+          <TabItem x:Name="BytesTab" Header="ASN.1 Bytes">
+            <Border BorderBrush="#A0A0A0" BorderThickness="1" Background="White">
+              <ui:HexViewer x:Name="Hex" />
+            </Border>
+          </TabItem>
+        </TabControl>
+      </Border>
+    </Grid>
+    <Grid Grid.Row="3" ColumnDefinitions="*,Auto" Margin="5,3">
+      <TextBlock x:Name="Status" Text="" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+      <TextBlock x:Name="StatusRight" Grid.Column="1" VerticalAlignment="Center" Margin="12,0,4,0" />
+    </Grid>
+  </Grid>
+</Window>

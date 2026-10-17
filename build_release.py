@@ -3,10 +3,12 @@
 import argparse
 from datetime import datetime
 import os
+import platform
 from pathlib import Path
 import shutil
 import subprocess
 import sys
+import tempfile
 
 
 ROOT = Path(__file__).resolve().parent
@@ -44,16 +46,8 @@ def run(command):
     subprocess.run([str(arg) for arg in command], cwd=str(ROOT), check=True)
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("destination", type=Path, help="New directory for the complete release")
-    parser.add_argument("--msbuild", help="Use this MSBuild.exe instead of automatic discovery")
-    args = parser.parse_args()
-    destination = args.destination.expanduser().resolve()
-    if destination.exists():
-        raise FileExistsError("Destination already exists; choose a new directory: " + str(destination))
-
-    run([find_msbuild(args.msbuild), ROOT / "ASN1Viewer.sln", "/t:Rebuild",
+def build_windows(destination, msbuild=None):
+    run([find_msbuild(msbuild), ROOT / "ASN1Viewer.sln", "/t:Rebuild",
          "/p:Configuration=Release", "/p:Platform=Any CPU", "/nologo", "/v:minimal"])
     run([ROOT / "ASN1Viewer.Tests/bin/Release/ASN1Viewer.Tests.exe"])
 
@@ -89,6 +83,95 @@ def main():
     print("Packaged {} files: {}".format(len(files), package))
     print("Copied release to: " + str(destination))
     return 0
+
+
+def find_dotnet(explicit=None):
+    requested = explicit or os.environ.get("DOTNET")
+    candidate = shutil.which(requested or "dotnet")
+    if not candidate and not requested:
+        local = Path.home() / ".dotnet/dotnet"
+        if local.is_file():
+            candidate = str(local)
+    if not candidate:
+        raise FileNotFoundError(".NET SDK not found. Install the .NET 8 SDK or specify --dotnet.")
+    return str(Path(candidate).resolve())
+
+
+def build_macos_icon(source, destination):
+    # Apple's iconset names distinguish logical sizes from Retina pixel sizes.
+    with tempfile.TemporaryDirectory(prefix="asn1viewer-icon-") as temporary:
+        iconset = Path(temporary) / "ASN1Viewer.iconset"
+        iconset.mkdir()
+        for size in (16, 32, 128, 256, 512):
+            for scale in (1, 2):
+                suffix = "@2x" if scale == 2 else ""
+                target = iconset / ("icon_{}x{}{}.png".format(size, size, suffix))
+                run(["sips", "-z", size * scale, size * scale, source, "--out", target])
+        run(["iconutil", "--convert", "icns", "--output", destination, iconset])
+
+
+def build_macos(destination, runtime, dotnet=None):
+    if sys.platform != "darwin":
+        raise OSError("macOS packaging requires a Mac for code signing.")
+    sdk = find_dotnet(dotnet)
+    project = ROOT / "ASN1Viewer.macOS"
+    for test in ("Tests/ASN1Viewer.Core.Tests.Modern.csproj",
+                 "UITests/ASN1Viewer.macOS.UITests.csproj"):
+        run([sdk, "run", "--project", project / test, "-c", "Release"])
+
+    package = (ROOT / "bin/publish" / datetime.now().strftime("%Y%m%d-%H%M%S-%f")
+               / runtime)
+    app = package / "ASN1Viewer.app"
+    executable_dir = app / "Contents/MacOS"
+    resources = app / "Contents/Resources"
+    resources.mkdir(parents=True)
+    run([sdk, "publish", project / "ASN1Viewer.macOS.csproj", "-c", "Release",
+         "-r", runtime, "--self-contained", "true", "-p:UseAppHost=true",
+         "-o", executable_dir])
+    shutil.copy2(project / "Info.plist", app / "Contents/Info.plist")
+    shutil.copy2(ROOT / "LICENSE", resources / "LICENSE")
+    build_macos_icon(project / "files/Icons/AppIcon.png", resources / "ASN1Viewer.icns")
+    executable = executable_dir / "ASN1Viewer.macOS"
+    executable.chmod(executable.stat().st_mode | 0o111)
+    run(["codesign", "--force", "--deep", "--sign", "-", app])
+    run(["codesign", "--verify", "--deep", "--strict", app])
+    # Refuse existing destinations, then preserve macOS resource forks and
+    # extended attributes (including signatures on non-Mach-O libraries).
+    destination.mkdir(parents=True, exist_ok=False)
+    run(["ditto", package, destination])
+    run(["codesign", "--verify", "--deep", "--strict", destination / "ASN1Viewer.app"])
+    print("Packaged app: " + str(app))
+    print("Copied release to: " + str(destination))
+    return 0
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("destination", type=Path, help="New directory for the complete release")
+    parser.add_argument("--platform", choices=("windows", "macos"),
+                        default="macos" if sys.platform == "darwin" else "windows",
+                        help="Release platform (default: current host)")
+    parser.add_argument("--msbuild", help="Use this MSBuild.exe instead of automatic discovery")
+    parser.add_argument("--dotnet", help="Use this dotnet executable (also accepts DOTNET environment variable)")
+    parser.add_argument("--runtime", choices=("osx-arm64", "osx-x64"),
+                        help="macOS architecture (default: current host architecture)")
+    args = parser.parse_args()
+    if args.platform == "windows" and (args.runtime or args.dotnet):
+        parser.error("--runtime and --dotnet are only valid for --platform macos")
+    if args.platform == "macos" and args.msbuild:
+        parser.error("--msbuild is only valid for --platform windows")
+    destination = args.destination.expanduser().resolve()
+    if destination.exists():
+        raise FileExistsError("Destination already exists; choose a new directory: " + str(destination))
+    if args.platform == "macos":
+        runtime = args.runtime
+        if not runtime:
+            runtime = {"arm64": "osx-arm64", "aarch64": "osx-arm64",
+                       "x86_64": "osx-x64", "amd64": "osx-x64"}.get(platform.machine().lower())
+            if not runtime:
+                parser.error("Unknown host architecture; specify --runtime")
+        return build_macos(destination, runtime, args.dotnet)
+    return build_windows(destination, args.msbuild)
 
 
 if __name__ == "__main__":

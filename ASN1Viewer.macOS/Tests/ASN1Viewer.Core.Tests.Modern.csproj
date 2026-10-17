@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Core/ASN1Viewer.Core.Modern.csproj" />
+    <Compile Include="../../ASN1Viewer.Tests/Program.cs" Link="Program.cs" />
+    <Content Include="../../ASN1Viewer.Tests/samples.tsv" Link="samples.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../../ASN1Viewer/files/TestFiles/*" Link="fixtures/samples/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../../ASN1Viewer/self test files/*.txt" Link="fixtures/regressions/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

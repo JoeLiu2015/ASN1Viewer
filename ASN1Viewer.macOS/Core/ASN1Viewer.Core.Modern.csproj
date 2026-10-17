@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>ASN1Viewer.Core</AssemblyName>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../ASN1Viewer.Core/**/*.cs" Exclude="../../ASN1Viewer.Core/obj/**;../../ASN1Viewer.Core/bin/**" />
+    <Content Include="../../ASN1Viewer.Core/files/Asn1Modules/*.txt" Link="files/Asn1Modules/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

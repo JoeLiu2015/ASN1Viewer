@@ -1,0 +1,10 @@
+<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="ASN1Viewer.macOS.ui.EditASN1Node" Width="600" Height="360" MinWidth="360" MinHeight="200"
+        WindowStartupLocation="CenterOwner" RequestedThemeVariant="Light">
+  <Grid RowDefinitions="Auto,*,Auto" Margin="8">
+    <TextBlock x:Name="EditLabel" Margin="0,0,0,6" />
+    <TextBox x:Name="HexEdit" Grid.Row="1" AcceptsReturn="True" TextChanged="HexChanged"
+             FontFamily="Menlo,Consolas,monospace" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+    <TextBlock x:Name="Error" Grid.Row="2" Foreground="Red" TextWrapping="Wrap" Margin="0,6,0,0" />
+  </Grid>
+</Window>

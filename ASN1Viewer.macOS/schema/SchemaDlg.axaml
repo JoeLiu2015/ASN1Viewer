@@ -1,0 +1,5 @@
+<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="ASN1Viewer.macOS.schema.SchemaDlg" Width="700" Height="560" MinWidth="400" MinHeight="300"
+        WindowStartupLocation="CenterOwner" RequestedThemeVariant="Light">
+  <TreeView x:Name="ModuleTree" Margin="4" ScrollViewer.HorizontalScrollBarVisibility="Auto" />
+</Window>

@@ -1,0 +1,9 @@
+Generated with the built-in image generation tool, using ASN1Viewer/app.ico
+(converted to PNG) as the reference. Resized to 1024x1024 using sips.
+
+Create a high-resolution macOS adaptation of THIS EXACT Windows ASN1Viewer application icon. Faithfully preserve its distinctive silhouette and composition: a vertical hierarchy spine on the LEFT with three hollow square nodes branching to the RIGHT at successive heights, plus a diagonal outlined pencil crossing its lower-right corner. This is a hierarchy editor, NOT a top-down organizational chart. Keep the original cyan-blue stroke color identity and hollow square node geometry. Redraw crisp, polished, bold at 1024x1024; original raster is low resolution so reconstruct cleanly. Use a very pale icy-blue opaque full-bleed background, subtly graded with restrained macOS depth; the cyan-blue hierarchy-and-pencil symbol should occupy about 80% of canvas height and 70% width, centered. Absolutely NO inset tile, no outer rim, no pre-rounded corners, no transparent padding, no frame, no grey border: background extends fully to all four edges and corners and macOS supplies the outer mask. A subtle dimensional highlight on the cyan glyph is okay, but preserve the original icon's identity and exact hierarchy-plus-pencil concept. No text, no letters, no extra motifs.
+
+transparent_background: false
+
+Packaging reference:
+https://developer.apple.com/library/archive/documentation/Xcode/Reference/xcode_ref-Asset_Catalog_Format/IconSetType.html

@@ -5,6 +5,9 @@
 *.userosscache
 *.sln.docstates
 
+# JetBrains IDEs
+.idea/
+
 # Build output
 [Bb]in/
 [Oo]bj/
@@ -12,3 +15,7 @@
 # Python cache
 __pycache__/
 *.py[cod]
+
+# macOS bundles
+artifacts/
+.DS_Store
