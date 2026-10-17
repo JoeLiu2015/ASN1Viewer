@@ -71,9 +71,10 @@ public sealed class VectorIcon : Control
             "open" => ("M2,6 H10 L12,9 H22 V20 H2 Z M2,9 H22", null, gray),
             "recent" => (Clock, null, gray),
             "samples" => ("M5,2 H14 L20,8 V22 H5 Z M14,2 V8 H20 M9,12 H16 M9,16 H16", null, gray),
-            "modules" => (null, "{}", gray),
-            "pin" => ("M14,2 L22,10 L18,11 L14,17 L11,14 L3,22 M7,10 L10,4 Z M7,10 L14,17", null, gray),
+            "modules" => ("M3,3 H10 V10 H3 Z M14,3 H21 V10 H14 Z M3,14 H10 V21 H3 Z M14,14 H21 V21 H14 Z", null, gray),
+            "pin" => ("M7,3 H17 V5 H15 V10 L19,14 V16 H5 V14 L9,10 V5 H7 Z M12,16 V21", null, gray),
             "language" => ("M12,2 A10,10 0 1 1 11.99,2 M2,12 H22 M12,2 C4,8 4,16 12,22 C20,16 20,8 12,2", null, gray),
+            "dropdown" => ("M5,8.5 L12,15.5 L19,8.5", null, gray),
             "more" => ("M5,11 A1,1 0 1 1 4.99,11 M12,11 A1,1 0 1 1 11.99,11 M19,11 A1,1 0 1 1 18.99,11", null, gray),
             _ => ("M8,3 H4 V21 H8 M16,3 H20 V21 H16", null, gray)
         };

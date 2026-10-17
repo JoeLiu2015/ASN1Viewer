@@ -195,7 +195,11 @@ public partial class MainForm : Window
         var content = new StackPanel { Orientation = Avalonia.Layout.Orientation.Horizontal, Spacing = 7 };
         content.Children.Add(new VectorIcon { Kind = icon, Width = 18, Height = 18, Selected = icon == "open" });
         if (icon != "more") content.Children.Add(new TextBlock { Text = ActionLabel(icon, key), VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center });
-        if (menu != null && icon != "more") content.Children.Add(new TextBlock { Text = "⌄", VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center });
+        if (menu != null && icon != "more") content.Children.Add(new VectorIcon
+        {
+            Kind = "dropdown", Width = 12, Height = 12,
+            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
+        });
         var button = new Button { Name = "Action_" + icon, Content = content, Tag = icon };
         button.Classes.Add("action");
         if (icon == "open") button.Classes.Add("primary");
