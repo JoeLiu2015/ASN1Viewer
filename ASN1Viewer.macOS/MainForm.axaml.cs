@@ -26,7 +26,17 @@ public sealed class NodeItem : INotifyPropertyChanged
 {
     public ASNNode Node { get; }
     public string Label => Node.ToString();
-    public Bitmap Icon => DesktopUtils.GetIcon("node-" + IconIndex + ".png");
+    // Keep the full ASN.1 representation for copy/tooltips; the sidebar emphasizes schema names.
+    public string DisplayLabel
+    {
+        get
+        {
+            var match = System.Text.RegularExpressions.Regex.Match(Label,
+                @"^(.+?)\s+(?:SEQUENCE|SET|INTEGER|BOOLEAN|BITSTRING|OCTETSTRING|NULL|OID|UTF8String|PrintableString|UTCTime|GeneralizedTime|\[Context\])(?:\b|\[)");
+            return match.Success ? match.Groups[1].Value : Label;
+        }
+    }
+    public string IconKind => Node.TagClass == ASNNode.NODE_CLASS_UNIVERSAL ? "node-" + Node.TagNum : "context";
     public int IconIndex => Node.TagClass != ASNNode.NODE_CLASS_UNIVERSAL ? 24 : Node.TagNum switch
     {
         1 => 21, 2 or 9 or 10 => 1, 3 => 23, 4 => 25, 5 => 18, 6 or 7 => 11,
@@ -109,6 +119,18 @@ public partial class MainForm : Window
         if (initialFile != null) Opened += async (_, _) => await LoadFile(initialFile);
     }
 
+    private void HeaderPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        // Only the header's empty space and title drag the window; buttons retain clicks.
+        var visual = e.Source as Control;
+        while (visual != null && visual != sender)
+        {
+            if (visual is Button) return;
+            visual = visual.Parent as Control;
+        }
+        if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed) BeginMoveDrag(e);
+    }
+
     private string T(string key) => lang[key];
     private void SetLanguage(string languageCode)
     {
@@ -141,43 +163,52 @@ public partial class MainForm : Window
 
     private void BuildMenus()
     {
-        var top = Item("MENU_TOPMOST", () => { Topmost = !Topmost; BuildMenus(); });
-        top.ToggleType = MenuItemToggleType.CheckBox; top.IsChecked = Topmost;
-        MainMenu.ItemsSource = new object[]
-        {
-            Submenu("MENU_FILE", new object[] { Item("MENU_OPEN", async () => await PickFile()), Submenu("MENU_RECENT", RecentItems()),
-                new Separator(), Item("MENU_EXIT", Close) }),
-            Submenu("MENU_VIEW", new object[] { top, Item("MENU_MODULES", ShowModules), Submenu("MENU_TESTFILES", SampleItems()) }),
-            Submenu("MENU_HELP", new object[] { Submenu("MENU_LANG", LanguageItems()), new Separator(),
-                Item("MENU_ABOUT", () => new About(lang).ShowDialog(this)),
-                Item("MENU_CHECKVER", UpdateNotice) })
-        };
-        Toolbar.Children.Clear();
+        Actions.Children.Clear();
         Tool("open", "MENU_OPEN", async () => await PickFile());
-        Tool("samples", "MENU_TESTFILES", null, SampleItems);
         Tool("recent", "MENU_RECENT", null, RecentItems);
-        Tool("topmost", "MENU_TOPMOST", () => { Topmost = !Topmost; BuildMenus(); }, active: Topmost);
-        Toolbar.Children.Add(new Border { Width = 1, Height = 18, Background = Brushes.Silver, Margin = new Thickness(3, 2) });
+        Tool("samples", "MENU_TESTFILES", null, SampleItems);
+        Tool("modules", "MENU_MODULES", ShowModules);
+        Tool("pin", "MENU_TOPMOST", () => { Topmost = !Topmost; BuildMenus(); }, active: Topmost);
         Tool("language", "MENU_LANG", null, LanguageItems);
-        Tool("update", "MENU_CHECKVER", UpdateNotice);
+        Tool("more", language == "zh_CN" ? "更多" : "More", null, () => new object[] {
+            Item("MENU_ABOUT", () => new About(lang).ShowDialog(this)),
+            Item("MENU_CHECKVER", UpdateNotice), new Separator(), Item("MENU_EXIT", Close)
+        });
+        StructureTitle.Text = language == "zh_CN" ? "结构" : "Structure";
+        Input.Watermark = language == "zh_CN" ? "粘贴 PEM、Base64 或 HEX，自动解析…" : "Paste PEM, Base64 or HEX to parse automatically…";
         BuildContextMenu();
     }
 
+    private string ActionLabel(string icon, string key) => (icon, language == "zh_CN") switch
+    {
+        ("open", true) => "打开", ("open", false) => "Open",
+        ("recent", true) => "最近", ("recent", false) => "Recent",
+        ("samples", true) => "示例", ("samples", false) => "Samples",
+        ("modules", true) => "ASN.1 模块", ("modules", false) => "Modules",
+        ("pin", true) => "置顶", ("pin", false) => "Pin",
+        ("language", true) => "语言", ("language", false) => "Language",
+        _ => T(key)
+    };
+
     private void Tool(string icon, string key, Action? action, Func<IEnumerable<object>>? menu = null, bool active = false)
     {
-        var content = new StackPanel { Orientation = Avalonia.Layout.Orientation.Horizontal, Spacing = 1 };
-        content.Children.Add(new Image { Source = DesktopUtils.GetIcon("toolbar-" + icon + ".png"), Width = 16, Height = 16 });
-        if (menu != null) content.Children.Add(new TextBlock { Text = "▾", FontSize = 8, VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center });
-        var button = new Button { Content = content, Width = menu != null ? 31 : 25 };
-        button.Classes.Add("tool");
-        if (active) button.Background = new SolidColorBrush(Color.Parse("#CCE8FF"));
+        var content = new StackPanel { Orientation = Avalonia.Layout.Orientation.Horizontal, Spacing = 7 };
+        content.Children.Add(new VectorIcon { Kind = icon, Width = 18, Height = 18, Selected = icon == "open" });
+        if (icon != "more") content.Children.Add(new TextBlock { Text = ActionLabel(icon, key), VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center });
+        if (menu != null && icon != "more") content.Children.Add(new TextBlock { Text = "⌄", VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center });
+        var button = new Button { Name = "Action_" + icon, Content = content, Tag = icon };
+        button.Classes.Add("action");
+        if (icon == "open") button.Classes.Add("primary");
+        if (active) button.Classes.Add("active");
         ToolTip.SetTip(button, T(key));
+        Avalonia.Automation.AutomationProperties.SetName(button, T(key));
+        if (menu != null) button.ContextMenu = new ContextMenu { ItemsSource = menu().ToArray() };
         button.Click += (_, _) =>
         {
             if (menu != null) { button.ContextMenu = new ContextMenu { ItemsSource = menu().ToArray() }; button.ContextMenu.Open(button); }
             else action?.Invoke();
         };
-        Toolbar.Children.Add(button);
+        Actions.Children.Add(button);
     }
 
     private void BuildContextMenu()
@@ -287,6 +318,7 @@ public partial class MainForm : Window
                 }
             }
             Title = T("PROD_NAME") + " - " + name;
+            DocumentName.Text = Path.GetFileName(name);
             StatusRight.Text = $"{parsed.Data.Length:N0} bytes";
         }
         catch (Exception ex) { if (!textOnly || revision == inputRevision) ShowError(ex); }

@@ -17,7 +17,7 @@ public sealed class HexViewer : Grid
     public byte[] Data { get; private set; } = Array.Empty<byte>();
     public ASNNode? SelectedNode { get; private set; }
     public int FirstVisibleByte => (int)scroll.Value * 16;
-    public const double LineHeight = 20;
+    public const double LineHeight = 18;
 
     public HexViewer()
     {
@@ -59,7 +59,7 @@ public sealed class HexViewer : Grid
 
     private void UpdateScroll()
     {
-        var visibleRows = Math.Max(1, (int)((Bounds.Height - 18) / LineHeight));
+        var visibleRows = Math.Max(1, (int)((Bounds.Height - 32) / LineHeight));
         scroll.Maximum = Math.Max(0, (Data.Length + 15) / 16 - visibleRows);
         scroll.ViewportSize = visibleRows;
         scroll.LargeChange = visibleRows;
@@ -82,52 +82,67 @@ public sealed class HexViewer : Grid
     private sealed class HexSurface : Control
     {
         private readonly HexViewer owner;
-        private readonly Typeface typeface = new("Menlo,Consolas,monospace");
+        private readonly Typeface typeface = new(new FontFamily("Menlo"), FontStyle.Normal, FontWeight.Normal);
         private const double Cell = 8;
         public HexSurface(HexViewer owner) { this.owner = owner; MinWidth = 654; ClipToBounds = true; }
         public override void Render(DrawingContext context)
         {
             base.Render(context);
             context.FillRectangle(Brushes.White, new Rect(Bounds.Size));
-            void Text(string text, double x, double y, IBrush color) => context.DrawText(
-                new FormattedText(text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, 13, color), new Point(x, y));
-            int rows = (int)Math.Ceiling(Bounds.Height / LineHeight);
+            void Text(string text, double x, double y, IBrush color, double cellWidth = 0)
+            {
+                var formatted = new FormattedText(text, CultureInfo.InvariantCulture,
+                    FlowDirection.LeftToRight, typeface, 12, color);
+                context.DrawText(formatted, new Point(x + (cellWidth > 0 ? (cellWidth - formatted.Width) / 2 : 0), y));
+            }
+            double columnWidth = Math.Max(24, (Bounds.Width - 92 - 20 - 16 * Cell) / 16);
+            double asciiStart = 92 + 16 * columnWidth + 20;
+            Text("Offset", 4, 7, Brushes.SlateGray);
+            Text("Hexadecimal", 92, 7, Brushes.SlateGray);
+            Text("ASCII", asciiStart, 7, Brushes.SlateGray);
+            context.DrawLine(new Pen(new SolidColorBrush(Color.Parse("#E8EBF0")), 1), new Point(0, 28), new Point(Bounds.Width, 28));
+            int rows = (int)Math.Ceiling((Bounds.Height - 32) / LineHeight);
             for (int row = 0; row < rows; row++)
             {
                 int start = owner.FirstVisibleByte + row * 16;
                 if (start >= owner.Data.Length) break;
-                double y = row * LineHeight + 3;
-                Text($"{start:X8}|", 4, y, Brushes.Gray);
-                Text("|", 490, y, Brushes.Gray);
-                // Windows paints a continuous band across spaces between selected bytes.
-                if (owner.SelectedNode is { } selected)
+                double y = row * LineHeight + 33;
+                Text($"{start:X8}", 4, y, Brushes.Gray);
+
+                // Fill each contiguous region once, avoiding seams at fractional column widths.
+                int count = Math.Min(16, owner.Data.Length - start);
+                for (int first = 0; first < count;)
                 {
-                    int first = Math.Max(start, selected.Start) - start;
-                    int last = Math.Min(start + 16, selected.End) - start - 1;
-                    if (first <= last && first < 16 && last >= 0)
+                    var region = owner.RegionAt(start + first);
+                    int end = first + 1;
+                    while (end < count && owner.RegionAt(start + end) == region) end++;
+                    if (region != ByteRegion.Outside)
                     {
-                        double firstX = 92 + first * 24 + (first >= 8 ? 8 : 0);
-                        double lastX = 92 + last * 24 + (last >= 8 ? 8 : 0);
-                        var yellow = new SolidColorBrush(Color.FromRgb(255, 255, 179));
-                        context.FillRectangle(yellow, new Rect(firstX, y, lastX - firstX + 2 * Cell, LineHeight));
-                        context.FillRectangle(yellow, new Rect(508 + first * Cell, y, (last - first + 1) * Cell, LineHeight));
+                        var tint = new SolidColorBrush(Color.Parse(region switch {
+                            ByteRegion.Tag => "#FCE1E4", ByteRegion.Content => "#DCF3E3", _ => "#DFEBFF" }));
+                        context.FillRectangle(tint, new Rect(92 + first * columnWidth, y,
+                            (end - first) * columnWidth, LineHeight));
+                        context.FillRectangle(tint, new Rect(asciiStart + first * Cell, y,
+                            (end - first) * Cell, LineHeight));
                     }
+                    first = end;
                 }
+
                 for (int col = 0; col < 16 && start + col < owner.Data.Length; col++)
                 {
                     int offset = start + col;
                     var region = owner.RegionAt(offset);
-                    var color = region switch
+                    IBrush color = region switch
                     {
-                        ByteRegion.Tag => Brushes.Red,
-                        ByteRegion.Length or ByteRegion.EndOfContent => Brushes.Blue,
-                        ByteRegion.Content => Brushes.Green,
-                        _ => Brushes.Gray
+                        ByteRegion.Tag => new SolidColorBrush(Color.Parse("#D03346")),
+                        ByteRegion.Length or ByteRegion.EndOfContent => new SolidColorBrush(Color.Parse("#1264D7")),
+                        ByteRegion.Content => new SolidColorBrush(Color.Parse("#238347")),
+                        _ => new SolidColorBrush(Color.Parse("#394154"))
                     };
-                    double x = 92 + col * 24 + (col >= 8 ? 8 : 0), asciiX = 508 + col * Cell;
+                    double x = 92 + col * columnWidth, asciiX = asciiStart + col * Cell;
                     byte b = owner.Data[offset];
-                    Text(b.ToString("X2"), x, y, color);
-                    Text(b >= 32 && b <= 126 ? ((char)b).ToString() : ".", asciiX, y, color);
+                    Text(b.ToString("X2"), x, y, color, columnWidth);
+                    Text(b >= 32 && b <= 126 ? ((char)b).ToString() : ".", asciiX, y, color, Cell);
                 }
             }
         }

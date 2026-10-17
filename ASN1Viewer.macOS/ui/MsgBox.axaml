@@ -1,11 +1,17 @@
 <Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="ASN1Viewer.macOS.ui.MsgBox" Width="430" SizeToContent="Height" CanResize="False"
         WindowStartupLocation="CenterOwner" RequestedThemeVariant="Light">
-  <StackPanel Margin="20" Spacing="20">
-    <TextBlock x:Name="MessageText" TextWrapping="Wrap" />
+  <Window.Styles><StyleInclude Source="avares://ASN1Viewer.macOS/ui/DialogStyles.axaml"/></Window.Styles>
+  <StackPanel Margin="24" Spacing="24">
+    <Grid ColumnDefinitions="48,*" ColumnSpacing="16">
+      <Border Width="48" Height="48" CornerRadius="11" ClipToBounds="True" VerticalAlignment="Top">
+        <Image Source="avares://ASN1Viewer.macOS/files/Icons/AppIcon.png"/>
+      </Border>
+      <TextBlock x:Name="MessageText" Grid.Column="1" TextWrapping="Wrap" VerticalAlignment="Center"/>
+    </Grid>
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
-      <Button x:Name="OKButton" Content="OK" Click="OKClicked" MinWidth="80" />
-      <Button x:Name="CancelButton" Content="Cancel" Click="CancelClicked" MinWidth="80" />
+      <Button x:Name="CancelButton" Content="Cancel" Click="CancelClicked" IsCancel="True"/>
+      <Button x:Name="OKButton" Classes="primary" Content="OK" Click="OKClicked" IsDefault="True"/>
     </StackPanel>
   </StackPanel>
 </Window>

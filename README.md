@@ -51,16 +51,17 @@ dotnet run --project ASN1Viewer.macOS/ASN1Viewer.macOS.csproj
 dotnet run --project ASN1Viewer.macOS/ASN1Viewer.macOS.csproj -- /path/to/certificate.pem
 ```
 
-The macOS main window follows the Windows layout: File/View/Help menus, the
-original compact toolbar and node icons, a resizable structure tree on the left,
-Input Text / ASN.1 Bytes tabs on the right, and node information in the status bar.
+The macOS main window uses a single action row for Open, Recent, Samples,
+Modules, Pin, Language and More (About, Check Update, Exit). A resizable tinted
+sidebar holds the structure tree with type-specific vector icons; segmented
+Input Text / ASN.1 Bytes tabs occupy the right pane, with node information below.
 Typing PEM/Base64/HEX automatically parses after a short debounce. Selecting a
 node scrolls the complete hex document to its offset and highlights Tag (red),
 length (blue), content (green), and BER end markers in both HEX and ASCII columns.
 Only visible rows are drawn; there is no 64 KiB preview truncation.
 
 Right-click a node to expand/collapse, edit leaf content, copy text/bytes, or parse
-embedded content. The menus include all bundled test files, persistent recent files, always-on-top, English/Chinese labels and the ASN.1 module viewer.
+embedded content. The action buttons include all bundled test files, persistent recent files, always-on-top, English/Chinese labels and the ASN.1 module viewer.
 Language and always-on-top preferences are saved when the window closes.
 Input remains limited to 16 MiB. Automatic updates are disabled, as in the original
 Windows code. macOS retains its system window title bar and file dialogs.
@@ -113,7 +114,7 @@ logic lives in the matching `.axaml.cs` files.
 | `schema/SchemaTreeBuilder.cs` | `schema/SchemaTreeBuilder.cs` |
 | `Config.cs`, `Lang.cs`, `DesktopUtils.cs`, `Updater.cs` | Matching files in the macOS project root |
 
-Icons live in `files/Icons`; node PNGs were extracted from the original Windows
-ImageList resource. The original language files are linked under `lang`, and
+The application icon lives in `files/Icons`. `ui/VectorIcon.cs` draws the current
+action and node icons at any display scale; legacy PNGs remain as reference assets. The original language files are linked under `lang`, and
 sample files are copied into `files/TestFiles` at build time. Parser and schema
 model sources remain shared with `ASN1Viewer.Core`.

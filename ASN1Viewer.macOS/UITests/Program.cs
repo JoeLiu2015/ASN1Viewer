@@ -33,11 +33,18 @@ void Parse(string text)
     PumpUntil(() => task.IsCompleted);
     task.GetAwaiter().GetResult();
 }
-Check(window.FindControl<Menu>("MainMenu")!.Items.Count == 3, "Windows menu structure missing");
-Check(window.FindControl<StackPanel>("Toolbar")!.Children.Count == 7, "Windows toolbar structure missing");
+Check(window.FindControl<Menu>("MainMenu") == null, "Legacy menu must be removed");
+var actions = window.FindControl<StackPanel>("Actions")!;
+Button Action(string name) => actions.Children.OfType<Button>().Single(b => (string?)b.Tag == name);
+Check(actions.Children.Count == 7, "macOS action row incomplete");
+Action("pin").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+Check(window.Topmost, "Pin button failed");
+Action("pin").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+Check(!window.Topmost, "Unpin button failed");
+Check(Action("more").ContextMenu!.Items.OfType<MenuItem>().Count() == 3, "About, update or exit action missing");
 Parse("30 03 02 01 2A");
 var root = (NodeItem)tree.SelectedItem!;
-Check(root.Children.Count == 1 && root.IconIndex == 32 && root.Children[0].IconIndex == 1, "Node icons or children missing");
+Check(root.Children.Count == 1 && root.IconKind == "node-16" && root.Children[0].IconKind == "node-2", "Node type icons or children missing");
 tree.SelectedItem = root.Children[0];
 Check(tabs.SelectedIndex == 1, "Tree selection must switch to ASN.1 Bytes");
 Check(status.Text!.Contains("Offset[2]") && status.Text.Contains("Length[1]"), "Windows status format missing");
@@ -72,22 +79,20 @@ var fileTask = window.LoadFile(Path.Combine(AppContext.BaseDirectory, "files", "
 PumpUntil(() => fileTask.IsCompleted);
 fileTask.GetAwaiter().GetResult();
 Check(input.Text!.Length > 0 && window.Title!.EndsWith("PKCS12.pfx"), "File path or input mirror missing");
+Check(window.FindControl<TextBlock>("DocumentName")!.Text == "PKCS12.pfx", "Sidebar filename missing");
+Check(Grid.GetRow(window.FindControl<TextBlock>("DocumentName")!) == 1, "Sidebar filename overlaps heading");
+Check(Action("recent").ContextMenu!.Items.OfType<MenuItem>().Any(i => i.Header?.ToString()?.EndsWith("PKCS12.pfx") == true), "Recent files action was not refreshed");
 Check(((NodeItem)tree.SelectedItem!).Label.Contains("PFX"), "Sample schema matching missing");
 // A selected node past the old 64 KiB preview limit remains reachable in the full document.
 var data = new byte[100000]; data[90000] = 2; data[90001] = 1; data[90002] = 42;
 var distant = ASN1Viewer.ASNNode.Parse(data, 90000, 3, false);
 hex.SetData(data); hex.SelectNode(distant);
 Check(hex.Data.Length == 100000 && hex.FirstVisibleByte == 90000 && hex.RegionAt(90002) == ByteRegion.Content, "Full-document navigation beyond 64 KiB failed");
-var mainMenu = window.FindControl<Menu>("MainMenu")!;
-var view = (MenuItem)mainMenu.Items[1]!;
-view.Items.OfType<MenuItem>().Single(i => (string?)i.Header == "ASN.1 Modules")
-    .RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+Action("modules").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
 var modules = window.OwnedWindows.Single();
 Check(modules.FindControl<TreeView>("ModuleTree")!.Items.Count > 0, "Schema module window is empty");
 modules.Close();
-var help = (MenuItem)mainMenu.Items[2]!;
-var languages = (MenuItem)help.Items[0]!;
-languages.Items.OfType<MenuItem>().Single(i => (string?)i.Header == "Chinese")
+Action("language").ContextMenu!.Items.OfType<MenuItem>().Single(i => (string?)i.Header == "Chinese")
     .RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
 Check((string?)window.FindControl<TabItem>("InputTab")!.Header == "输入文本", "Shared Chinese labels not loaded");
 var about = new About();
@@ -109,4 +114,4 @@ message.FindControl<Button>("OKButton")!.RaiseEvent(new RoutedEventArgs(Button.C
 PumpUntil(() => accepted.IsCompleted);
 Check(accepted.GetAwaiter().GetResult(), "MsgBox acceptance result incorrect");
 window.Close();
-Console.WriteLine("PASS Windows UI parity: menus, toolbar, icons, automatic input, selection, full-document hex, byte colors, BER, sample schema, live editing, language, About, MsgBox and error recovery");
+Console.WriteLine("PASS macOS UI: action row, pin toggle, vector icons, automatic input, selection, full-document hex, byte colors, BER, sample schema, live editing, language, About, MsgBox and error recovery");

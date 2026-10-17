@@ -1,5 +1,19 @@
 <Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        x:Class="ASN1Viewer.macOS.schema.SchemaDlg" Width="700" Height="560" MinWidth="400" MinHeight="300"
+        xmlns:ui="using:ASN1Viewer.macOS.ui"
+        x:Class="ASN1Viewer.macOS.schema.SchemaDlg" Width="760" Height="600" MinWidth="460" MinHeight="340"
         WindowStartupLocation="CenterOwner" RequestedThemeVariant="Light">
-  <TreeView x:Name="ModuleTree" Margin="4" ScrollViewer.HorizontalScrollBarVisibility="Auto" />
+  <Window.Styles><StyleInclude Source="avares://ASN1Viewer.macOS/ui/DialogStyles.axaml"/></Window.Styles>
+  <Grid RowDefinitions="76,*,60">
+    <Grid ColumnDefinitions="36,*" ColumnSpacing="12" Margin="24,16">
+      <ui:VectorIcon Kind="modules" Width="28" Height="28" VerticalAlignment="Center"/>
+      <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">
+        <TextBlock x:Name="Heading" FontSize="18" FontWeight="SemiBold"/>
+        <TextBlock x:Name="ModuleCount" Foreground="#737D90" FontSize="12"/>
+      </StackPanel>
+    </Grid>
+    <Border Grid.Row="1" Margin="20,0" Background="White" BorderBrush="#E1E5EC" BorderThickness="1" CornerRadius="9" Padding="8">
+      <TreeView x:Name="ModuleTree" Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
+    </Border>
+    <Button Grid.Row="2" x:Name="Done" Classes="primary" Click="DoneClicked" IsDefault="True" IsCancel="True" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0"/>
+  </Grid>
 </Window>

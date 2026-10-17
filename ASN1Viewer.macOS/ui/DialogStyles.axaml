@@ -1,0 +1,15 @@
+<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Style Selector="Window">
+    <Setter Property="Background" Value="#F6F7FA"/><Setter Property="Foreground" Value="#252938"/>
+    <Setter Property="FontFamily" Value=".AppleSystemUIFont, Helvetica Neue"/><Setter Property="FontSize" Value="13"/>
+  </Style>
+  <Style Selector="Button">
+    <Setter Property="MinHeight" Value="32"/><Setter Property="MinWidth" Value="80"/>
+    <Setter Property="Padding" Value="16,6"/><Setter Property="CornerRadius" Value="8"/>
+    <Setter Property="Background" Value="White"/><Setter Property="BorderBrush" Value="#DDE2EA"/><Setter Property="BorderThickness" Value="1"/>
+  </Style>
+  <Style Selector="Button.primary"><Setter Property="Background" Value="#007AFF"/><Setter Property="BorderBrush" Value="#007AFF"/><Setter Property="Foreground" Value="White"/></Style>
+  <Style Selector="Button.primary:pointerover /template/ ContentPresenter"><Setter Property="Background" Value="#0065D8"/><Setter Property="Foreground" Value="White"/></Style>
+  <Style Selector="TextBox"><Setter Property="CornerRadius" Value="8"/><Setter Property="BorderBrush" Value="#DFE4EC"/><Setter Property="Background" Value="White"/><Setter Property="Padding" Value="12"/></Style>
+  <Style Selector="TreeViewItem"><Setter Property="MinHeight" Value="30"/><Setter Property="Padding" Value="6,4"/><Setter Property="CornerRadius" Value="6"/></Style>
+</Styles>

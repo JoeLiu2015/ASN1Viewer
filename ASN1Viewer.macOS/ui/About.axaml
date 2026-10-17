@@ -1,10 +1,14 @@
 <Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        x:Class="ASN1Viewer.macOS.ui.About" Width="450" SizeToContent="Height" CanResize="False"
+        x:Class="ASN1Viewer.macOS.ui.About" Width="420" SizeToContent="Height" CanResize="False"
         WindowStartupLocation="CenterOwner" RequestedThemeVariant="Light">
-  <StackPanel Margin="24" Spacing="16">
-    <TextBlock x:Name="ProductName" FontSize="20" FontWeight="SemiBold" />
-    <TextBlock x:Name="Copyright" />
-    <TextBlock x:Name="Build" />
-    <Button x:Name="OK" Content="OK" Click="CloseClicked" HorizontalAlignment="Right" MinWidth="80" />
+  <Window.Styles><StyleInclude Source="avares://ASN1Viewer.macOS/ui/DialogStyles.axaml"/></Window.Styles>
+  <StackPanel Margin="32,24,32,24" Spacing="12">
+    <Border Width="88" Height="88" CornerRadius="20" ClipToBounds="True" HorizontalAlignment="Center" Margin="0,0,0,4">
+      <Image Source="avares://ASN1Viewer.macOS/files/Icons/AppIcon.png"/>
+    </Border>
+    <TextBlock x:Name="ProductName" FontSize="21" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+    <TextBlock x:Name="Build" Foreground="#657187" TextAlignment="Center" TextWrapping="Wrap"/>
+    <TextBlock x:Name="Copyright" FontSize="11" Foreground="#7B8494" TextAlignment="Center" TextWrapping="Wrap" Margin="0,4,0,12"/>
+    <Button x:Name="OK" Classes="primary" Content="OK" Click="CloseClicked" IsDefault="True" IsCancel="True" HorizontalAlignment="Center" MinWidth="100"/>
   </StackPanel>
 </Window>
