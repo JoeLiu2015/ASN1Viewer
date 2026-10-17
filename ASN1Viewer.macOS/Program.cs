@@ -17,6 +17,10 @@ public sealed class App : Application
     {
         Name = "ASN1Viewer";
         Styles.Add(new FluentTheme());
+        Styles.Add(new Avalonia.Markup.Xaml.Styling.StyleInclude(new Uri("avares://ASN1Viewer.macOS/"))
+        {
+            Source = new Uri("avares://ASN1Viewer.macOS/ui/MenuStyles.axaml")
+        });
     }
 
     public override void OnFrameworkInitializationCompleted()

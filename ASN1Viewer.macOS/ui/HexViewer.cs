@@ -97,9 +97,9 @@ public sealed class HexViewer : Grid
             }
             double columnWidth = Math.Max(24, (Bounds.Width - 92 - 20 - 16 * Cell) / 16);
             double asciiStart = 92 + 16 * columnWidth + 20;
-            Text("Offset", 4, 7, Brushes.SlateGray);
-            Text("Hexadecimal", 92, 7, Brushes.SlateGray);
-            Text("ASCII", asciiStart, 7, Brushes.SlateGray);
+            Text("Offset", 4, 7, Brushes.SlateGray, 8 * Cell);
+            Text("Hexadecimal", 92, 7, Brushes.SlateGray, 16 * columnWidth);
+            Text("ASCII", asciiStart, 7, Brushes.SlateGray, 16 * Cell);
             context.DrawLine(new Pen(new SolidColorBrush(Color.Parse("#E8EBF0")), 1), new Point(0, 28), new Point(Bounds.Width, 28));
             int rows = (int)Math.Ceiling((Bounds.Height - 32) / LineHeight);
             for (int row = 0; row < rows; row++)
@@ -145,6 +145,18 @@ public sealed class HexViewer : Grid
                     Text(b >= 32 && b <= 126 ? ((char)b).ToString() : ".", asciiX, y, color, Cell);
                 }
             }
+
+            // Separate both data columns into eight-byte groups, including highlighted rows.
+            var divider = new Pen(new SolidColorBrush(Color.Parse("#DCE2EA")), 1);
+            // Column boundaries sit in the gutters and extend through the header.
+            double offsetBoundary = (4 + 8 * Cell + 92) / 2;
+            double asciiBoundary = asciiStart - 10;
+            context.DrawLine(divider, new Point(offsetBoundary, 0), new Point(offsetBoundary, Bounds.Height));
+            context.DrawLine(divider, new Point(asciiBoundary, 0), new Point(asciiBoundary, Bounds.Height));
+            double hexMiddle = 92 + 8 * columnWidth;
+            double asciiMiddle = asciiStart + 8 * Cell;
+            context.DrawLine(divider, new Point(hexMiddle, 29), new Point(hexMiddle, Bounds.Height));
+            context.DrawLine(divider, new Point(asciiMiddle, 29), new Point(asciiMiddle, Bounds.Height));
         }
     }
 }

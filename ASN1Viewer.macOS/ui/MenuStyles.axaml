@@ -1,0 +1,29 @@
+<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Styles.Resources>
+    <SolidColorBrush x:Key="MenuFlyoutPresenterBackground">#FAFBFD</SolidColorBrush>
+    <SolidColorBrush x:Key="MenuFlyoutPresenterBorderBrush">#D9DEE7</SolidColorBrush>
+    <SolidColorBrush x:Key="MenuFlyoutItemBackgroundPointerOver">#007AFF</SolidColorBrush>
+    <SolidColorBrush x:Key="MenuFlyoutItemForegroundPointerOver">White</SolidColorBrush>
+    <SolidColorBrush x:Key="MenuFlyoutItemBackgroundPressed">#0065D8</SolidColorBrush>
+    <SolidColorBrush x:Key="MenuFlyoutItemForegroundPressed">White</SolidColorBrush>
+    <SolidColorBrush x:Key="MenuFlyoutItemForeground">#252938</SolidColorBrush>
+    <SolidColorBrush x:Key="MenuFlyoutItemForegroundDisabled">#9AA1AE</SolidColorBrush>
+    <SolidColorBrush x:Key="MenuFlyoutItemKeyboardAcceleratorTextForegroundPointerOver">White</SolidColorBrush>
+    <SolidColorBrush x:Key="MenuFlyoutSubItemChevronPointerOver">White</SolidColorBrush>
+    <Thickness x:Key="MenuFlyoutScrollerMargin">5</Thickness>
+  </Styles.Resources>
+  <Style Selector="ContextMenu">
+    <Setter Property="FontFamily" Value=".AppleSystemUIFont, Helvetica Neue"/>
+    <Setter Property="FontSize" Value="13"/><Setter Property="CornerRadius" Value="10"/>
+    <Setter Property="BorderThickness" Value="1"/><Setter Property="MinWidth" Value="190"/>
+  </Style>
+  <Style Selector="MenuItem">
+    <Setter Property="FontFamily" Value=".AppleSystemUIFont, Helvetica Neue"/>
+    <Setter Property="FontSize" Value="13"/><Setter Property="MinHeight" Value="28"/>
+    <Setter Property="Padding" Value="10,5"/><Setter Property="CornerRadius" Value="5"/>
+  </Style>
+  <Style Selector="ContextMenu Separator">
+    <Setter Property="Height" Value="1"/><Setter Property="MinHeight" Value="1"/>
+    <Setter Property="Margin" Value="8,5"/><Setter Property="Background" Value="#E1E5EB"/>
+  </Style>
+</Styles>

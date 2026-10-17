@@ -80,7 +80,7 @@ PumpUntil(() => fileTask.IsCompleted);
 fileTask.GetAwaiter().GetResult();
 Check(input.Text!.Length > 0 && window.Title!.EndsWith("PKCS12.pfx"), "File path or input mirror missing");
 Check(window.FindControl<TextBlock>("DocumentName")!.Text == "PKCS12.pfx", "Sidebar filename missing");
-Check(Grid.GetRow(window.FindControl<TextBlock>("DocumentName")!) == 1, "Sidebar filename overlaps heading");
+Check(Grid.GetColumn(window.FindControl<TextBlock>("DocumentName")!) == 1, "Sidebar filename must appear beside heading");
 Check(Action("recent").ContextMenu!.Items.OfType<MenuItem>().Any(i => i.Header?.ToString()?.EndsWith("PKCS12.pfx") == true), "Recent files action was not refreshed");
 Check(((NodeItem)tree.SelectedItem!).Label.Contains("PFX"), "Sample schema matching missing");
 // A selected node past the old 64 KiB preview limit remains reachable in the full document.
