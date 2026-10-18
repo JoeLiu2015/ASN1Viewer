@@ -16,14 +16,14 @@ A lightweight and fast ASN.1 data viewer, built in C# with Windows (WinForms) an
 ## Screenshots
 ![Run](https://github.com/JoeLiu2015/ASN1Viewer/blob/main/.github/imgs/Asn1Viewer.gif)
 
-## Getting Started
+## Windows: Getting Started
 1. Clone repo
 2. Open in Visual Studio
 3. Build and run
 4. Open sample(Test) files
 ![TestFiles](https://github.com/JoeLiu2015/ASN1Viewer/blob/main/.github/imgs/Test%20Files.png)
 5. There are 3 ways to open ASN.1 data(file)
-  - By menue (File->Open)
+  - By menu (File->Open)
   - Drag the file into the Form
   - Input PEM text or HEX text in the **"Input Text"** tab
 
@@ -34,100 +34,60 @@ A lightweight and fast ASN.1 data viewer, built in C# with Windows (WinForms) an
 - Analyze PKCS structures
 - Debug ASN.1-based protocols
 
+## macOS
+
+Inspect certificates, keys, and other ASN.1 data in a macOS-style interface with
+a structure sidebar, an action bar, and synchronized text and byte views.
+Available for both Apple Silicon and Intel Macs running macOS 12 or newer.
+
+### Download and open
+
+1. Open [Releases](https://github.com/JoeLiu2015/ASN1Viewer/releases) and choose the ZIP for your Mac:
+   - **Apple Silicon (M-series):** `ASN1Viewer-osx-arm64.zip`
+   - **Intel:** `ASN1Viewer-osx-x64.zip`
+2. Extract the ZIP and move **ASN1Viewer.app** to Applications.
+3. Open **ASN1Viewer**. The download includes the runtime; no separate .NET installation is needed.
+
+The macOS builds are currently ad-hoc signed, not Apple-notarized.
+
+### Open ASN.1 data
+
+- Click **Open** to select a certificate, key, or other ASN.1 file, or drag a file into the window.
+- Paste **PEM, Base64, or hexadecimal text** into **Input Text**. The structure updates automatically as you type.
+- Choose **Samples** to explore the bundled X.509, PKCS, and other examples.
+- Use **Recent** to reopen a previously viewed file.
+
+![macOS ASN1Viewer displaying a certificate in English](.github/imgs/macOS-Bytes.jpg)
+
+### Explore the structure and bytes
+
+Expand nodes in the left sidebar to inspect their ASN.1 types and values.
+Distinct node icons help identify different types. Selecting a node opens
+**ASN.1 Bytes** and scrolls to its location in the document.
+
+The byte view shows **Offset**, **Hexadecimal**, and **ASCII** columns. Colors
+identify the selected node's tag (red), length (blue), and value (green).
+Light dividers separate columns and groups of eight bytes. The status bar shows
+the selected node's offset and length. Switch back to **Input Text** to view or
+change the text input.
+
+### Edit and inspect further
+
+Right-click a node to expand or collapse its children, copy its text or bytes,
+edit a leaf value, or parse embedded ASN.1 content. Editing a value updates the
+structure and byte view, including parent lengths when the value changes size.
+Click **Modules** to browse the bundled ASN.1 definitions and their structure.
+
+### Make it your own
+
+- **Pin** keeps the window above other applications.
+- **Language** switches between English and Simplified Chinese. The first launch uses English; subsequent launches restore your saved choice.
+- Drag the divider beside the sidebar to give the structure or byte view more room.
+- Open **More (•••) → About** to see the full version number and build date.
+
+Files and text input are limited to 16 MiB. To update the app, download a newer
+build from Releases; automatic updates are not enabled.
+
 ## License
+
 MIT
-
-
-## macOS desktop UI
-
-The `ASN1Viewer.macOS` application uses Avalonia and the existing C# parser and
-schema sources. The original Windows solution continues to build with MSBuild.
-The separate SDK projects require the **.NET 8 SDK** (or a newer SDK with the
-.NET 8 runtime installed). No Xcode project or Mono installation is required.
-
-```sh
-dotnet run --project ASN1Viewer.macOS/ASN1Viewer.macOS.csproj
-# Optionally open a file at startup:
-dotnet run --project ASN1Viewer.macOS/ASN1Viewer.macOS.csproj -- /path/to/certificate.pem
-```
-
-The macOS main window uses a single action row for Open, Recent, Samples,
-Modules, Pin, Language and More (About, Check Update, Exit). A resizable tinted
-sidebar holds the structure tree with type-specific vector icons; segmented
-Input Text / ASN.1 Bytes tabs occupy the right pane, with node information below.
-Typing PEM/Base64/HEX automatically parses after a short debounce. Selecting a
-node scrolls the complete hex document to its offset and highlights Tag (red),
-length (blue), content (green), and BER end markers in both HEX and ASCII columns.
-Only visible rows are drawn; there is no 64 KiB preview truncation.
-
-Right-click a node to expand/collapse, edit leaf content, copy text/bytes, or parse
-embedded content. The action buttons include all bundled test files, persistent recent files, always-on-top, English/Chinese labels and the ASN.1 module viewer.
-Language and always-on-top preferences are saved when the window closes.
-Input remains limited to 16 MiB. Automatic updates are disabled, as in the original
-Windows code. macOS retains its system window title bar and file dialogs.
-
-Build a self-contained application bundle on macOS (macOS 12 or newer):
-
-```sh
-python3 build_release.py artifacts/osx-arm64 --runtime osx-arm64  # Apple Silicon
-python3 build_release.py artifacts/osx-x64 --runtime osx-x64    # Intel
-open artifacts/osx-arm64/ASN1Viewer.app
-```
-
-The bundle includes .NET, schemas and sample files; the destination Mac does not
-need the SDK. Use `--dotnet /path/to/dotnet` or `DOTNET=/path/to/dotnet` if it is not on PATH.
-The script selects macOS on a Mac and Windows elsewhere; `--platform macos` or
-`--platform windows` selects it explicitly. Both paths build and test before
-packaging, and require a new destination directory to avoid overwriting a release.
-The existing Windows command remains `python build_release.py <destination>`. Builds are locally
-ad-hoc signed. Public distribution requires Developer ID signing and notarization;
-see the [Avalonia macOS deployment guide](https://docs.avaloniaui.net/docs/deployment/macos).
-CI builds both architectures and uploads ZIP bundles.
-
-Pushing a version tag (for example `v3.0.0`) runs the Release workflow for
-Windows, macOS Apple Silicon, and macOS Intel from the same commit. Once all
-builds and tests pass, one GitHub Release for that tag contains:
-
-- `ASN1Viewer-windows.zip`
-- `ASN1Viewer-osx-arm64.zip`
-- `ASN1Viewer-osx-x64.zip`
-
-Both UI projects share `ASN1Viewer/Properties/AssemblyInfo.cs`; update its version
-before tagging the release. Re-running the workflow updates these assets on the
-existing tag's Release rather than creating a separate macOS Release. Branch
-and pull-request builds only upload Actions artifacts, not public Releases.
-
-The macOS app uses its own 1024×1024 icon at
-`ASN1Viewer.macOS/files/Icons/AppIcon.png`. The Python release script generates
-the standard 16–512 point iconset at 1× and 2× using `sips` and `iconutil`, and
-packages `Contents/Resources/ASN1Viewer.icns` with `CFBundleIconFile` configured
-for Finder, Dock and the application switcher. No separate shell script is needed.
-
-Run the existing behavior baseline against the shared Core on modern .NET:
-
-```sh
-dotnet run --project ASN1Viewer.macOS/Tests/ASN1Viewer.Core.Tests.Modern.csproj -c Release
-dotnet run --project ASN1Viewer.macOS/UITests/ASN1Viewer.macOS.UITests.csproj -c Release
-```
-
-### macOS source layout
-
-The macOS frontend mirrors the Windows frontend's component boundaries. Avalonia
-`.axaml` files replace WinForms `.Designer.cs`/`.resx` view definitions; window
-logic lives in the matching `.axaml.cs` files.
-
-| Windows frontend | macOS frontend |
-| --- | --- |
-| `MainForm.cs` + Designer/resx | `MainForm.axaml.cs` + `MainForm.axaml` |
-| `ui/About.cs` + Designer/resx | `ui/About.axaml.cs` + `ui/About.axaml` |
-| `ui/EditASN1Node.cs` + Designer/resx | `ui/EditASN1Node.axaml.cs` + `ui/EditASN1Node.axaml` |
-| `ui/HexViewer.cs` | `ui/HexViewer.cs` (custom-drawn control) |
-| `ui/MsgBox.cs` + Designer/resx | `ui/MsgBox.axaml.cs` + `ui/MsgBox.axaml` |
-| `schema/SchemaDlg.cs` + Designer/resx | `schema/SchemaDlg.axaml.cs` + `schema/SchemaDlg.axaml` |
-| `schema/SchemaTreeBuilder.cs` | `schema/SchemaTreeBuilder.cs` |
-| `Config.cs`, `Lang.cs`, `DesktopUtils.cs`, `Updater.cs` | Matching files in the macOS project root |
-
-The application icon lives in `files/Icons`. `ui/VectorIcon.cs` draws the current
-action and node icons at any display scale; legacy PNGs remain as reference assets. The original language files are linked under `lang`, and
-sample files are copied into `files/TestFiles` at build time. Parser and schema
-model sources remain shared with `ASN1Viewer.Core`.
