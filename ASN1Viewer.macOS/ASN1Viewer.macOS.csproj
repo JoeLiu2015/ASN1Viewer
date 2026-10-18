@@ -5,12 +5,15 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseAppHost>true</UseAppHost>
+    <!-- Share assembly metadata, including versions, with the Windows UI. -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
   </PropertyGroup>
   <ItemGroup>
     <AvaloniaResource Include="files/Icons/**" />
     <AvaloniaResource Include="../ASN1Viewer/lang/*.txt" Link="lang/%(Filename)%(Extension)" />
     <Compile Remove="Core/**;Tests/**;UITests/**" />
+    <Compile Include="../ASN1Viewer/Properties/AssemblyInfo.cs" Link="Properties/AssemblyInfo.cs" />
     <ProjectReference Include="Core/ASN1Viewer.Core.Modern.csproj" />
     <PackageReference Include="Avalonia.Desktop" Version="11.3.13" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.13" />

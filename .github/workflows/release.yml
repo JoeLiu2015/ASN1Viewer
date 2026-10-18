@@ -6,10 +6,10 @@ on:
       - 'v*'
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  release:
+  windows:
     runs-on: windows-latest
     defaults:
       run:
@@ -32,9 +32,70 @@ jobs:
       - name: Create ZIP
         run: Compress-Archive -Path bin/release/ASN1Viewer -DestinationPath bin/release/ASN1Viewer-windows.zip
 
-      - name: Publish GitHub Release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-windows
+          path: bin/release/ASN1Viewer-windows.zip
+          if-no-files-found: error
+
+  macos:
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        runtime: [osx-arm64, osx-x64]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Build, test, and package
+        env:
+          RUNTIME: ${{ matrix.runtime }}
+        run: |
+          python3 build_release.py "artifacts/$RUNTIME" --platform macos --runtime "$RUNTIME"
+          ditto -c -k --keepParent "artifacts/$RUNTIME/ASN1Viewer.app" "artifacts/ASN1Viewer-$RUNTIME.zip"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.runtime }}
+          path: artifacts/ASN1Viewer-${{ matrix.runtime }}.zip
+          if-no-files-found: error
+
+  publish:
+    needs: [windows, macos]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: release-${{ github.ref_name }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: release-*
+          merge-multiple: true
+          path: artifacts
+      - name: Publish all platforms to the same GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           RELEASE_TAG: ${{ github.ref_name }}
-        run: gh release create "$env:RELEASE_TAG" bin/release/ASN1Viewer-windows.zip --verify-tag --title "ASN1Viewer $env:RELEASE_TAG" --generate-notes
+        shell: bash
+        run: |
+          set -euo pipefail
+          assets=(
+            artifacts/ASN1Viewer-windows.zip
+            artifacts/ASN1Viewer-osx-arm64.zip
+            artifacts/ASN1Viewer-osx-x64.zip
+          )
+          for asset in "${assets[@]}"; do
+            test -s "$asset"
+          done
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release upload "$RELEASE_TAG" "${assets[@]}" --clobber
+          else
+            gh release create "$RELEASE_TAG" "${assets[@]}" --verify-tag --title "ASN1Viewer $RELEASE_TAG" --generate-notes
+          fi

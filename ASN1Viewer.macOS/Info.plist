@@ -4,8 +4,7 @@
   <key>CFBundleName</key><string>ASN1Viewer</string>
   <key>CFBundleDisplayName</key><string>ASN1Viewer</string>
   <key>CFBundleIdentifier</key><string>com.joeliu.asn1viewer</string>
-  <key>CFBundleVersion</key><string>1.0.0</string>
-  <key>CFBundleShortVersionString</key><string>1.0.0</string>
+  <!-- Generated from the Windows UI AssemblyInfo.cs by build_release.py. -->
   <key>CFBundleExecutable</key><string>ASN1Viewer.macOS</string>
   <key>CFBundleIconFile</key><string>ASN1Viewer.icns</string>
   <key>CFBundlePackageType</key><string>APPL</string>

@@ -84,6 +84,19 @@ ad-hoc signed. Public distribution requires Developer ID signing and notarizatio
 see the [Avalonia macOS deployment guide](https://docs.avaloniaui.net/docs/deployment/macos).
 CI builds both architectures and uploads ZIP bundles.
 
+Pushing a version tag (for example `v3.0.0`) runs the Release workflow for
+Windows, macOS Apple Silicon, and macOS Intel from the same commit. Once all
+builds and tests pass, one GitHub Release for that tag contains:
+
+- `ASN1Viewer-windows.zip`
+- `ASN1Viewer-osx-arm64.zip`
+- `ASN1Viewer-osx-x64.zip`
+
+Both UI projects share `ASN1Viewer/Properties/AssemblyInfo.cs`; update its version
+before tagging the release. Re-running the workflow updates these assets on the
+existing tag's Release rather than creating a separate macOS Release. Branch
+and pull-request builds only upload Actions artifacts, not public Releases.
+
 The macOS app uses its own 1024×1024 icon at
 `ASN1Viewer.macOS/files/Icons/AppIcon.png`. The Python release script generates
 the standard 16–512 point iconset at 1× and 2× using `sips` and `iconutil`, and

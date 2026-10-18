@@ -4,6 +4,8 @@ import argparse
 from datetime import datetime
 import os
 import platform
+import plistlib
+import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -110,6 +112,21 @@ def build_macos_icon(source, destination):
         run(["iconutil", "--convert", "icns", "--output", destination, iconset])
 
 
+def write_macos_plist(destination):
+    assembly_info = (ROOT / "ASN1Viewer/Properties/AssemblyInfo.cs").read_text(encoding="utf-8-sig")
+    match = re.search(r'^\s*\[assembly:\s*AssemblyVersion\("(\d+\.\d+\.\d+)\.\d+"\)\]',
+                      assembly_info, re.MULTILINE)
+    if not match:
+        raise ValueError("AssemblyInfo.cs must define a four-part numeric AssemblyVersion")
+    with (ROOT / "ASN1Viewer.macOS/Info.plist").open("rb") as source:
+        metadata = plistlib.load(source)
+    # macOS bundle versions use three components rather than .NET's four.
+    metadata["CFBundleVersion"] = match.group(1)
+    metadata["CFBundleShortVersionString"] = match.group(1)
+    with destination.open("wb") as output:
+        plistlib.dump(metadata, output, sort_keys=False)
+
+
 def build_macos(destination, runtime, dotnet=None):
     if sys.platform != "darwin":
         raise OSError("macOS packaging requires a Mac for code signing.")
@@ -128,7 +145,7 @@ def build_macos(destination, runtime, dotnet=None):
     run([sdk, "publish", project / "ASN1Viewer.macOS.csproj", "-c", "Release",
          "-r", runtime, "--self-contained", "true", "-p:UseAppHost=true",
          "-o", executable_dir])
-    shutil.copy2(project / "Info.plist", app / "Contents/Info.plist")
+    write_macos_plist(app / "Contents/Info.plist")
     shutil.copy2(ROOT / "LICENSE", resources / "LICENSE")
     build_macos_icon(project / "files/Icons/AppIcon.png", resources / "ASN1Viewer.icns")
     executable = executable_dir / "ASN1Viewer.macOS"
@@ -177,6 +194,6 @@ def main():
 if __name__ == "__main__":
     try:
         sys.exit(main())
-    except (OSError, subprocess.CalledProcessError) as error:
+    except (OSError, ValueError, subprocess.CalledProcessError) as error:
         print("Release failed: " + str(error), file=sys.stderr)
         sys.exit(1)
