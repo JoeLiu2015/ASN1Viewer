@@ -96,6 +96,18 @@ Action("language").ContextMenu!.Items.OfType<MenuItem>().Single(i => (string?)i.
     .RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
 Check((string?)window.FindControl<TabItem>("InputTab")!.Header == "输入文本", "Shared Chinese labels not loaded");
 var about = new About();
+var expectedVersion = System.Reflection.CustomAttributeExtensions
+    .GetCustomAttribute<System.Reflection.AssemblyFileVersionAttribute>(typeof(About).Assembly)!.Version;
+foreach (var language in new[] { "en_US", "zh_CN" })
+{
+    var localized = new Lang();
+    localized.Select(language);
+    var localizedAbout = new About(localized);
+    Check(localizedAbout.FindControl<TextBlock>("ProductName")!.Text!.Contains($"v{expectedVersion}"), "About product name version differs from assembly metadata");
+    Check(localizedAbout.FindControl<TextBlock>("Build")!.Text!.Contains(expectedVersion), "About build version differs from assembly metadata");
+    var expectedDate = new DateTime(2000, 1, 1).AddDays(Version.Parse(expectedVersion).Revision).ToString("yyyy-MM-dd");
+    Check(localizedAbout.FindControl<TextBlock>("BuildDate")!.Text!.Contains(expectedDate), "About build date differs from version revision");
+}
 var aboutClosed = about.ShowDialog(window);
 Check(about.FindControl<TextBlock>("ProductName")!.Text!.Contains("ASN.1"), "About window product metadata missing");
 about.FindControl<Button>("OK")!.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));

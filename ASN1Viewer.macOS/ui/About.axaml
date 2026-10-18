@@ -8,6 +8,7 @@
     </Border>
     <TextBlock x:Name="ProductName" FontSize="21" FontWeight="SemiBold" HorizontalAlignment="Center"/>
     <TextBlock x:Name="Build" Foreground="#657187" TextAlignment="Center" TextWrapping="Wrap"/>
+    <TextBlock x:Name="BuildDate" Foreground="#657187" TextAlignment="Center" TextWrapping="Wrap"/>
     <TextBlock x:Name="Copyright" FontSize="11" Foreground="#7B8494" TextAlignment="Center" TextWrapping="Wrap" Margin="0,4,0,12"/>
     <Button x:Name="OK" Classes="primary" Content="OK" Click="CloseClicked" IsDefault="True" IsCancel="True" HorizontalAlignment="Center" MinWidth="100"/>
   </StackPanel>

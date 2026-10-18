@@ -16,7 +16,7 @@ public sealed class Lang
         while (reader.ReadLine() is { } line)
         {
             var colon = line.IndexOf(':');
-            if (colon > 0) strings[line[..colon].Trim()] = line[(colon + 1)..].Trim().Replace("%VERSION%", "2.0");
+            if (colon > 0) strings[line[..colon].Trim()] = line[(colon + 1)..].Trim().Replace("%VERSION%", DesktopUtils.ApplicationVersion);
         }
     }
 }

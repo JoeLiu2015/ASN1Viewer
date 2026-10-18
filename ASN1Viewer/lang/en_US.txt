@@ -27,6 +27,8 @@ STATUS_SUCCEED : Succeed.
 ABOUT_TITLE    : About {0}
 ABOUT_COPYRIGHT: Copyright © 2020-{0} ASN.1 Viewer Ltd
 ABOUT_BUILD    : Version {0}  Build {1}
+ABOUT_VERSION  : Version {0}
+ABOUT_BUILD_DATE : Build date {0}
 MSG_NOFILE     : File "{0}" is not found.
 TXT_SKIP       : Skip {0} bytes ({1} lines)
 TXT_TEXT       : Text

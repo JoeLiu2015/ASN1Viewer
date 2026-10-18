@@ -4,6 +4,7 @@
     <Setter Property="FontFamily" Value=".AppleSystemUIFont, Helvetica Neue"/><Setter Property="FontSize" Value="13"/>
   </Style>
   <Style Selector="Button">
+    <Setter Property="HorizontalContentAlignment" Value="Center"/><Setter Property="VerticalContentAlignment" Value="Center"/>
     <Setter Property="MinHeight" Value="32"/><Setter Property="MinWidth" Value="80"/>
     <Setter Property="Padding" Value="16,6"/><Setter Property="CornerRadius" Value="8"/>
     <Setter Property="Background" Value="White"/><Setter Property="BorderBrush" Value="#DDE2EA"/><Setter Property="BorderThickness" Value="1"/>

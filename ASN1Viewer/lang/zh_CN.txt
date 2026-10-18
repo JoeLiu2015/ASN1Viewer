@@ -27,6 +27,8 @@ STATUS_SUCCEED : 成功.
 ABOUT_TITLE    : 关于 {0}
 ABOUT_COPYRIGHT: 版权 © 2020-{0} ASN.1 Viewer Ltd
 ABOUT_BUILD    : 版本 {0}  内部版本号 {1}
+ABOUT_VERSION  : 版本 {0}
+ABOUT_BUILD_DATE : 构建日期 {0}
 MSG_NOFILE     : 文件 “{0}” 不存在.
 TXT_SKIP       : 跳过 {0} 字节 ({1} 行)
 TXT_TEXT       : 文本

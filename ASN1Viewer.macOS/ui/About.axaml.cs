@@ -12,9 +12,10 @@ public partial class About : Window
         Title = string.Format(lang["ABOUT_TITLE"], lang["PROD_NAME"]);
         ProductName.Text = lang["PROD_NAME"];
         Copyright.Text = string.Format(lang["ABOUT_COPYRIGHT"], DateTime.Now.Year);
-        Build.Text = string.Format(lang["ABOUT_BUILD"], AssemblyVersion, DesktopUtils.GetAssembyBuildTime().ToString("yyyyMMdd"));
+        Build.Text = string.Format(lang["ABOUT_VERSION"], AssemblyVersion);
+        BuildDate.Text = string.Format(lang["ABOUT_BUILD_DATE"], DesktopUtils.GetAssembyBuildTime().ToString("yyyy-MM-dd"));
         OK.Content = lang["BTN_OK"];
     }
-    public string AssemblyVersion => typeof(About).Assembly.GetName().Version?.ToString() ?? "2.0";
+    public string AssemblyVersion => DesktopUtils.ApplicationVersion;
     private void CloseClicked(object? sender, RoutedEventArgs e) => Close();
 }
